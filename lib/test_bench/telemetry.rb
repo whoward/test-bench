@@ -4,6 +4,7 @@ module TestBench
 
     def self.build
       instance = new [], 0, 0, 0, 0
+      instance.started
       instance
     end
 

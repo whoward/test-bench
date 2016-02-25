@@ -21,14 +21,14 @@ module TestBench
       module FileMap
         def self.example
           {
-            TestScript::Error.path => TestScript::Error.text,
-            TestScript::Failing.path => TestScript::Failing.text,
-            TestScript::Passing.path => TestScript::Passing.text,
+            TestScript::Error.file => TestScript::Error.text,
+            TestScript::Failing.file => TestScript::Failing.text,
+            TestScript::Passing.file => TestScript::Passing.text,
           }
         end
       end
 
-      module Paths
+      module Files
         def self.example
           FileMap.example.keys
         end
@@ -40,7 +40,7 @@ module TestBench
             Controls::TestScript::Error.example
           end
 
-          def self.path
+          def self.file
             '/error.rb'
           end
         end
@@ -50,7 +50,7 @@ module TestBench
             Controls::TestScript::Failing.example
           end
 
-          def self.path
+          def self.file
             '/failing.rb'
           end
         end
@@ -60,7 +60,7 @@ module TestBench
             Controls::TestScript::Passing.example
           end
 
-          def self.path
+          def self.file
             '/failing.rb'
           end
         end

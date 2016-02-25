@@ -13,6 +13,7 @@ require 'test_bench/internal_logging'
 
 require 'test_bench/activate'
 require 'test_bench/runner'
+require 'test_bench/executor'
 require 'test_bench/expand_path'
 require 'test_bench/telemetry'
 require 'test_bench/telemetry/assertions'

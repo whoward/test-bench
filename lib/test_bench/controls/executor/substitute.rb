@@ -2,8 +2,8 @@ module TestBench
   module Controls
     module Executor
       class Substitute
-        def add file
-          added_files << file
+        def add *files
+          added_files.concat files
         end
 
         def added_files

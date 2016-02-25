@@ -48,11 +48,11 @@ module TestBench
         Array expand_path.(path)
       end
 
-      files.each do |file|
-        executor.add file
-      end
+      executor.add *files
 
       logger.debug "Gathered files (Paths: #{paths.size}, Files: #{files.size})"
+
+      files
     end
 
     def execute
