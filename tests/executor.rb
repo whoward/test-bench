@@ -6,14 +6,14 @@ context "Executor" do
 
   context "File execution" do
     test do
-      executor = TestBench::Executor.new binding, 1, file_module
-      executor.telemetry = TestBench::Telemetry.build
+      telemetry = TestBench::Telemetry.build
       files = [Controls::FileSubstitute::TestScript::Passing.file]
 
-      executor.add *files
-      executor.()
+      executor = TestBench::Executor.new binding, 1, file_module
+      executor.telemetry = telemetry
+      executor.(files)
 
-      assert executor.telemetry do
+      assert telemetry do
         executed? *files
       end
     end
@@ -23,15 +23,15 @@ context "Executor" do
   end
 
   test "Parallel execution" do
+    parallel_process_max = 0
     child_count = 4
-    executor = TestBench::Executor.new binding, child_count, file_module
     files = [Controls::FileSubstitute::TestScript::Passing.file] * 10
 
-    executor.add *files
-    executor.()
-
-    assert executor do
-      parallel_process_max? 4
+    executor = TestBench::Executor.new binding, child_count, file_module
+    executor.(files) do
+      parallel_process_max = [parallel_process_max, executor.processes.size].max
     end
+
+    assert parallel_process_max == child_count
   end
 end
