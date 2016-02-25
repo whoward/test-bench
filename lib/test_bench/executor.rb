@@ -9,7 +9,6 @@ module TestBench
     null_attr :telemetry
 
     def initialize binding, child_count, file_module
-      @telemetry = telemetry
       @binding = binding
       @child_count = child_count
       @file_module = file_module
@@ -44,7 +43,6 @@ module TestBench
         telemetry_data = Telemetry.dump telemetry
 
         telemetry_producer.write telemetry_data
-        telemetry_producer.close
       end
     end
 
