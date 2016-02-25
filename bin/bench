@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+
+begin
+  require 'test_bench/activate'
+rescue LoadError
+  require_relative '../init'
+end
+
+require 'test_bench/cli'
+
+TestBench::CLI.() or exit 1
