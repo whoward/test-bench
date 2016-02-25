@@ -29,7 +29,7 @@ context "Executor" do
 
     executor = TestBench::Executor.new binding, child_count, file_module
     executor.(files) do
-      parallel_process_max = [parallel_process_max, executor.processes.size].max
+      parallel_process_max = [parallel_process_max, executor.process_map.size].max
     end
 
     assert parallel_process_max == child_count

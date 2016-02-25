@@ -23,7 +23,7 @@ module TestBench
           child_process telemetry_producer, file
         end
 
-        processes[pid] = telemetry_consumer
+        process_map[pid] = telemetry_consumer
 
         block.(file) if block_given?
       end
@@ -47,8 +47,8 @@ module TestBench
       end
     end
 
-    def processes
-      @processes ||= {}
+    def process_map
+      @process_map ||= {}
     end
 
     def read_telemetry telemetry_consumer
@@ -78,10 +78,10 @@ module TestBench
     end
 
     def wait process_count
-      while processes.size > process_count
+      while process_map.size > process_count
         pid = ::Process.wait
 
-        io = processes.delete pid
+        io = process_map.delete pid
         read_telemetry io
       end
     end
