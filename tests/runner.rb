@@ -2,7 +2,7 @@ require_relative './test_init'
 
 context "Runner" do
   test "Expands all paths into a concrete set of files and executes them" do
-    executor = TestBench::Executor::Substitute.new
+    executor = TestBench::Controls::Executor::Substitute.new
 
     runner = TestBench::Runner.new %w(some/path other/path.rb)
     runner.expand_path = Controls::ExpandPath.example
