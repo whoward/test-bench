@@ -19,11 +19,11 @@ module TestBench
       files.each do |file|
         wait child_count - 1
 
-        pid, parent_io = spawn_process do |child_io|
-          child_process child_io, file
+        pid, telemetry_consumer = spawn_process do |telemetry_producer|
+          child_process telemetry_producer, file
         end
 
-        processes[pid] = parent_io
+        processes[pid] = telemetry_consumer
 
         block.(file) if block_given?
       end
@@ -31,7 +31,7 @@ module TestBench
       wait 0
     end
 
-    def child_process child_io, file
+    def child_process telemetry_producer, file
       test_script = file_module.read file
       telemetry = Telemetry.build
 
@@ -42,8 +42,8 @@ module TestBench
         telemetry.stopped
         telemetry_data = Telemetry.dump telemetry
 
-        child_io.write telemetry_data
-        child_io.close
+        telemetry_producer.write telemetry_data
+        telemetry_producer.close
       end
     end
 
@@ -51,30 +51,30 @@ module TestBench
       @processes ||= {}
     end
 
-    def read_telemetry io
-      telemetry_data = io.read
-      io.close
+    def read_telemetry telemetry_consumer
+      telemetry_data = telemetry_consumer.read
+      telemetry_consumer.close
 
       telemetry = Telemetry.load telemetry_data
       self.telemetry << telemetry
     end
 
     def spawn_process &block
-      parent_read_io, child_write_io = IO.pipe
+      telemetry_producer, telemetry_consumer = IO.pipe
 
       child_pid = fork do
-        parent_read_io.close
+        telemetry_producer.close
 
         begin
-          block.(child_write_io)
+          block.(telemetry_consumer)
         ensure
-          child_write_io.close unless child_write_io.closed?
+          telemetry_consumer.close unless telemetry_consumer.closed?
         end
       end
 
-      child_write_io.close
+      telemetry_consumer.close
 
-      return child_pid, parent_read_io
+      return child_pid, telemetry_producer
     end
 
     def wait process_count
