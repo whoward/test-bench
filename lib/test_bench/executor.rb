@@ -19,11 +19,11 @@ module TestBench
       files.each do |file|
         wait child_count - 1
 
-        process = Process.start do |io|
-          child_process io, file
+        pid, parent_io = spawn_process do |child_io|
+          child_process child_io, file
         end
 
-        processes[process.pid] = process
+        processes[pid] = parent_io
 
         block.(file) if block_given?
       end
@@ -31,7 +31,7 @@ module TestBench
       wait 0
     end
 
-    def child_process io, file
+    def child_process child_io, file
       test_script = file_module.read file
       telemetry = Telemetry.build
 
@@ -41,7 +41,9 @@ module TestBench
         telemetry.file_executed file
         telemetry.stopped
         telemetry_data = Telemetry.dump telemetry
-        io.write telemetry_data
+
+        child_io.write telemetry_data
+        child_io.close
       end
     end
 
@@ -49,44 +51,38 @@ module TestBench
       @processes ||= {}
     end
 
+    def read_telemetry io
+      telemetry_data = io.read
+      io.close
+
+      telemetry = Telemetry.load telemetry_data
+      self.telemetry << telemetry
+    end
+
+    def spawn_process &block
+      parent_read_io, child_write_io = IO.pipe
+
+      child_pid = fork do
+        parent_read_io.close
+
+        begin
+          block.(child_write_io)
+        ensure
+          child_write_io.close unless child_write_io.closed?
+        end
+      end
+
+      child_write_io.close
+
+      return child_pid, parent_read_io
+    end
+
     def wait process_count
       while processes.size > process_count
         pid = ::Process.wait
 
-        process = processes.delete pid
-        self.telemetry << process.read_telemetry
-      end
-    end
-
-    Process = Struct.new :pid, :telemetry_io do
-      def self.start &child_block
-        parent_read_io, child_write_io = IO.pipe
-
-        child_pid = fork do
-          parent_read_io.close
-
-          begin
-            child_block.(child_write_io)
-          ensure
-            child_write_io.close unless child_write_io.closed?
-          end
-        end
-
-        child_write_io.close
-
-        new child_pid, parent_read_io
-      end
-
-      def read_telemetry
-        telemetry_data = telemetry_io.read
-        Telemetry.load telemetry_data
-      end
-
-      def stopped?
-        ::Process.kill 0, pid
-        false
-      rescue Errno::ESRCH
-        return true
+        io = processes.delete pid
+        read_telemetry io
       end
     end
   end
