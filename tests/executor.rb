@@ -4,21 +4,33 @@ context "Executor" do
   file_module = Controls::FileSubstitute.example
   binding = Controls::Binding.example
 
-  context "File execution" do
-    test do
+  test "File execution" do
+    telemetry = TestBench::Telemetry.build
+    files = [Controls::FileSubstitute::TestScript::Passing.file]
+
+    executor = TestBench::Executor.new binding, 1, file_module
+    executor.telemetry = telemetry
+    executor.(files)
+
+    assert telemetry do
+      executed? *files
+    end
+  end
+
+  test "Aggregated telemetry" do
+    test "Assertions" do
       telemetry = TestBench::Telemetry.build
-      files = [Controls::FileSubstitute::TestScript::Passing.file]
+      files = [Controls::FileSubstitute::TestScript::Passing.file] * 3
 
       executor = TestBench::Executor.new binding, 1, file_module
       executor.telemetry = telemetry
       executor.(files)
 
-      assert telemetry do
-        executed? *files
-      end
+      assert telemetry.assertions == 3
     end
 
     test "Error"
+
     test "Failure"
   end
 

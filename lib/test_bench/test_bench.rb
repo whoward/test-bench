@@ -18,6 +18,9 @@ module TestBench
     mod.const_get :Runner
   end
 
-  require 'test_bench/bootstrap'
-  include TestBench::Bootstrap
+  def assert subject=nil, mod=nil, &block
+    telemetry = Telemetry::Registry.get binding
+
+    telemetry.asserted
+  end
 end

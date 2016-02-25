@@ -71,10 +71,5 @@ module TestBench
     def tests
       failures + passes + skips
     end
-
-    def self.configure receiver
-      instance = build
-      receiver.telemetry = instance
-    end
   end
 end

@@ -33,7 +33,8 @@ module TestBench
 
     def child_process telemetry_producer, file
       test_script = file_module.read file
-      telemetry = Telemetry.build
+
+      telemetry = Telemetry::Registry.get binding
 
       begin
         binding.eval test_script, file
@@ -79,7 +80,7 @@ module TestBench
 
     def wait process_count
       while process_map.size > process_count
-        pid = ::Process.wait
+        pid = Process.wait
 
         io = process_map.delete pid
         read_telemetry io
