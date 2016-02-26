@@ -11,7 +11,8 @@ require 'test_bench/settings/environment'
 
 require 'test_bench/internal_logging'
 
-require 'test_bench/activate'
+require 'test_bench/assert'
+require 'test_bench/assert/proc'
 require 'test_bench/runner'
 require 'test_bench/executor'
 require 'test_bench/expand_path'

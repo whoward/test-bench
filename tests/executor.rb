@@ -17,6 +17,27 @@ context "Executor" do
     end
   end
 
+  context "Result" do
+    test "All passing tests returns true" do
+      files = [Controls::FileSubstitute::TestScript::Passing.file]
+
+      executor = TestBench::Executor.new binding, 1, file_module
+      result = executor.(files)
+
+      assert result == true
+    end
+
+    test "A failing test causes the result to be false" do
+      break
+      files = [Controls::FileSubstitute::TestScript::Failing.file]
+
+      executor = TestBench::Executor.new binding, 1, file_module
+      result = executor.(files)
+
+      assert result == false
+    end
+  end
+
   test "Aggregated telemetry" do
     test "Assertions" do
       telemetry = TestBench::Telemetry.build
@@ -29,7 +50,12 @@ context "Executor" do
       assert telemetry.assertions == 3
     end
 
-    test "Error"
+    test "Error" do
+      telemetry = TestBench::Telemetry.build
+      files = [Controls::FileSubstitute::TestScript::Failing.file]
+
+      executor = TestBench::Executor.new binding, 1, file_module
+    end
 
     test "Failure"
   end

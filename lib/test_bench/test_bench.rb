@@ -23,4 +23,8 @@ module TestBench
 
     telemetry.asserted
   end
+
+  def context prose=nil, &block
+    block.()
+  end
 end

@@ -38,7 +38,7 @@ context "Telemetry" do
 
     telemetry.asserted
 
-    assert telemetry.assertions += 1
+    assert telemetry.assertions == 1
   end
 
   context "Calculations" do

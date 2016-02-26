@@ -5,8 +5,7 @@ module TestBench
     attr_reader :binding
     attr_reader :child_count
     attr_reader :file_module
-
-    null_attr :telemetry
+    attr_writer :telemetry
 
     def initialize binding, child_count, file_module
       @binding = binding
@@ -28,10 +27,13 @@ module TestBench
       end
 
       wait 0
+
+      telemetry.passed?
     end
 
     def child_process telemetry_producer, file
       test_script = file_module.read file
+      test_script = "context do; #{test_script}; end"
 
       telemetry = Telemetry::Registry.get binding
 
@@ -83,6 +85,10 @@ module TestBench
         io = process_map.delete pid
         read_telemetry io
       end
+    end
+
+    def telemetry
+      @telemetry ||= Telemetry.build
     end
   end
 end
