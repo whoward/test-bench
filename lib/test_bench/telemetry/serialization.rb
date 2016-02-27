@@ -3,7 +3,7 @@ module TestBench
     extend InternalLogging
 
     def self.dump telemetry
-      logger.trace "Serializing telemetry (Tests: #{telemetry.tests})"
+      logger.debug "Serializing telemetry (Tests: #{telemetry.tests})"
 
       hash = telemetry.to_h
       hash[:start_time] = hash[:start_time]&.iso8601 5
@@ -11,21 +11,21 @@ module TestBench
 
       data = JSON.generate hash
 
-      logger.debug "Serialized telemetry (Tests: #{telemetry.tests}, Size: #{data.bytesize})"
-      logger.data "JSON:"
-      logger.data do JSON.pretty_generate hash end
+      logger.info "Serialized telemetry (Tests: #{telemetry.tests}, Size: #{data.bytesize})"
+      logger.debug "JSON:"
+      logger.debug do JSON.pretty_generate hash end
 
       data
     end
 
     def self.load data
-      logger.trace "Deserializing telemetry (Size: #{data.bytesize})"
-      logger.data do "Raw: #{data}" end
+      logger.debug "Deserializing telemetry (Size: #{data.bytesize})"
+      logger.debug do "Raw: #{data}" end
 
       hash = JSON.parse data, :symbolize_names => true
 
-      logger.data "JSON:"
-      logger.data do JSON.pretty_generate hash end
+      logger.debug "JSON:"
+      logger.debug do JSON.pretty_generate hash end
 
       telemetry = new(
         hash.fetch(:files),
@@ -38,7 +38,7 @@ module TestBench
         Time.parse(hash.fetch(:stop_time)),
       )
 
-      logger.debug "Serialized telemetry (Size: #{data.bytesize}, Tests: #{telemetry.tests})"
+      logger.info "Serialized telemetry (Size: #{data.bytesize}, Tests: #{telemetry.tests})"
 
       telemetry
     end

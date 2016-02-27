@@ -21,11 +21,11 @@ module TestBench
     end
 
     def call
-      logger.trace "Starting CLI (Arguments: #{argv.inspect})"
+      logger.debug "Starting CLI (Arguments: #{argv.inspect})"
 
       option_parser.parse! argv
 
-      logger.data do
+      logger.debug do
         settings_text = JSON.pretty_generate settings.to_h
         "Settings:\n#{settings_text}"
       end

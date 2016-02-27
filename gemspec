@@ -18,6 +18,4 @@ Test framework designed for extreme simplicity. In contrast to other popular tes
   s.require_paths = %w(lib)
   s.files = Dir.glob 'lib/**/*'
   s.platform = Gem::Platform::RUBY
-
-  s.add_runtime_dependency 'extended_logger', '~> 0', '>= 0.6.7'
 end

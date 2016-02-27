@@ -20,7 +20,7 @@ module TestBench
     end
 
     def call pattern
-      logger.trace do
+      logger.debug do
         "Scanning for files (Pattern: #{pattern.inspect}, Root Directory: #{root_directory.to_s.inspect})"
       end
 
@@ -32,7 +32,7 @@ module TestBench
         pathname.to_s
       end
 
-      logger.trace do
+      logger.debug do
         "Scanned for files (Pattern: #{pattern.inspect}, Root Directory: #{root_directory.to_s.inspect}, Matches: #{files.size})"
       end
 

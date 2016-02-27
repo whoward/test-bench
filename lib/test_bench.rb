@@ -1,7 +1,7 @@
 require 'json'
+require 'logger'
 require 'pathname'
-
-require 'extended_logger'
+require 'time'
 
 require 'test_bench/null_object'
 

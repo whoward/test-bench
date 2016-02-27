@@ -28,28 +28,28 @@ module TestBench
     end
 
     def call
-      logger.trace "Asserting (Subject Type: #{subject_namespace.to_s.inspect})"
+      logger.debug "Asserting (Subject Type: #{subject_namespace.to_s.inspect})"
 
       extend_subject assertions_module if assertions_module
 
       result = subject.instance_exec subject, &block
       passed = if result then true else false end
 
-      logger.debug "Asserted (Subject Type: #{subject_namespace.to_s.inspect}, Passed: #{passed})"
+      logger.info "Asserted (Subject Type: #{subject_namespace.to_s.inspect}, Passed: #{passed})"
 
       passed
     end
 
     def extend_subject mod
-      logger.trace "Extending subject (Module: #{mod.name.inspect})"
+      logger.debug "Extending subject (Module: #{mod.name.inspect})"
 
       raise TypeError if subject.frozen?
       subject.extend mod
 
-      logger.debug "Extended subject (Module: #{mod.name.inspect})"
+      logger.info "Extended subject (Module: #{mod.name.inspect})"
 
     rescue TypeError
-      logger.debug "Did not extend subject; is subject frozer, or missing singleton class? (Module: #{mod.name.inspect}, Subject Type: #{subject_namespace.inspect})"
+      logger.info "Did not extend subject; is subject frozer, or missing singleton class? (Module: #{mod.name.inspect}, Subject Type: #{subject_namespace.inspect})"
     end
 
     def subject_namespace
