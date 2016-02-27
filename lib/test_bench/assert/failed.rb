@@ -21,7 +21,7 @@ module TestBench
       end
 
       def to_s
-        "Assertion failed (File: #{frame.path.inspect}, Line: #{frame.lineno})"
+        "Assertion failed"
       end
     end
   end

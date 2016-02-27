@@ -55,6 +55,7 @@ context "Test structure" do
       end
 
       assert error
+      assert !error.success?
     end
   end
 
