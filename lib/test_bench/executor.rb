@@ -1,7 +1,5 @@
 module TestBench
   class Executor
-    using NullObject::NullAttribute
-
     attr_reader :binding
     attr_reader :child_count
     attr_reader :file_module
