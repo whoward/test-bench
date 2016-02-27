@@ -8,8 +8,6 @@ module TestBench
 
     def self.build
       instance = new
-      Environment.(instance)
-      instance
     end
 
     def bootstrap
@@ -50,12 +48,8 @@ module TestBench
       }
     end
 
-    def self.configure receiver
-      receiver.settings = self.instance
-    end
-
-    def self.instance
-      @instance ||= build
+    def self.toplevel
+      @toplevel ||= Registry.get TOPLEVEL_BINDING
     end
   end
 end

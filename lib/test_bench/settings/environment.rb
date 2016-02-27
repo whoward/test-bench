@@ -1,24 +1,18 @@
 module TestBench
   class Settings
     class Environment
-      using NullObject::NullAttribute
-
+      attr_reader :settings
       attr_writer :env
 
-      null_attr :settings
+      def initialize settings
+        @settings = settings
+      end
 
-      def self.build settings=nil, env=nil
+      def self.build settings, env=nil
         env ||= ENV
 
-        instance = new
+        instance = new settings
         instance.env = env
-
-        if settings
-          instance.settings = settings
-        else
-          Settings.configure instance
-        end
-
         instance
       end
 

@@ -9,7 +9,7 @@ module TestBench
         logger.progname = receiver.class.name
       end
 
-      logger.level = Settings.instance.internal_log_level
+      logger.level = Settings.toplevel.internal_log_level
       logger
     end
 

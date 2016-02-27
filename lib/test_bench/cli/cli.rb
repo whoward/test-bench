@@ -16,7 +16,7 @@ module TestBench
       argv ||= ARGV
 
       instance = new argv
-      Settings.configure instance
+      instance.settings = Settings.toplevel
       instance.()
     end
 

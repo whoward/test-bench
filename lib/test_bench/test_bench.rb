@@ -6,7 +6,7 @@ module TestBench
   end
 
   def self.mod
-    if Settings.instance.bootstrap
+    if Settings.toplevel.bootstrap
       require 'test_bench/bootstrap'
       TestBench::Bootstrap
     else
@@ -17,6 +17,8 @@ module TestBench
   def self.runner
     mod.const_get :Runner
   end
+
+  Settings::Environment.(Settings.toplevel)
 
   include Structure
 end

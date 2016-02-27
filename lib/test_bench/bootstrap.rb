@@ -45,7 +45,7 @@ module TestBench
           end
         end
 
-        settings = Settings.instance
+        settings = Settings.toplevel
         exclude_pattern = Regexp.new settings.exclude_pattern
 
         files.each do |file|

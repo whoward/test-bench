@@ -42,7 +42,8 @@ context "Pulling settings from the environment" do
   end
 
   context "Boolean interpretation" do
-    environment = TestBench::Settings::Environment.build
+    settings = TestBench::NullObject.new
+    environment = TestBench::Settings::Environment.build settings
 
     context "Activated" do
       test "On" do

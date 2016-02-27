@@ -43,6 +43,19 @@ context "Test structure" do
 
       assert telemetry.errors == 1
     end
+
+    test "Errors are re-raised when fail fast is activated" do
+      binding = Controls::Binding.example
+      settings = TestBench::Settings::Registry.get binding
+      settings.fail_fast = true
+
+      begin
+        binding.eval 'context do fail end', __FILE__, __LINE__
+      rescue RuntimeError => error
+      end
+
+      assert error
+    end
   end
 
   context "Test" do
@@ -55,13 +68,14 @@ context "Test structure" do
       assert telemetry.passed?
     end
 
-    test "Errors are recorded as test failures" do
+    test "Errors are recorded both as as test failures and errors" do
       binding = Controls::Binding.example
       telemetry = TestBench::Telemetry::Registry.get binding
 
       binding.eval 'test "Some test" do fail end', __FILE__, __LINE__
 
       assert telemetry.failures == 1
+      assert telemetry.errors == 1
     end
 
     test %{Prose defaults to "Test"}

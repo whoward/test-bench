@@ -1,8 +1,8 @@
 module TestBench
-  class Telemetry
+  class Settings
     module Registry
       def self.instance
-        @instance ||= TestBench::Registry.new Telemetry
+        @instance ||= TestBench::Registry.new Settings
       end
 
       def self.get binding

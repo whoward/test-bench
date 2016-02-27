@@ -13,11 +13,14 @@ module TestBench
 
     def context prose=nil, &block
       telemetry = Telemetry::Registry.get binding
+      settings = Settings::Registry.get binding
 
       begin
         block.()
       rescue => error
         telemetry.error_raised
+
+        raise error if settings.fail_fast
       end
     end
 
@@ -31,6 +34,7 @@ module TestBench
           block.()
         rescue => error
           telemetry.test_failed
+          raise error
         end
       end
     end
