@@ -1,8 +1,9 @@
 module TestBench
   module Controls
     module Telemetry
-      def self.example file=nil, failures: nil
+      def self.example file=nil, failures: nil, errors: nil
         failures ||= 1
+        errors ||= 1
         file ||= Path.example
 
         TestBench::Telemetry.new(
@@ -11,6 +12,7 @@ module TestBench
           failures, # failures
           1,        # skips
           11,       # assertions
+          errors,   # errors
           t0,       # start_time
           t1,       # stop_time
         )
@@ -25,6 +27,7 @@ module TestBench
           :failures => 1,
           :skips => 1,
           :assertions => 11,
+          :errors => 1,
           :start_time => t0.iso8601(5),
           :stop_time => t1.iso8601(5),
         )
@@ -44,17 +47,18 @@ module TestBench
 
       module Merged
         def self.example
-          files = [Passed.file, Failed.file]
+          files = [Passed.file, Failed.file, Error.file]
 
           t0 = Telemetry.t0
           t1 = Telemetry.t1
 
           TestBench::Telemetry.new(
             files,
-            2,   # passes
+            3,   # passes
             1,   # failures
-            2,   # skips
-            22,  # assertions
+            3,   # skips
+            33,  # assertions
+            1,   # errors
             t0,  # start_time
             t1,  # stop_time
           )
@@ -67,11 +71,25 @@ module TestBench
         def self.second
           Failed.example
         end
+
+        def self.third
+          Error.example
+        end
+      end
+
+      module Error
+        def self.example
+          Telemetry.example file, :errors => 1, :failures => 0
+        end
+
+        def self.file
+          'error.rb'
+        end
       end
 
       module Failed
         def self.example
-          Telemetry.example file, :failures => 1
+          Telemetry.example file, :errors => 0, :failures => 1
         end
 
         def self.file
@@ -81,7 +99,7 @@ module TestBench
 
       module Passed
         def self.example
-          Telemetry.example file, :failures => 0
+          Telemetry.example file, :errors => 0, :failures => 0
         end
 
         def self.file

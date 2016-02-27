@@ -18,13 +18,5 @@ module TestBench
     mod.const_get :Runner
   end
 
-  def assert subject=nil, mod=nil, &block
-    telemetry = Telemetry::Registry.get binding
-
-    telemetry.asserted
-  end
-
-  def context prose=nil, &block
-    block.()
-  end
+  include Structure
 end

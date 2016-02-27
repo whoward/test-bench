@@ -33,6 +33,7 @@ module TestBench
         hash.fetch(:failures),
         hash.fetch(:skips),
         hash.fetch(:assertions),
+        hash.fetch(:errors),
         Time.parse(hash.fetch(:start_time)),
         Time.parse(hash.fetch(:stop_time)),
       )

@@ -1,18 +1,19 @@
 module TestBench
-  class Telemetry < Struct.new :files, :passes, :failures, :skips, :assertions, :start_time, :stop_time
+  class Telemetry < Struct.new :files, :passes, :failures, :skips, :assertions, :errors, :start_time, :stop_time
     attr_writer :clock
 
     def self.build
-      instance = new [], 0, 0, 0, 0
+      instance = new [], 0, 0, 0, 0, 0
       instance.started
       instance
     end
 
     def << other
       self.assertions += other.assertions
-      self.passes += other.passes
+      self.errors += other.errors
       self.files.concat other.files
       self.failures += other.failures
+      self.passes += other.passes
       self.skips += other.skips
       self.start_time = [start_time, other.start_time].compact.min
       self.stop_time = [stop_time, other.stop_time].compact.max
@@ -36,6 +37,10 @@ module TestBench
       stop_time - start_time
     end
 
+    def error_raised
+      self.errors += 1
+    end
+
     def failed?
       not passed?
     end
@@ -45,7 +50,7 @@ module TestBench
     end
 
     def passed?
-      failures.zero?
+      failures.zero? and errors.zero?
     end
 
     def started
