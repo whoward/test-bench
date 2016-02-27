@@ -20,7 +20,7 @@ module TestBench
       rescue => error
         telemetry.error_raised
 
-        raise error if settings.fail_fast
+        exit 1 if settings.fail_fast
       end
     end
 

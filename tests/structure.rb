@@ -44,14 +44,14 @@ context "Test structure" do
       assert telemetry.errors == 1
     end
 
-    test "Errors are re-raised when fail fast is activated" do
+    test "The system exits immediately when fail fast is set" do
       binding = Controls::Binding.example
       settings = TestBench::Settings::Registry.get binding
       settings.fail_fast = true
 
       begin
         binding.eval 'context do fail end', __FILE__, __LINE__
-      rescue RuntimeError => error
+      rescue SystemExit => error
       end
 
       assert error
