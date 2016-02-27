@@ -5,7 +5,6 @@ module TestBench
     attr_reader :binding
     attr_reader :child_count
     attr_reader :file_module
-    attr_writer :telemetry
 
     def initialize binding, child_count, file_module
       @binding = binding
@@ -16,6 +15,8 @@ module TestBench
     def call files, &block
       files.each do |file|
         wait child_count - 1
+
+        break if settings.fail_fast and telemetry.failed?
 
         pid, telemetry_consumer = spawn_process do |telemetry_producer|
           child_process telemetry_producer, file
@@ -87,8 +88,12 @@ module TestBench
       end
     end
 
+    def settings
+      @settings ||= Settings.new
+    end
+
     def telemetry
-      @telemetry ||= Telemetry.build
+      @telemetry ||= Telemetry::Registry.get binding
     end
   end
 end

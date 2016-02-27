@@ -2,23 +2,22 @@ require_relative './test_init'
 
 context "Executor" do
   file_module = Controls::FileSubstitute.example
-  binding = Controls::Binding.example
 
   test "File execution" do
-    telemetry = TestBench::Telemetry.build
+    binding = Controls::Binding.example
     files = [Controls::FileSubstitute::TestScript::Passing.file]
 
     executor = TestBench::Executor.new binding, 1, file_module
-    executor.telemetry = telemetry
     executor.(files)
 
-    assert telemetry do
+    assert executor.telemetry do
       executed? *files
     end
   end
 
   context "Result" do
     test "All passing tests returns true" do
+      binding = Controls::Binding.example
       files = [Controls::FileSubstitute::TestScript::Passing.file]
 
       executor = TestBench::Executor.new binding, 1, file_module
@@ -27,9 +26,9 @@ context "Executor" do
       assert result == true
     end
 
-    test "A failing test causes the result to be false" do
-      break
-      files = [Controls::FileSubstitute::TestScript::Failing.file]
+    test "An uncaught error causes the result to be false" do
+      binding = Controls::Binding.example
+      files = [Controls::FileSubstitute::TestScript::Error.file]
 
       executor = TestBench::Executor.new binding, 1, file_module
       result = executor.(files)
@@ -40,27 +39,29 @@ context "Executor" do
 
   test "Aggregated telemetry" do
     test "Assertions" do
-      telemetry = TestBench::Telemetry.build
+      binding = Controls::Binding.example
       files = [Controls::FileSubstitute::TestScript::Passing.file] * 3
 
       executor = TestBench::Executor.new binding, 1, file_module
-      executor.telemetry = telemetry
       executor.(files)
 
-      assert telemetry.assertions == 3
+      assert executor.telemetry.assertions == 3
     end
 
-    test "Error" do
-      telemetry = TestBench::Telemetry.build
-      files = [Controls::FileSubstitute::TestScript::Failing.file]
+    test "Errors" do
+      binding = Controls::Binding.example
+      telemetry = TestBench::Telemetry::Registry.get binding
+      files = [Controls::FileSubstitute::TestScript::Error.file]
 
       executor = TestBench::Executor.new binding, 1, file_module
-    end
+      executor.(files)
 
-    test "Failure"
+      assert telemetry.errors == 1
+    end
   end
 
   test "Parallel execution" do
+    binding = Controls::Binding.example
     parallel_process_max = 0
     child_count = 4
     files = [Controls::FileSubstitute::TestScript::Passing.file] * 10
@@ -71,5 +72,32 @@ context "Executor" do
     end
 
     assert parallel_process_max == child_count
+  end
+
+  context "Fail fast setting" do
+    files = [
+      Controls::FileSubstitute::TestScript::Failing.file,
+      Controls::FileSubstitute::TestScript::Passing.file,
+    ]
+
+    test "Enabled" do
+      binding = Controls::Binding.example
+
+      executor = TestBench::Executor.new binding, 1, file_module
+      executor.settings.fail_fast = true
+      executor.(files)
+
+      assert executor.telemetry.files == files[0...1]
+    end
+
+    test "Disabled" do
+      binding = Controls::Binding.example
+
+      executor = TestBench::Executor.new binding, 1, file_module
+      executor.settings.fail_fast = false
+      executor.(files)
+
+      assert executor.telemetry.files == files
+    end
   end
 end

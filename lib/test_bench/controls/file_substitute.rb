@@ -61,7 +61,7 @@ module TestBench
           end
 
           def self.file
-            '/failing.rb'
+            '/passing.rb'
           end
         end
       end
