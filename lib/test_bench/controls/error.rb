@@ -1,8 +1,8 @@
 module TestBench
   module Controls
-    module Error
+    class Error < StandardError
       def self.example
-        AssertionFailed.example
+        new backtrace_locations
       end
 
       def self.detail indent: nil, **colors
@@ -12,7 +12,7 @@ module TestBench
         indent = '  ' * indent
 
         <<-TEXT
-#{indent}#{Output::Palette.apply "#{file}:#{line}:in `#{method_name}': Assertion failed (#{error.class})", **colors}
+#{indent}#{Output::Palette.apply "#{file}:#{line}:in `#{method_name}': #{message} (#{error.class})", **colors}
 #{indent}#{Output::Palette.apply "        from #{file}:#{line + 1}:in `#{method_name}'", **colors}
 #{indent}#{Output::Palette.apply "        from #{file}:#{line + 2}:in `#{method_name}'", **colors}
         TEXT
@@ -24,6 +24,10 @@ module TestBench
 
       def self.line
         1
+      end
+
+      def self.message
+        'Some error'
       end
 
       def self.method_name
@@ -54,12 +58,18 @@ module TestBench
         end
       end
 
-      module AssertionFailed
-        def self.example
-          backtrace_locations = Error.backtrace_locations
+      attr_reader :backtrace_locations
 
-          Assert::Failed.build backtrace_locations
-        end
+      def initialize backtrace_locations
+        @backtrace_locations = backtrace_locations
+      end
+
+      def backtrace
+        backtrace_locations.map &:to_s
+      end
+
+      def to_s
+        self.class.message
       end
     end
   end

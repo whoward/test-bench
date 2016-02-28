@@ -33,7 +33,9 @@ module TestBench
       paths = argv
       paths << 'tests' if paths.empty?
 
-      TestBench.runner.(paths) or exit 1
+      current_directory = File.expand_path Dir.pwd
+
+      TestBench.runner.(paths, current_directory) or exit 1
     end
 
     def help
@@ -46,7 +48,7 @@ Values that are toggled can be set via "on" or "off", "yes" or "no", "y" or "n",
 or "0" or "1".
 
     TEST_BENCH_BOOTSTRAP             When active, uses a minimal implementation
-                                     of "assert", "context", and "activate" that
+                                     of "assert", "context", and "test" that
                                      will work even when test-bench itself is
                                      under test.
     TEST_BENCH_CHILD_COUNT           Same as --child-count

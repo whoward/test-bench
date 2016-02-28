@@ -1,8 +1,16 @@
 module TestBench
   class Telemetry
-    module Registry
+    class Registry < TestBench::Registry
+      def key binding
+        "#{super}-#{Process.pid}"
+      end
+
+      def self.build
+        new Telemetry
+      end
+
       def self.instance
-        @instance ||= TestBench::Registry.new Telemetry
+        @instance ||= build
       end
 
       def self.get binding

@@ -10,7 +10,9 @@ module TestBench
     end
 
     def self.build
-      instance = new
+      level = :normal
+
+      instance = new level
       instance.device = $stdout
       instance
     end
@@ -51,6 +53,7 @@ module TestBench
 
     def file_finished file, telemetry
       verbose "Finished running #{file}"
+      normal ' '
 
       summary = summarize_telemetry telemetry
       verbose summary
@@ -69,7 +72,7 @@ module TestBench
     end
 
     def quiet prose, **colors
-      write prose, **colors if level == :quiet
+      write prose, **colors
     end
 
     def run_finished telemetry
@@ -103,7 +106,7 @@ module TestBench
     end
 
     def test_skipped prose
-      normal prose, :fg => :yellow
+      normal prose, :fg => :brown
     end
 
     def test_started prose

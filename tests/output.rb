@@ -128,7 +128,7 @@ context "Output" do
     output.test_skipped "Some test"
 
     assert output do
-      wrote_line? "Some test", :fg => :yellow
+      wrote_line? "Some test", :fg => :brown
     end
   end
 

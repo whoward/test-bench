@@ -26,6 +26,10 @@ module TestBench
 
       full_pattern = root_directory.join pattern
 
+      if full_pattern.directory?
+        full_pattern = full_pattern.join '**/*.rb'
+      end
+
       files = dir[full_pattern.to_s].map do |file|
         pathname = Pathname.new file
         pathname = pathname.relative_path_from root_directory
@@ -37,12 +41,6 @@ module TestBench
       end
 
       files
-    end
-
-    def self.configure receiver, root_directory
-      instance = build root_directory
-      receiver.expand_path = instance
-      instance
     end
   end
 end

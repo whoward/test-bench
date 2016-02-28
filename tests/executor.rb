@@ -40,6 +40,7 @@ context "Executor" do
   test "Aggregated telemetry" do
     test "Assertions" do
       binding = Controls::Binding.example
+      telemetry = TestBench::Telemetry::Registry.get binding
       files = [Controls::FileSubstitute::TestScript::Passing.file] * 3
 
       executor = TestBench::Executor.new binding, 1, file_module

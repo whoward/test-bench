@@ -36,7 +36,7 @@ module TestBench
     end
 
     module Runner
-      def self.call paths
+      def self.call paths, _=nil
         files = paths.flat_map do |path|
           if Dir.exist? path
             Dir["#{path}/**/*.rb"]

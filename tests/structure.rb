@@ -57,6 +57,8 @@ context "Test structure" do
       assert error
       assert !error.success?
     end
+
+    test "Indentation"
   end
 
   context "Test" do
@@ -89,5 +91,7 @@ context "Test structure" do
         wrote_line? "Test", :fg => :green
       end
     end
+
+    test "Skipping test"
   end
 end

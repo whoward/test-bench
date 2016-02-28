@@ -7,17 +7,14 @@ module TestBench
         @backtrace_locations = backtrace_locations
       end
 
-      def self.build backtrace_locations=nil
-        backtrace_locations ||= caller_locations
-        new backtrace_locations
+      def self.build backtrace_location=nil
+        backtrace_location ||= caller_locations[0]
+
+        new [backtrace_location]
       end
 
       def backtrace
         backtrace_locations.map &:to_s
-      end
-
-      def frame
-        backtrace_locations[0]
       end
 
       def to_s

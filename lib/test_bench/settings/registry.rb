@@ -1,8 +1,12 @@
 module TestBench
   class Settings
-    module Registry
+    class Registry < TestBench::Registry
+      def self.build
+        new Settings
+      end
+
       def self.instance
-        @instance ||= TestBench::Registry.new Settings
+        @instance ||= build
       end
 
       def self.get binding

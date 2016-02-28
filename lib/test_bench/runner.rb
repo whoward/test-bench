@@ -17,13 +17,14 @@ module TestBench
 
     def self.build paths, root_directory
       instance = new paths
-      Telemetry.configure instance
-      ExpandPath.configure instance, root_directory
+      instance.executor = Executor.build
+      instance.expand_path = ExpandPath.build root_directory
+      instance.telemetry = Telemetry.toplevel
       instance
     end
 
-    def self.call paths
-      root_directory = File.dirname caller_locations[0].path
+    def self.call paths, root_directory=nil
+      root_directory ||= File.dirname caller_locations[0].path
       instance = build paths, root_directory
       instance.()
     end

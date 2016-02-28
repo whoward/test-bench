@@ -7,12 +7,17 @@ module TestBench
     end
 
     def key binding
-      "#{binding.receiver.object_id}-#{Process.pid}"
+      binding.receiver.object_id
     end
 
     def get binding
       key = self.key binding
       table[key]
+    end
+
+    def set binding, value
+      key = self.key binding
+      table[key] = value
     end
 
     def table

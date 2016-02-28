@@ -49,7 +49,7 @@ module TestBench
     end
 
     def self.toplevel
-      @toplevel ||= Registry.get TOPLEVEL_BINDING
+      Registry.get TOPLEVEL_BINDING
     end
   end
 end

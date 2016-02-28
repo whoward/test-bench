@@ -4,7 +4,7 @@ module TestBench
       telemetry = Telemetry::Registry.get binding
 
       unless Assert.(subject, mod, &block)
-        raise Assert::Failed.new caller_locations
+        raise Assert::Failed.build caller_locations[0]
       end
 
     ensure
@@ -16,11 +16,14 @@ module TestBench
       settings = Settings::Registry.get binding
 
       begin
+        telemetry.context_entered prose
         block.()
-      rescue => error
-        telemetry.error_raised error
 
-        exit 1 if settings.fail_fast
+      rescue => error
+        Structure.error error, binding
+
+      ensure
+        telemetry.context_exited prose
       end
     end
 
@@ -29,15 +32,29 @@ module TestBench
 
       prose ||= 'Test'
 
-      context prose do
-        begin
-          block.()
-          telemetry.test_passed prose
-        rescue => error
-          telemetry.test_failed prose
-          raise error
-        end
+      if block.nil?
+        telemetry.test_skipped prose
+        return
       end
+
+      begin
+        telemetry.test_started prose
+        block.()
+        telemetry.test_passed prose
+
+      rescue => error
+        telemetry.test_failed prose
+        Structure.error error, binding
+      end
+    end
+
+    def self.error error, binding
+      telemetry = Telemetry::Registry.get binding
+      settings = Settings::Registry.get binding
+
+      telemetry.error_raised error
+
+      exit 1 if settings.fail_fast
     end
   end
 end

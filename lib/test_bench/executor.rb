@@ -10,6 +10,13 @@ module TestBench
       @file_module = file_module
     end
 
+    def self.build
+      binding = TOPLEVEL_BINDING
+      child_count = Settings.toplevel.child_count
+
+      new binding, child_count, File
+    end
+
     def call files, &block
       files.each do |file|
         wait child_count - 1
@@ -34,7 +41,9 @@ module TestBench
       test_script = file_module.read file
       test_script = "context do; #{test_script}; end"
 
-      telemetry = Telemetry::Registry.get binding
+      telemetry.output = Output.build if binding.receiver == TOPLEVEL_BINDING.receiver
+
+      telemetry.file_started file
 
       begin
         binding.eval test_script, file
@@ -87,11 +96,11 @@ module TestBench
     end
 
     def settings
-      @settings ||= Settings.new
+      Settings::Registry.get binding
     end
 
     def telemetry
-      @telemetry ||= Telemetry::Registry.get binding
+      Telemetry::Registry.get binding
     end
   end
 end
