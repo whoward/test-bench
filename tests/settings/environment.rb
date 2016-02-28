@@ -1,6 +1,16 @@
 require_relative '../test_init'
 
 context "Pulling settings from the environment" do
+  test "Color" do
+    settings = TestBench::Settings.new
+    environment = TestBench::Settings::Environment.build settings,
+      'TEST_BENCH_COLOR' => 'off'
+
+    environment.()
+
+    assert settings.color == false
+  end
+
   test "Fail fast" do
     settings = TestBench::Settings.new
     environment = TestBench::Settings::Environment.build settings,

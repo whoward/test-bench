@@ -27,7 +27,7 @@ module TestBench
         elsif value.nil? or negative_pattern.match value
           false
         else
-          raise ArgumentError, %{Invalid boolean value #{value.inspect}; values that are toggled can be set via "on" or "off", "yes" or "no", "y" or "n", or "0" or "1".}
+          invalid_boolean value
         end
       end
 
@@ -36,9 +36,26 @@ module TestBench
       end
 
       def call
+        color
         fail_fast
         quiet
         verbose
+      end
+
+      def color
+        if deactivated? env['TEST_BENCH_COLOR']
+          settings.color = false
+        end
+      end
+
+      def deactivated? value
+        if negative_pattern.match value
+          true
+        elsif value.nil? or affirmative_pattern.match value
+          false
+        else
+          invalid_boolean value
+        end
       end
 
       def env
@@ -49,6 +66,10 @@ module TestBench
         if activated? env['TEST_BENCH_FAIL_FAST']
           settings.fail_fast = true
         end
+      end
+
+      def invalid_boolean value
+        raise ArgumentError, %{Invalid boolean value #{value.inspect}; values that are toggled can be set via "on" or "off", "yes" or "no", "y" or "n", or "0" or "1".}
       end
 
       def negative_pattern

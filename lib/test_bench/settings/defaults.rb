@@ -1,8 +1,8 @@
 module TestBench
   class Settings
     module Defaults
-      def self.child_count
-        1
+      def self.color
+        true
       end
       
       def self.exclude_pattern
@@ -11,10 +11,6 @@ module TestBench
 
       def self.fail_fast
         false
-      end
-
-      def self.internal_log_level
-        'fatal'
       end
     end
   end

@@ -1,6 +1,22 @@
 require_relative './test_init'
 
 context "Settings" do
+  context "Color" do
+    test do
+      settings = TestBench::Settings.new
+
+      settings.color = false
+
+      assert settings.color == false
+    end
+
+    test "Default is on" do
+      settings = TestBench::Settings.new
+
+      assert settings.color == true
+    end
+  end
+
   context "Exclude pattern" do
     test do
       settings = TestBench::Settings.new

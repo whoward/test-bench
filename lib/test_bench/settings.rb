@@ -1,5 +1,6 @@
 module TestBench
   class Settings
+    attr_writer :color
     attr_writer :exclude_pattern
     attr_writer :fail_fast
     attr_writer :output
@@ -8,6 +9,10 @@ module TestBench
       instance = new
       instance.output = Output.instance
       instance
+    end
+
+    def color
+      nil_coalesce :@color, Defaults.color
     end
 
     def exclude_pattern

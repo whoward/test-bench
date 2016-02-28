@@ -1,5 +1,6 @@
 module TestBench
   class Output
+    attr_accessor :color_disabled
     attr_writer :device
     attr_accessor :indentation
     attr_accessor :level
@@ -15,6 +16,12 @@ module TestBench
       instance = new level
       instance.device = $stdout
       instance
+    end
+
+    def color_enabled?
+      return false if color_disabled
+      return true if device.is_a? StringIO
+      device.tty?
     end
 
     def context_entered prose
@@ -43,6 +50,10 @@ module TestBench
 
     def device
       @device ||= StringIO.new
+    end
+
+    def disable_color
+      self.color_disabled = true
     end
 
     def error_raised error
@@ -136,7 +147,7 @@ module TestBench
     end
 
     def write prose, **colors
-      if device.tty? or device.is_a? StringIO
+      if color_enabled?
         prose = Palette.apply prose, **colors
       end
 

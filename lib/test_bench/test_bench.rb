@@ -2,7 +2,10 @@ module TestBench
   include Structure
 
   def self.activate
-    Settings::Environment.(Settings.toplevel)
+    settings = Settings.toplevel
+    Settings::Environment.(settings)
+
+    Output.instance.disable_color unless settings.color
 
     toplevel_binding = TOPLEVEL_BINDING
 
