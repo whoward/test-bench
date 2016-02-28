@@ -21,6 +21,5 @@ require 'test_bench/structure'
 require 'test_bench/telemetry'
 require 'test_bench/telemetry/assertions'
 require 'test_bench/telemetry/registry'
-require 'test_bench/telemetry/serialization'
 
 require 'test_bench/test_bench'

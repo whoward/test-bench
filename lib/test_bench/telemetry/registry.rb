@@ -12,10 +12,6 @@ module TestBench
       def get binding
         registry.get binding
       end
-
-      def set binding, telemetry
-        registry.set binding, telemetry
-      end
     end
   end
 end

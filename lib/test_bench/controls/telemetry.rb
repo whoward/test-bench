@@ -18,21 +18,6 @@ module TestBench
         )
       end
 
-      def self.data file=nil
-        file ||= Path.example
-
-        JSON.generate(
-          :files => [file],
-          :passes => 1,
-          :failures => 1,
-          :skips => 1,
-          :assertions => 11,
-          :errors => 1,
-          :start_time => t0.iso8601(5),
-          :stop_time => t1.iso8601(5),
-        )
-      end
-
       def self.t0
         Clock::Elapsed.t0
       end
