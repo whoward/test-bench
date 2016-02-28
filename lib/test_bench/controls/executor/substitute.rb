@@ -12,8 +12,9 @@ module TestBench
 
         def call telemetry
           added_files.each do |file|
+            telemetry.file_started file
             executed_files << file
-            telemetry.file_executed file
+            telemetry.file_finished file
           end
         end
 

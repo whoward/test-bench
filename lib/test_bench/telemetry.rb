@@ -1,6 +1,7 @@
 module TestBench
   class Telemetry < Struct.new :files, :passes, :failures, :skips, :assertions, :errors, :start_time, :stop_time
     attr_writer :clock
+    attr_writer :output
 
     def self.build
       instance = new [], 0, 0, 0, 0, 0
@@ -33,24 +34,48 @@ module TestBench
       @clock ||= Time
     end
 
+    def context_entered prose
+      output.context_entered prose
+    end
+
+    def context_exited prose
+      output.context_exited prose
+    end
+
     def elapsed_time
       stop_time - start_time
     end
 
-    def error_raised
+    def error_raised error
       self.errors += 1
+      output.error_raised error
     end
 
     def failed?
       not passed?
     end
 
-    def file_executed file
+    def file_finished file
       files << file
+      stopped
+      output.file_finished file, self
+    end
+
+    def file_started file
+      started
+      output.file_finished file, self
+    end
+
+    def output
+      @output ||= Output.new :verbose
     end
 
     def passed?
       failures.zero? and errors.zero?
+    end
+
+    def run_finished
+      output.run_finished self
     end
 
     def started
@@ -61,16 +86,23 @@ module TestBench
       self.stop_time = clock.now
     end
 
-    def test_failed
+    def test_failed prose
       self.failures += 1
+      output.test_failed prose
     end
 
-    def test_passed
+    def test_passed prose
       self.passes += 1
+      output.test_passed prose
     end
 
-    def test_skipped
+    def test_skipped prose
       self.skips += 1
+      output.test_skipped prose
+    end
+
+    def test_started prose
+      output.test_started prose
     end
 
     def tests

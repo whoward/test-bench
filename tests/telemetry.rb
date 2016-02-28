@@ -4,7 +4,7 @@ context "Telemetry" do
   test "Record that a file was executed" do
     telemetry = TestBench::Telemetry.build
 
-    telemetry.file_executed 'some/file.rb'
+    telemetry.file_finished 'some/file.rb'
 
     assert telemetry.files.include? 'some/file.rb'
   end
@@ -12,7 +12,7 @@ context "Telemetry" do
   test "Record that a test passed" do
     telemetry = TestBench::Telemetry.build
 
-    telemetry.test_passed
+    telemetry.test_passed "Some test"
 
     assert telemetry.passes == 1
   end
@@ -20,15 +20,16 @@ context "Telemetry" do
   test "Record that a test failed" do
     telemetry = TestBench::Telemetry.build
 
-    telemetry.test_failed
+    telemetry.test_failed "Some test"
 
     assert telemetry.failures == 1
   end
 
   test "Record that an error was raised" do
     telemetry = TestBench::Telemetry.build
+    error = Controls::Error.example
 
-    telemetry.error_raised
+    telemetry.error_raised error
 
     assert telemetry.errors == 1
   end
@@ -36,7 +37,7 @@ context "Telemetry" do
   test "Record that a test was skipped" do
     telemetry = TestBench::Telemetry.build
 
-    telemetry.test_skipped
+    telemetry.test_skipped "Some test"
 
     assert telemetry.skips == 1
   end

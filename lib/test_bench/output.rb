@@ -43,15 +43,21 @@ module TestBench
       @device ||= StringIO.new
     end
 
-    def file_finished path, telemetry
-      verbose "Finished running #{path}"
+    def error_raised error
+      indent
+      detail_error error
+      deindent
+    end
+
+    def file_finished file, telemetry
+      verbose "Finished running #{file}"
 
       summary = summarize_telemetry telemetry
       verbose summary
     end
 
-    def file_started path
-      normal "Running #{path}"
+    def file_started file
+      normal "Running #{file}"
     end
 
     def indent
@@ -64,12 +70,6 @@ module TestBench
 
     def quiet prose, **colors
       write prose, **colors if level == :quiet
-    end
-
-    def error_raised error
-      indent
-      detail_error error
-      deindent
     end
 
     def run_finished telemetry

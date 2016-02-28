@@ -39,7 +39,7 @@ module TestBench
       begin
         binding.eval test_script, file
       ensure
-        telemetry.file_executed file
+        telemetry.file_finished file
         telemetry.stopped
         telemetry_data = Telemetry.dump telemetry
 

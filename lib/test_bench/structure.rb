@@ -18,7 +18,7 @@ module TestBench
       begin
         block.()
       rescue => error
-        telemetry.error_raised
+        telemetry.error_raised error
 
         exit 1 if settings.fail_fast
       end
@@ -32,8 +32,9 @@ module TestBench
       context prose do
         begin
           block.()
+          telemetry.test_passed prose
         rescue => error
-          telemetry.test_failed
+          telemetry.test_failed prose
           raise error
         end
       end
