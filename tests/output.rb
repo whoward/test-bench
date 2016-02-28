@@ -98,7 +98,7 @@ context "Output" do
     output.test_started "Some test"
 
     assert output do
-      wrote_line? %{Started test "Some test"}
+      wrote_line? %{Started test "Some test"}, :fg => :gray
     end
   end
 
@@ -178,7 +178,7 @@ context "Output" do
 
     test "Run finished" do
       assert output do
-        wrote_line? "Finished running 1 file"
+        wrote_line? "Finished running 1 file", :fg => :cyan
       end
     end
 
@@ -186,7 +186,7 @@ context "Output" do
       control_summary = Controls::Telemetry::Summary.example telemetry
 
       assert output do
-        wrote_line? control_summary
+        wrote_line? control_summary, :fg => :cyan
       end
     end
   end

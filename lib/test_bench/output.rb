@@ -52,11 +52,13 @@ module TestBench
     end
 
     def file_finished file, telemetry
-      verbose "Finished running #{file}"
       normal ' '
 
       summary = summarize_telemetry telemetry
+
+      verbose "Finished running #{file}"
       verbose summary
+      verbose ' '
     end
 
     def file_started file
@@ -94,10 +96,10 @@ module TestBench
     def run_finished telemetry
       files = if telemetry.files.size == 1 then 'file' else 'files' end
 
-      quiet "Finished running #{telemetry.files.size} #{files}"
+      quiet "Finished running #{telemetry.files.size} #{files}", :fg => :cyan
 
       summary = summarize_telemetry telemetry
-      quiet summary
+      quiet summary, :fg => :cyan
     end
 
     def summarize_telemetry telemetry
@@ -126,7 +128,7 @@ module TestBench
     end
 
     def test_started prose
-      verbose "Started test #{prose.inspect}"
+      verbose "Started test #{prose.inspect}", :fg => :gray
     end
 
     def verbose prose, **colors

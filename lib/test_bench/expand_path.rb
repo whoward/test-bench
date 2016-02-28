@@ -11,6 +11,7 @@ module TestBench
 
     def self.build root_directory, exclude_pattern=nil
       exclude_pattern ||= Settings.toplevel.exclude_pattern
+      exclude_pattern = Regexp.new exclude_pattern if exclude_pattern.is_a? String
 
       dir = Dir
 
