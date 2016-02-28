@@ -21,4 +21,6 @@ module TestBench
   Settings::Environment.(Settings.toplevel)
 
   include Structure
+
+  Telemetry.toplevel.output = Output.build
 end

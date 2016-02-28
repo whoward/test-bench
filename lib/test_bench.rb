@@ -1,9 +1,7 @@
 require 'json'
-require 'logger'
 require 'pathname'
 require 'time'
 
-require 'test_bench/internal_logging'
 require 'test_bench/null_object'
 
 require 'test_bench/assert'

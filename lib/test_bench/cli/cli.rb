@@ -2,8 +2,6 @@ module TestBench
   class CLI
     using NullObject::NullAttribute
 
-    include InternalLogging
-
     attr_reader :argv
 
     null_attr :settings
@@ -21,14 +19,7 @@ module TestBench
     end
 
     def call
-      logger.debug "Starting CLI (Arguments: #{argv.inspect})"
-
       option_parser.parse! argv
-
-      logger.debug do
-        settings_text = JSON.pretty_generate settings.to_h
-        "Settings:\n#{settings_text}"
-      end
 
       paths = argv
       paths << 'tests' if paths.empty?
@@ -42,22 +33,7 @@ module TestBench
       puts option_parser.help
       puts
       puts <<-TEXT
-If no paths are specified, #{program_name} runs all files in ./tests. Execution
-can also be controlled additionally via the following environment variables.
-Values that are toggled can be set via "on" or "off", "yes" or "no", "y" or "n",
-or "0" or "1".
-
-    TEST_BENCH_BOOTSTRAP             When active, uses a minimal implementation
-                                     of "assert", "context", and "test" that
-                                     will work even when test-bench itself is
-                                     under test.
-    TEST_BENCH_CHILD_COUNT           Same as --child-count
-    TEST_BENCH_FAIL_FAST             Same as --fail-fast
-    TEST_BENCH_INTERNAL_LOG_LEVEL    Activates and sets the log level for the
-                                     internal logging system. Valid values are
-                                     "data", "trace", "debug", "info", "warn",
-                                     "error" and "fatal". Useful for debugging
-                                     test-bench itself.
+If no paths are specified, #{program_name} runs all files in ./tests.
       TEXT
     end
 

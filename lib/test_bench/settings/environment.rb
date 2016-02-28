@@ -45,7 +45,6 @@ module TestBench
         bootstrap
         child_count
         fail_fast
-        internal_log_level
       end
 
       def child_count
@@ -61,12 +60,6 @@ module TestBench
       def fail_fast
         if activated? env['TEST_BENCH_FAIL_FAST']
           settings.fail_fast = true
-        end
-      end
-
-      def internal_log_level
-        if env.key? 'TEST_BENCH_INTERNAL_LOG_LEVEL'
-          settings.internal_log_level = env['TEST_BENCH_INTERNAL_LOG_LEVEL']
         end
       end
 

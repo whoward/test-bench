@@ -31,16 +31,6 @@ context "Pulling settings from the environment" do
     assert settings.fail_fast == true
   end
 
-  test "Internal log level" do
-    settings = TestBench::Settings.new
-    environment = TestBench::Settings::Environment.build settings,
-      'TEST_BENCH_INTERNAL_LOG_LEVEL' => 'some-level'
-
-    environment.()
-
-    assert settings.internal_log_level == 'some-level'
-  end
-
   context "Boolean interpretation" do
     settings = TestBench::NullObject.new
     environment = TestBench::Settings::Environment.build settings

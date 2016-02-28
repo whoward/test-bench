@@ -4,7 +4,6 @@ module TestBench
     attr_writer :child_count
     attr_writer :exclude_pattern
     attr_writer :fail_fast
-    attr_writer :internal_log_level
 
     def self.build
       instance = new
@@ -26,10 +25,6 @@ module TestBench
       nil_coalesce :@fail_fast, Defaults.fail_fast
     end
 
-    def internal_log_level
-      nil_coalesce :@internal_log_level, Defaults.internal_log_level
-    end
-
     def nil_coalesce ivar, default_value
       if instance_variable_defined? ivar
         instance_variable_get ivar
@@ -43,7 +38,6 @@ module TestBench
         :bootstrap => bootstrap,
         :child_count => child_count,
         :exclude_pattern => exclude_pattern,
-        :internal_log_level => internal_log_level,
         :fail_fast => fail_fast,
       }
     end

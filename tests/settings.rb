@@ -65,22 +65,6 @@ context "Settings" do
     end
   end
 
-  context "Internal log level" do
-    test do
-      settings = TestBench::Settings.new
-
-      settings.internal_log_level = 'some-level'
-
-      assert settings.internal_log_level == 'some-level'
-    end
-
-    test "Default is fatal (least verbose)" do
-      settings = TestBench::Settings.new
-
-      assert settings.internal_log_level == 'fatal'
-    end
-  end
-
   test "Hash representation" do
     settings = TestBench::Settings.new
 
@@ -89,7 +73,6 @@ context "Settings" do
     assert hash[:bootstrap] == settings.bootstrap
     assert hash[:child_count] == settings.child_count
     assert hash[:exclude_pattern] == settings.exclude_pattern
-    assert hash[:internal_log_level] == settings.internal_log_level
     assert hash[:fail_fast] == settings.fail_fast
   end
 end
