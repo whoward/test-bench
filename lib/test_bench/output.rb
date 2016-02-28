@@ -107,11 +107,11 @@ module TestBench
 
       elapsed = String.new
       elapsed << "#{minutes}m" unless minutes.zero?
-      elapsed << "%.3gs" % seconds
+      elapsed << "%.3fs" % seconds
 
       tests = if telemetry.tests == 1 then 'test' else 'tests' end
 
-      "Ran %d #{tests} in #{elapsed} (%.3gs tests/second); %d passed, %d skipped, %d failed" %
+      "Ran %d #{tests} in #{elapsed} (%.3fs tests/second); %d passed, %d skipped, %d failed" %
         [telemetry.tests, telemetry.tests_per_second, telemetry.passes, telemetry.skips, telemetry.failures]
     end
 

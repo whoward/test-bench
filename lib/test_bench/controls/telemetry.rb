@@ -36,7 +36,7 @@ module TestBench
 
           tests_per_second = Rational telemetry.tests, telemetry.elapsed_time
 
-          "Ran %d tests in 1m1.11s (%.3gs tests/second); 1 passed, 1 skipped, %d failed" %
+          "Ran %d tests in 1m1.111s (%.3fs tests/second); 1 passed, 1 skipped, %d failed" %
             [telemetry.tests, tests_per_second, telemetry.failures]
         end
       end

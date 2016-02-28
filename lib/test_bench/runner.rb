@@ -31,9 +31,10 @@ module TestBench
       files = gather_files
       execute files
 
+    ensure
       telemetry.run_finished
 
-      telemetry.passed?
+      return telemetry.passed?
     end
 
     def gather_files
