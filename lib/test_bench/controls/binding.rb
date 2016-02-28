@@ -3,7 +3,7 @@ module TestBench
     module Binding
       def self.example
         mod = Module.new do
-          extend TestBench
+          extend TestBench::Structure
 
           def self.get_binding
             binding

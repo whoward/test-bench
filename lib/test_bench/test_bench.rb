@@ -1,12 +1,8 @@
 module TestBench
-  include Structure
-
   def self.activate
-    toplevel_binding = TOPLEVEL_BINDING
+    TOPLEVEL_BINDING.receiver.extend Structure
 
-    telemetry = Telemetry::Registry.get toplevel_binding
+    telemetry = Telemetry::Registry.get TOPLEVEL_BINDING
     telemetry.output = Output.instance
-
-    toplevel_binding.receiver.extend TestBench
   end
 end

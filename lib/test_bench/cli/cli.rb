@@ -30,8 +30,7 @@ module TestBench
       puts option_parser.help
       puts
       puts <<-TEXT
-If no paths are specified, #{program_name} runs all files in ./tests. The
-following environment variables can also control execution:
+If no paths are specified, #{program_name} runs all files in ./tests. The following environment variables can also control execution:
 
         TEST_BENCH_COLOR           Set color on or off
         TEST_BENCH_FAIL_FAST       Same as -f or --fail-fast
