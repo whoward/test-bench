@@ -136,8 +136,12 @@ module TestBench
     end
 
     def write prose, **colors
-      prose = Palette.apply prose, **colors
+      if device.tty? or device.is_a? StringIO
+        prose = Palette.apply prose, **colors
+      end
+
       prose = "#{'  ' * indentation}#{prose}"
+
       device.puts prose
     end
 

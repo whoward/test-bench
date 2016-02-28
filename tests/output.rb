@@ -198,4 +198,17 @@ context "Output" do
       end
     end
   end
+
+  context "Output is not a tty" do
+    test "Color is disabled" do
+      output = TestBench::Output.new :normal
+      output.device = Tempfile.new
+
+      output.normal 'Some text', :fg => :red
+
+      assert output do
+        wrote_line? 'Some text'
+      end
+    end
+  end
 end
