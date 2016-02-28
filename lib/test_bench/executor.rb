@@ -23,8 +23,8 @@ module TestBench
 
         break if settings.fail_fast and telemetry.failed?
 
-        pid, telemetry_consumer = spawn_process do |telemetry_producer|
-          child_process telemetry_producer, file
+        pid, telemetry_consumer = spawn_process do
+          child_process file
         end
 
         process_map[pid] = telemetry_consumer
@@ -37,7 +37,7 @@ module TestBench
       telemetry.passed?
     end
 
-    def child_process telemetry_producer, file
+    def child_process file
       test_script = file_module.read file
       test_script = "context do; #{test_script}; end"
 
@@ -52,9 +52,6 @@ module TestBench
       ensure
         telemetry.file_finished file
         telemetry.stopped
-        telemetry_data = Telemetry.dump telemetry
-
-        telemetry_producer.write telemetry_data
       end
     end
 
@@ -71,21 +68,24 @@ module TestBench
     end
 
     def spawn_process &block
-      telemetry_producer, telemetry_consumer = IO.pipe
+      telemetry_consumer, telemetry_producer = IO.pipe
 
       child_pid = fork do
-        telemetry_producer.close
+        telemetry_consumer.close
 
         begin
-          block.(telemetry_consumer)
+          block.()
         ensure
-          telemetry_consumer.close unless telemetry_consumer.closed?
+          telemetry_data = Telemetry.dump telemetry
+
+          telemetry_producer.write telemetry_data
+          telemetry_producer.close
         end
       end
 
-      telemetry_consumer.close
+      telemetry_producer.close
 
-      return child_pid, telemetry_producer
+      return child_pid, telemetry_consumer
     end
 
     def wait process_count
