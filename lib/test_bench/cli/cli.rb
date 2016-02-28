@@ -33,6 +33,7 @@ module TestBench
 If no paths are specified, #{program_name} runs all files in ./tests. The
 following environment variables can also control execution:
 
+        TEST_BENCH_COLOR           Set color on or off
         TEST_BENCH_FAIL_FAST       Same as -f or --fail-fast
         TEST_BENCH_QUIET           Same as -q or --quiet
         TEST_BENCH_VERBOSE         Same as -v or --verbose

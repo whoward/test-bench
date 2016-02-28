@@ -2,7 +2,7 @@ module TestBench
   class Settings
     module Defaults
       def self.color
-        true
+        nil
       end
       
       def self.exclude_pattern

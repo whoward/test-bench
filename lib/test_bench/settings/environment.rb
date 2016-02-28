@@ -45,6 +45,8 @@ module TestBench
       def color
         if deactivated? env['TEST_BENCH_COLOR']
           settings.color = false
+        elsif activated? env['TEST_BENCH_COLOR']
+          settings.color = true
         end
       end
 

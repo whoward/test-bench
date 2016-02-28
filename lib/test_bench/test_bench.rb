@@ -5,7 +5,7 @@ module TestBench
     settings = Settings.toplevel
     Settings::Environment.(settings)
 
-    Output.instance.disable_color unless settings.color
+    Output.instance.force_color = settings.color unless settings.color.nil?
 
     toplevel_binding = TOPLEVEL_BINDING
 

@@ -10,10 +10,10 @@ context "Settings" do
       assert settings.color == false
     end
 
-    test "Default is on" do
+    test "Default is nil (autodetect)" do
       settings = TestBench::Settings.new
 
-      assert settings.color == true
+      assert settings.color == nil
     end
   end
 

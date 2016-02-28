@@ -1,6 +1,6 @@
 module TestBench
   class Output
-    attr_accessor :color_disabled
+    attr_accessor :force_color
     attr_writer :device
     attr_accessor :indentation
     attr_accessor :level
@@ -19,7 +19,7 @@ module TestBench
     end
 
     def color_enabled?
-      return false if color_disabled
+      return force_color unless force_color.nil?
       return true if device.is_a? StringIO
       device.tty?
     end
@@ -50,10 +50,6 @@ module TestBench
 
     def device
       @device ||= StringIO.new
-    end
-
-    def disable_color
-      self.color_disabled = true
     end
 
     def error_raised error
