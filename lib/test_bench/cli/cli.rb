@@ -37,6 +37,7 @@ following environment variables can also control execution:
         TEST_BENCH_FAIL_FAST       Same as -f or --fail-fast
         TEST_BENCH_QUIET           Same as -q or --quiet
         TEST_BENCH_VERBOSE         Same as -v or --verbose
+
       TEXT
     end
 
