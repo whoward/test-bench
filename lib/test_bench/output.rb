@@ -29,15 +29,15 @@ module TestBench
     end
 
     def deindent
-      self.indentation -= 1
+      self.indentation -= 1 unless level == :quiet
     end
 
     def detail_error error
       detail_summary = "#{error.backtrace[0]}: #{error.message} (#{error.class})"
 
-      quiet detail_summary, :fg => :white, :bg => :red
+      quiet detail_summary, :fg => :red
       error.backtrace[1..-1].each do |frame|
-        quiet "        from #{frame}", :fg => :white, :bg => :red
+        quiet "        from #{frame}", :fg => :red
       end
     end
 
@@ -66,7 +66,7 @@ module TestBench
     end
 
     def indent
-      self.indentation += 1
+      self.indentation += 1 unless level == :quiet
     end
 
     def lower_verbosity
@@ -116,7 +116,7 @@ module TestBench
     end
 
     def test_failed prose
-      normal prose, :fg => :red
+      normal prose, :fg => :white, :bg => :red
     end
 
     def test_passed prose

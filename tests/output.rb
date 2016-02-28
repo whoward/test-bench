@@ -23,14 +23,21 @@ context "Output" do
       end
     end
 
-    test "Indentation is increased" do
-      output = TestBench::Output.new :normal
+    context "Indentation is increased" do
+      test do
+        output = TestBench::Output.new :normal
 
-      output.context_entered "Outer context"
-      output.context_entered "Inner context"
+        output.context_entered "Some context"
 
-      assert output do
-        wrote_line? "Inner context", :fg => :green, :indent => 1
+        assert output.indentation == 1
+      end
+
+      test "Unless output is in quiet mode" do
+        output = TestBench::Output.new :quiet
+
+        output.context_entered "Some context"
+
+        assert output.indentation == 0
       end
     end
 
@@ -47,11 +54,8 @@ context "Output" do
         output = TestBench::Output.new :normal
 
         output.context_entered nil
-        output.context_entered "Inner context"
 
-        assert output do
-          wrote_line? "Inner context", :fg => :green, :indent => 0
-        end
+        assert output.indentation == 0
       end
     end
   end
@@ -65,15 +69,23 @@ context "Output" do
       assert output, &:wrote_nothing?
     end
 
-    test "Indentation is decreased" do
-      output = TestBench::Output.new :normal
-      output.indentation = 1
+    context "Indentation is decreased" do
+      test do
+        output = TestBench::Output.new :normal
+        output.indentation = 1
 
-      output.context_exited "Some context"
-      output.context_entered "Other context"
+        output.context_exited "Some context"
 
-      assert output do
-        wrote_line? "Other context", :fg => :green, :indent => 0
+        assert output.indentation == 0
+      end
+
+      test "Unless output is in quiet mode" do
+        output = TestBench::Output.new :quiet
+        output.indentation = 1
+
+        output.context_exited "Some context"
+
+        assert output.indentation == 1
       end
     end
 
@@ -118,7 +130,7 @@ context "Output" do
     output.test_failed "Some test"
 
     assert output do
-      wrote_line? "Some test", :fg => :red
+      wrote_line? "Some test", :fg => :white, :bg => :red
     end
   end
 
@@ -135,11 +147,7 @@ context "Output" do
   test "An error was raised" do
     error = Controls::Error.example
     output = TestBench::Output.new :quiet
-    control_text_written = TestBench::Controls::Error.detail(
-      :indent => 1,
-      :fg => :white,
-      :bg => :red,
-    )
+    control_text_written = TestBench::Controls::Error.detail :fg => :red
 
     output.error_raised error
 
