@@ -74,7 +74,12 @@ module TestBench
       failures.zero? and errors.zero?
     end
 
+    def run_started
+      started
+    end
+
     def run_finished
+      stopped
       output.run_finished self
     end
 

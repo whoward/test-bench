@@ -29,13 +29,14 @@ module TestBench
     end
 
     def call
-      telemetry.started
       logger.debug "Running (Start: #{telemetry.start_time.inspect})"
 
-      gather_files
-      execute
+      telemetry.run_started
 
-      telemetry.stopped
+      files = gather_files
+      execute files
+
+      telemetry.run_finished
 
       logger.info "Ran (Start: #{telemetry.start_time.inspect}, Stop: #{telemetry.stop_time.inspect}, Passed: #{telemetry.passed?})"
       telemetry.passed?
@@ -48,19 +49,17 @@ module TestBench
         Array expand_path.(path)
       end
 
-      executor.add *files
-
       logger.info "Gathered files (Paths: #{paths.size}, Files: #{files.size})"
 
       files
     end
 
-    def execute
-      logger.debug "Executing (Executor: #{executor.class.inspect})"
+    def execute files
+      logger.debug "Executing (Executor: #{executor.class.inspect}, Files: #{files.size})"
 
-      executor.(telemetry)
+      executor.(files)
 
-      logger.info "Executed (Executor: #{executor.class.inspect})"
+      logger.info "Executed (Executor: #{executor.class.inspect}, Files: #{files.size})"
     end
   end
 end

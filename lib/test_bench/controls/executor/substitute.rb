@@ -2,19 +2,11 @@ module TestBench
   module Controls
     module Executor
       class Substitute
-        def add *files
-          added_files.concat files
-        end
+        attr_writer :telemetry
 
-        def added_files
-          @added_files ||= []
-        end
-
-        def call telemetry
-          added_files.each do |file|
-            telemetry.file_started file
+        def call files
+          files.each do |file|
             executed_files << file
-            telemetry.file_finished file
           end
         end
 
