@@ -58,7 +58,20 @@ context "Test structure" do
       assert !error.success?
     end
 
-    test "Indentation"
+    test "Indentation" do
+      binding = Controls::Binding.example
+      telemetry = TestBench::Telemetry::Registry.get binding
+
+      binding.eval <<~RUBY, __FILE__, __LINE__
+      context "Outer context" do
+        context "Inner context" do end
+      end
+      RUBY
+
+      assert telemetry.output do
+        wrote_line? 'Inner context', :fg => :green, :indent => 1
+      end
+    end
   end
 
   context "Test" do
@@ -92,6 +105,13 @@ context "Test structure" do
       end
     end
 
-    test "Skipping test"
+    test "Skipping test" do
+      binding = Controls::Binding.example
+      telemetry = TestBench::Telemetry::Registry.get binding
+
+      binding.eval 'test', __FILE__, __LINE__
+
+      assert telemetry.skips == 1
+    end
   end
 end

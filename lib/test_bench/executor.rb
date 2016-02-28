@@ -41,7 +41,9 @@ module TestBench
       test_script = file_module.read file
       test_script = "context do; #{test_script}; end"
 
-      telemetry.output = Output.build if binding.receiver == TOPLEVEL_BINDING.receiver
+      child_telemetry = Telemetry.build
+      child_telemetry.output = telemetry.output
+      Telemetry::Registry.set binding, child_telemetry
 
       telemetry.file_started file
 

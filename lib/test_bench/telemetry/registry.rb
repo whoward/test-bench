@@ -1,20 +1,20 @@
 module TestBench
   class Telemetry
-    class Registry < TestBench::Registry
-      def key binding
-        "#{super}-#{Process.pid}"
+    module Registry
+      extend self
+
+      def registry
+        @registry ||= TestBench::Registry.build do
+          Telemetry.build
+        end
       end
 
-      def self.build
-        new Telemetry
+      def get binding
+        registry.get binding
       end
 
-      def self.instance
-        @instance ||= build
-      end
-
-      def self.get binding
-        instance.get binding
+      def set binding, telemetry
+        registry.set binding, telemetry
       end
     end
   end

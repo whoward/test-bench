@@ -13,17 +13,19 @@ module TestBench
       @paths = paths
     end
 
-    def self.build paths, root_directory
+    def self.build paths, root_directory, exclude_pattern: nil
       instance = new paths
       instance.executor = Executor.build
-      instance.expand_path = ExpandPath.build root_directory
-      instance.telemetry = Telemetry.toplevel
+      instance.expand_path = ExpandPath.build root_directory, exclude_pattern
+      instance.telemetry = Telemetry::Registry.get TOPLEVEL_BINDING
       instance
     end
 
-    def self.call paths, root_directory=nil
+    def self.call paths, root_directory=nil, exclude_pattern: nil
+      paths = Array paths
       root_directory ||= File.dirname caller_locations[0].path
-      instance = build paths, root_directory
+
+      instance = build paths, root_directory, :exclude_pattern => exclude_pattern
       instance.()
     end
 

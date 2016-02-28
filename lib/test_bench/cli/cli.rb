@@ -26,14 +26,20 @@ module TestBench
 
       current_directory = File.expand_path Dir.pwd
 
-      TestBench.runner.(paths, current_directory) or exit 1
+      TestBench::Runner.(paths, current_directory) or exit 1
     end
 
     def help
       puts option_parser.help
       puts
       puts <<-TEXT
-If no paths are specified, #{program_name} runs all files in ./tests.
+If no paths are specified, #{program_name} runs all files in ./tests. The
+following environment variables can also control execution:
+
+        TEST_BENCH_CHILD_COUNT     Same as -n or --child-count
+        TEST_BENCH_FAIL_FAST       Same as -f or --fail-fast
+        TEST_BENCH_QUIET           Same as -q or --quiet
+        TEST_BENCH_VERBOSE         Same as -v or --verbose
       TEXT
     end
 

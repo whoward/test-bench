@@ -2,7 +2,7 @@ module TestBench
   class Output
     attr_writer :device
     attr_accessor :indentation
-    attr_reader :level
+    attr_accessor :level
 
     def initialize level
       @level = level
@@ -67,12 +67,28 @@ module TestBench
       self.indentation += 1
     end
 
+    def lower_verbosity
+      if level == :verbose
+        self.level = :normal
+      elsif level == :normal
+        self.level = :quiet
+      end
+    end
+
     def normal prose, **colors
       write prose, **colors unless level == :quiet
     end
 
     def quiet prose, **colors
       write prose, **colors
+    end
+
+    def raise_verbosity
+      if level == :quiet
+        self.level = :normal
+      elsif level == :normal
+        self.level = :verbose
+      end
     end
 
     def run_finished telemetry
@@ -121,6 +137,10 @@ module TestBench
       prose = Palette.apply prose, **colors
       prose = "#{'  ' * indentation}#{prose}"
       device.puts prose
+    end
+
+    def self.instance
+      @instance ||= build
     end
 
     module Assertions

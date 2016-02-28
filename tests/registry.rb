@@ -7,8 +7,10 @@ context "Registry" do
     end
   end
 
+  factory = cls.method :build
+
   test "The same binding always receives the same instance" do
-    registry = TestBench::Registry.new cls
+    registry = TestBench::Registry.new factory
     binding = Controls::Binding.example
 
     object1 = registry.get binding
@@ -18,7 +20,7 @@ context "Registry" do
   end
 
   test "Different bindings receive different instance" do
-    registry = TestBench::Registry.new cls
+    registry = TestBench::Registry.new factory
     binding1 = Controls::Binding.example
     binding2 = Controls::Binding.example
 

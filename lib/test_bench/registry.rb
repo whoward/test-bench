@@ -1,9 +1,14 @@
 module TestBench
   class Registry
-    attr_reader :cls
+    attr_reader :factory
 
-    def initialize cls
-      @cls = cls
+    def initialize factory
+      @factory = factory
+    end
+
+    def self.build &block
+      factory = block
+      new factory
     end
 
     def key binding
@@ -12,7 +17,7 @@ module TestBench
 
     def get binding
       key = self.key binding
-      table[key]
+      table[key] ||= factory.()
     end
 
     def set binding, value
@@ -21,17 +26,7 @@ module TestBench
     end
 
     def table
-      @table ||= Hash.new do |hash, key|
-        hash[key] = cls.build
-      end
-    end
-
-    def self.instance
-      @instance ||= new
-    end
-
-    def self.get binding
-      instance.get binding
+      @table ||= {}
     end
   end
 end

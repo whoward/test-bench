@@ -1,22 +1,6 @@
 require_relative './test_init'
 
 context "Settings" do
-  context "Bootstrap" do
-    test do
-      settings = TestBench::Settings.new
-
-      settings.bootstrap = true
-
-      assert settings.bootstrap == true
-    end
-
-    test "Default is not activated" do
-      settings = TestBench::Settings.new
-
-      assert settings.bootstrap == false
-    end
-  end
-
   context "Child count" do
     test do
       settings = TestBench::Settings.new
@@ -65,14 +49,21 @@ context "Settings" do
     end
   end
 
-  test "Hash representation" do
-    settings = TestBench::Settings.new
+  context "Adjusting verbosity" do
+    test "Raising" do
+      settings = TestBench::Settings.new
 
-    hash = settings.to_h
+      settings.raise_verbosity
 
-    assert hash[:bootstrap] == settings.bootstrap
-    assert hash[:child_count] == settings.child_count
-    assert hash[:exclude_pattern] == settings.exclude_pattern
-    assert hash[:fail_fast] == settings.fail_fast
+      assert settings.output.level == :verbose
+    end
+
+    test "Lowering" do
+      settings = TestBench::Settings.new
+
+      settings.lower_verbosity
+
+      assert settings.output.level == :quiet
+    end
   end
 end

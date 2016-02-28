@@ -1,16 +1,6 @@
 require_relative '../test_init'
 
 context "Pulling settings from the environment" do
-  test "Bootstrap" do
-    settings = TestBench::Settings.new
-    environment = TestBench::Settings::Environment.build settings,
-      'TEST_BENCH_BOOTSTRAP' => 'on'
-
-    environment.()
-
-    assert settings.bootstrap == true
-  end
-
   test "Child count" do
     settings = TestBench::Settings.new
     environment = TestBench::Settings::Environment.build settings,
@@ -29,6 +19,26 @@ context "Pulling settings from the environment" do
     environment.()
 
     assert settings.fail_fast == true
+  end
+
+  test "Quiet" do
+    settings = TestBench::Settings.new
+    environment = TestBench::Settings::Environment.build settings,
+      'TEST_BENCH_QUIET' => 'on'
+
+    environment.()
+
+    assert settings.output.level == :quiet
+  end
+
+  test "Verbose" do
+    settings = TestBench::Settings.new
+    environment = TestBench::Settings::Environment.build settings,
+      'TEST_BENCH_VERBOSE' => 'on'
+
+    environment.()
+
+    assert settings.output.level == :verbose
   end
 
   context "Boolean interpretation" do

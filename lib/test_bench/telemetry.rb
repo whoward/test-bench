@@ -117,9 +117,5 @@ module TestBench
     def tests_per_second
       Rational tests, elapsed_time
     end
-
-    def self.toplevel
-      Registry.get TOPLEVEL_BINDING
-    end
   end
 end

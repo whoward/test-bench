@@ -1,10 +1,6 @@
 module TestBench
   class Settings
     module Defaults
-      def self.bootstrap
-        false
-      end
-
       def self.child_count
         1
       end

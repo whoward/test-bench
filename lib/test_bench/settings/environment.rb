@@ -35,16 +35,11 @@ module TestBench
         @@affirmative_pattern ||= %r{\A(?:on|yes|y|1)\z}i
       end
 
-      def bootstrap
-        if activated? env['TEST_BENCH_BOOTSTRAP']
-          settings.bootstrap = true
-        end
-      end
-
       def call
-        bootstrap
         child_count
         fail_fast
+        quiet
+        verbose
       end
 
       def child_count
@@ -65,6 +60,20 @@ module TestBench
 
       def negative_pattern
         @@negative_pattern ||= %r{\A(?:off|no|n|0)\z}i
+      end
+
+      def quiet
+        if activated? env['TEST_BENCH_QUIET']
+          settings.lower_verbosity
+          settings.lower_verbosity
+        end
+      end
+
+      def verbose
+        if activated? env['TEST_BENCH_VERBOSE']
+          settings.raise_verbosity
+          settings.raise_verbosity
+        end
       end
     end
   end

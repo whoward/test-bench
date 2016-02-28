@@ -1,26 +1,14 @@
 module TestBench
-  def self.activate receiver=nil
-    receiver ||= TOPLEVEL_BINDING.receiver
-
-    receiver.extend TestBench.mod
-  end
-
-  def self.mod
-    if Settings.toplevel.bootstrap
-      require 'test_bench/bootstrap'
-      TestBench::Bootstrap
-    else
-      self
-    end
-  end
-
-  def self.runner
-    mod.const_get :Runner
-  end
-
-  Settings::Environment.(Settings.toplevel)
-
   include Structure
 
-  Telemetry.toplevel.output = Output.build
+  def self.activate
+    Settings::Environment.(Settings.toplevel)
+
+    toplevel_binding = TOPLEVEL_BINDING
+
+    telemetry = Telemetry::Registry.get toplevel_binding
+    telemetry.output = Output.instance
+
+    toplevel_binding.receiver.extend TestBench
+  end
 end

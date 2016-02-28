@@ -1,16 +1,16 @@
 module TestBench
   class Settings
-    attr_writer :bootstrap
+    using NullObject::NullAttribute
+
     attr_writer :child_count
     attr_writer :exclude_pattern
     attr_writer :fail_fast
+    attr_writer :output
 
     def self.build
       instance = new
-    end
-
-    def bootstrap
-      nil_coalesce :@bootstrap, Defaults.bootstrap
+      instance.output = Output.instance
+      instance
     end
 
     def child_count
@@ -25,6 +25,10 @@ module TestBench
       nil_coalesce :@fail_fast, Defaults.fail_fast
     end
 
+    def lower_verbosity
+      output.lower_verbosity
+    end
+
     def nil_coalesce ivar, default_value
       if instance_variable_defined? ivar
         instance_variable_get ivar
@@ -33,13 +37,12 @@ module TestBench
       end
     end
 
-    def to_h
-      {
-        :bootstrap => bootstrap,
-        :child_count => child_count,
-        :exclude_pattern => exclude_pattern,
-        :fail_fast => fail_fast,
-      }
+    def output
+      @output ||= Output.new :normal
+    end
+
+    def raise_verbosity
+      output.raise_verbosity
     end
 
     def self.toplevel
