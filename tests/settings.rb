@@ -1,22 +1,6 @@
 require_relative './test_init'
 
 context "Settings" do
-  context "Child count" do
-    test do
-      settings = TestBench::Settings.new
-
-      settings.child_count = 2
-
-      assert settings.child_count == 2
-    end
-
-    test "Default is 1" do
-      settings = TestBench::Settings.new
-
-      assert settings.child_count == 1
-    end
-  end
-
   context "Exclude pattern" do
     test do
       settings = TestBench::Settings.new

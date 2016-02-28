@@ -1,16 +1,6 @@
 require_relative '../test_init'
 
 context "Pulling settings from the environment" do
-  test "Child count" do
-    settings = TestBench::Settings.new
-    environment = TestBench::Settings::Environment.build settings,
-      'TEST_BENCH_CHILD_COUNT' => '2'
-
-    environment.()
-
-    assert settings.child_count == 2
-  end
-
   test "Fail fast" do
     settings = TestBench::Settings.new
     environment = TestBench::Settings::Environment.build settings,
@@ -42,7 +32,7 @@ context "Pulling settings from the environment" do
   end
 
   context "Boolean interpretation" do
-    settings = TestBench::NullObject.new
+    settings = TestBench::Settings.new
     environment = TestBench::Settings::Environment.build settings
 
     context "Activated" do

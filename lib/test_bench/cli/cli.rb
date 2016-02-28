@@ -1,10 +1,7 @@
 module TestBench
   class CLI
-    using NullObject::NullAttribute
-
     attr_reader :argv
-
-    null_attr :settings
+    attr_writer :settings
 
     def initialize argv
       @argv = argv
@@ -36,7 +33,6 @@ module TestBench
 If no paths are specified, #{program_name} runs all files in ./tests. The
 following environment variables can also control execution:
 
-        TEST_BENCH_CHILD_COUNT     Same as -n or --child-count
         TEST_BENCH_FAIL_FAST       Same as -f or --fail-fast
         TEST_BENCH_QUIET           Same as -q or --quiet
         TEST_BENCH_VERBOSE         Same as -v or --verbose
@@ -52,10 +48,6 @@ following environment variables can also control execution:
         parser.on '-h', '--help', "Print this help message and exit successfully" do
           help
           exit 0
-        end
-
-        parser.on '-n', '--child-count NUM', "Maximum number of processes to run in parallel" do |number|
-          settings.child_count = Integer(number)
         end
 
         parser.on '-p', '--preload FILE', "Preload FILE before loading test scripts" do |file|
@@ -89,6 +81,10 @@ following environment variables can also control execution:
 
     def program_name
       File.basename $PROGRAM_NAME
+    end
+
+    def settings
+      @settings ||= Settings.new
     end
   end
 end

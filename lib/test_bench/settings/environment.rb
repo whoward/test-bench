@@ -36,16 +36,9 @@ module TestBench
       end
 
       def call
-        child_count
         fail_fast
         quiet
         verbose
-      end
-
-      def child_count
-        if env.key? 'TEST_BENCH_CHILD_COUNT'
-          settings.child_count = Integer(env['TEST_BENCH_CHILD_COUNT'])
-        end
       end
 
       def env

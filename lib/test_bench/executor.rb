@@ -1,20 +1,17 @@
 module TestBench
   class Executor
     attr_reader :binding
-    attr_reader :child_count
     attr_reader :file_module
 
-    def initialize binding, child_count, file_module
+    def initialize binding, file_module
       @binding = binding
-      @child_count = child_count
       @file_module = file_module
     end
 
     def self.build
       binding = TOPLEVEL_BINDING
-      child_count = Settings.toplevel.child_count
 
-      new binding, child_count, File
+      new binding, File
     end
 
     def call files, &block

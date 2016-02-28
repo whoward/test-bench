@@ -7,7 +7,7 @@ context "Executor" do
     binding = Controls::Binding.example
     files = [Controls::FileSubstitute::TestScript::Passing.file]
 
-    executor = TestBench::Executor.new binding, 1, file_module
+    executor = TestBench::Executor.new binding, file_module
     executor.(files)
 
     assert executor.telemetry do
@@ -20,7 +20,7 @@ context "Executor" do
       binding = Controls::Binding.example
       files = [Controls::FileSubstitute::TestScript::Passing.file]
 
-      executor = TestBench::Executor.new binding, 1, file_module
+      executor = TestBench::Executor.new binding, file_module
       result = executor.(files)
 
       assert result == true
@@ -30,7 +30,7 @@ context "Executor" do
       binding = Controls::Binding.example
       files = [Controls::FileSubstitute::TestScript::Error.file]
 
-      executor = TestBench::Executor.new binding, 1, file_module
+      executor = TestBench::Executor.new binding, file_module
       result = executor.(files)
 
       assert result == false
@@ -43,7 +43,7 @@ context "Executor" do
       telemetry = TestBench::Telemetry::Registry.get binding
       files = [Controls::FileSubstitute::TestScript::Passing.file] * 3
 
-      executor = TestBench::Executor.new binding, 1, file_module
+      executor = TestBench::Executor.new binding, file_module
       executor.(files)
 
       assert executor.telemetry.assertions == 3
@@ -54,7 +54,7 @@ context "Executor" do
       telemetry = TestBench::Telemetry::Registry.get binding
       files = [Controls::FileSubstitute::TestScript::Error.file]
 
-      executor = TestBench::Executor.new binding, 1, file_module
+      executor = TestBench::Executor.new binding, file_module
       executor.(files)
 
       assert telemetry.errors == 1

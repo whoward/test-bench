@@ -1,13 +1,9 @@
 module TestBench
   class Runner
-    using NullObject::NullAttribute
-
+    attr_writer :executor
+    attr_writer :expand_path
     attr_reader :paths
     attr_writer :telemetry
-
-    null_attr :executor
-    null_attr :expand_path
-    null_attr :telemetry
 
     def initialize paths
       @paths = paths
@@ -48,6 +44,18 @@ module TestBench
 
     def execute files
       executor.(files)
+    end
+
+    def executor
+      @executor ||= Executor.build
+    end
+
+    def expand_path
+      @expand_path ||= Proc.new do [] end
+    end
+
+    def telemetry
+      @telemetry ||= Telemetry.build
     end
   end
 end

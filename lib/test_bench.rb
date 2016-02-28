@@ -1,8 +1,5 @@
-require 'json'
 require 'pathname'
 require 'time'
-
-require 'test_bench/null_object'
 
 require 'test_bench/assert'
 require 'test_bench/assert/failed'
