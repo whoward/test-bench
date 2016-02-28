@@ -66,7 +66,7 @@ context "Test structure" do
 
       binding.eval 'test "Some test" do end', __FILE__, __LINE__
 
-      assert telemetry.passed?
+      assert telemetry.passes == 1
     end
 
     test "Errors are recorded both as as test failures and errors" do
@@ -79,6 +79,15 @@ context "Test structure" do
       assert telemetry.errors == 1
     end
 
-    test %{Prose defaults to "Test"}
+    test %{Prose defaults to "Test"} do
+      binding = Controls::Binding.example
+      telemetry = TestBench::Telemetry::Registry.get binding
+
+      binding.eval 'test do end', __FILE__, __LINE__
+
+      assert telemetry.output do
+        wrote_line? "Test", :fg => :green
+      end
+    end
   end
 end
