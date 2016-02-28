@@ -76,5 +76,9 @@ module TestBench
     def tests
       failures + passes + skips
     end
+
+    def tests_per_second
+      Rational tests, elapsed_time
+    end
   end
 end

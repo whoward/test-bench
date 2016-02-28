@@ -112,39 +112,82 @@ context "Output" do
     end
   end
 
-  context "Test failed" do
-    method_name = Controls::Error.method_name
+  test "Test failed" do
+    output = TestBench::Output.new :normal
+
+    output.test_failed "Some test"
+
+    assert output do
+      wrote_line? "Some test", :fg => :red
+    end
+  end
+
+  test "Test skipped" do
+    output = TestBench::Output.new :normal
+
+    output.test_skipped "Some test"
+
+    assert output do
+      wrote_line? "Some test", :fg => :yellow
+    end
+  end
+
+  test "An error was raised" do
     error = Controls::Error.example
+    output = TestBench::Output.new :quiet
+    control_text_written = TestBench::Controls::Error.detail(
+      :indent => 1,
+      :fg => :white,
+      :bg => :red,
+    )
 
-    test "Result line" do
-      output = TestBench::Output.new :normal
+    output.error_raised error
 
-      output.test_failed "Some test", error
+    assert output do
+      text_written == control_text_written
+    end
+  end
 
+  context "File has finished being executed" do
+    output = TestBench::Output.new :verbose
+    path = Controls::Path.example
+    telemetry = Controls::Telemetry.example
+
+    output.file_finished path, telemetry
+
+    test "File finished" do
       assert output do
-        wrote_line? "Some test", :fg => :red
+        wrote_line? "Finished running #{path}"
       end
     end
 
-    test "Detailed error backtrace" do
-      output = TestBench::Output.new :quiet
-      control_text_written = TestBench::Controls::Error.detail(
-        :indent => 1,
-        :fg => :white,
-        :bg => :red,
-      )
-
-      output.test_failed "Some test", error
+    test "Telemetry summary" do
+      control_summary = Controls::Telemetry::Summary.example telemetry
 
       assert output do
-        text_written == control_text_written
+        wrote_line? control_summary
       end
     end
   end
 
-  test "Test skipped"
-  test "An error was raised"
-  test "An assertion failed"
-  test "File has finished being executed"
-  test "The run has finished"
+  context "The run has finished" do
+    output = TestBench::Output.new :quiet
+    telemetry = Controls::Telemetry.example
+
+    output.run_finished telemetry
+
+    test "Run finished" do
+      assert output do
+        wrote_line? "Finished running 1 file"
+      end
+    end
+
+    test "Telemetry summary" do
+      control_summary = Controls::Telemetry::Summary.example telemetry
+
+      assert output do
+        wrote_line? control_summary
+      end
+    end
+  end
 end

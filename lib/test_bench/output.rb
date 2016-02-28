@@ -43,6 +43,13 @@ module TestBench
       @device ||= StringIO.new
     end
 
+    def file_finished path, telemetry
+      verbose "Finished running #{path}"
+
+      summary = summarize_telemetry telemetry
+      verbose summary
+    end
+
     def file_started path
       normal "Running #{path}"
     end
@@ -59,16 +66,44 @@ module TestBench
       write prose, **colors if level == :quiet
     end
 
-    def test_failed prose, error
-      normal prose, :fg => :red
-
+    def error_raised error
       indent
       detail_error error
       deindent
     end
 
+    def run_finished telemetry
+      files = if telemetry.files.size == 1 then 'file' else 'files' end
+
+      quiet "Finished running #{telemetry.files.size} #{files}"
+
+      summary = summarize_telemetry telemetry
+      quiet summary
+    end
+
+    def summarize_telemetry telemetry
+      minutes, seconds = telemetry.elapsed_time.divmod 60
+
+      elapsed = String.new
+      elapsed << "#{minutes}m" unless minutes.zero?
+      elapsed << "%.3gs" % seconds
+
+      tests = if telemetry.tests == 1 then 'test' else 'tests' end
+
+      "Ran %d #{tests} in #{elapsed} (%.3gs tests/second); %d passed, %d skipped, %d failed" %
+        [telemetry.tests, telemetry.tests_per_second, telemetry.passes, telemetry.skips, telemetry.failures]
+    end
+
+    def test_failed prose
+      normal prose, :fg => :red
+    end
+
     def test_passed prose
       normal prose, :fg => :green
+    end
+
+    def test_skipped prose
+      normal prose, :fg => :yellow
     end
 
     def test_started prose

@@ -45,6 +45,17 @@ module TestBench
         "1m1.111s"
       end
 
+      module Summary
+        def self.example telemetry=nil
+          telemetry ||= Telemetry.example
+
+          tests_per_second = Rational telemetry.tests, telemetry.elapsed_time
+
+          "Ran %d tests in 1m1.11s (%.3gs tests/second); 1 passed, 1 skipped, %d failed" %
+            [telemetry.tests, tests_per_second, telemetry.failures]
+        end
+      end
+
       module Merged
         def self.example
           files = [Passed.file, Failed.file, Error.file]
