@@ -78,6 +78,7 @@ module TestBench
 
     def run_started
       started
+      publish :run_started
     end
 
     def run_finished
@@ -118,6 +119,11 @@ module TestBench
 
     def tests_per_second
       Rational tests, elapsed_time
+    end
+
+    def self.observe observer
+      toplevel_telemetry = Registry.get TOPLEVEL_BINDING
+      toplevel_telemetry.add_observer observer
     end
   end
 end

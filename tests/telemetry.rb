@@ -90,4 +90,15 @@ context "Telemetry" do
       assert !passed.failed?
     end
   end
+
+  test "Top level telemetry can be observed" do
+    observer = Object.new
+    observer.extend TestBench::Telemetry::Subscriber
+    toplevel_telemetry = TestBench::Telemetry::Registry.get TOPLEVEL_BINDING
+
+    TestBench::Telemetry.observe observer
+    deleted = toplevel_telemetry.delete_observer observer
+
+    assert deleted
+  end
 end
