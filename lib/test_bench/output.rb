@@ -160,10 +160,6 @@ module TestBench
       device.puts prose
     end
 
-    def self.instance
-      @instance ||= build
-    end
-
     module Assertions
       def text_written
         device.rewind

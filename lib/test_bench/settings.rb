@@ -6,7 +6,6 @@ module TestBench
 
     def self.build
       instance = new
-      instance.output = Output.instance
       Settings::Environment.(instance)
       instance
     end
