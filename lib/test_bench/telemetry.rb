@@ -59,7 +59,7 @@ module TestBench
     def file_finished file
       files << file
       stopped
-      publish :file_finished, file, self
+      publish :file_finished, file
     end
 
     def file_started file
@@ -83,7 +83,7 @@ module TestBench
 
     def run_finished
       stopped
-      publish :run_finished, self
+      publish :run_finished
     end
 
     def started

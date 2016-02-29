@@ -6,6 +6,7 @@ module TestBench
     attr_writer :device
     attr_accessor :indentation
     attr_accessor :level
+    attr_writer :telemetry
 
     def initialize level
       @level = level
@@ -60,7 +61,8 @@ module TestBench
       deindent
     end
 
-    def file_finished file, telemetry
+    def file_finished file
+      telemetry ||= self.telemetry
       normal ' '
 
       summary = summarize_telemetry telemetry
@@ -102,7 +104,7 @@ module TestBench
       end
     end
 
-    def run_finished telemetry
+    def run_finished
       files = if telemetry.files.size == 1 then 'file' else 'files' end
 
       quiet "Finished running #{telemetry.files.size} #{files}", :fg => :cyan
@@ -122,6 +124,10 @@ module TestBench
 
       "Ran %d #{tests} in #{elapsed} (%.3fs tests/second); %d passed, %d skipped, %d failed" %
         [telemetry.tests, telemetry.tests_per_second, telemetry.passes, telemetry.skips, telemetry.failures]
+    end
+
+    def telemetry
+      @telemetry ||= Telemetry.build
     end
 
     def test_failed prose

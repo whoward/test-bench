@@ -158,10 +158,10 @@ context "Output" do
 
   context "File has finished being executed" do
     output = TestBench::Output.new :verbose
+    output.telemetry = telemetry = Controls::Telemetry.example
     path = Controls::Path.example
-    telemetry = Controls::Telemetry.example
 
-    output.file_finished path, telemetry
+    output.file_finished path
 
     test "File finished" do
       assert output do
@@ -180,9 +180,9 @@ context "Output" do
 
   context "The run has finished" do
     output = TestBench::Output.new :quiet
-    telemetry = Controls::Telemetry.example
+    output.telemetry = telemetry = Controls::Telemetry.example
 
-    output.run_finished telemetry
+    output.run_finished
 
     test "Run finished" do
       assert output do
