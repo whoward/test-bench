@@ -1,7 +1,8 @@
 module TestBench
   class Telemetry < Struct.new :files, :passes, :failures, :skips, :assertions, :errors, :start_time, :stop_time
+    include Observable
+
     attr_writer :clock
-    attr_writer :output
 
     def self.build
       instance = new [], 0, 0, 0, 0, 0
@@ -35,11 +36,11 @@ module TestBench
     end
 
     def context_entered prose
-      output.context_entered prose
+      publish :context_entered, prose
     end
 
     def context_exited prose
-      output.context_exited prose
+      publish :context_exited, prose
     end
 
     def elapsed_time
@@ -48,7 +49,7 @@ module TestBench
 
     def error_raised error
       self.errors += 1
-      output.error_raised error
+      publish :error_raised, error
     end
 
     def failed?
@@ -58,20 +59,21 @@ module TestBench
     def file_finished file
       files << file
       stopped
-      output.file_finished file, self
+      publish :file_finished, file, self
     end
 
     def file_started file
       started
-      output.file_started file
-    end
-
-    def output
-      @output ||= Output.new :verbose
+      publish :file_started, file
     end
 
     def passed?
       failures.zero? and errors.zero?
+    end
+
+    def publish event, *arguments
+      changed
+      notify_observers event, *arguments
     end
 
     def run_started
@@ -80,7 +82,7 @@ module TestBench
 
     def run_finished
       stopped
-      output.run_finished self
+      publish :run_finished, self
     end
 
     def started
@@ -93,21 +95,21 @@ module TestBench
 
     def test_failed prose
       self.failures += 1
-      output.test_failed prose
+      publish :test_failed, prose
     end
 
     def test_passed prose
       self.passes += 1
-      output.test_passed prose
+      publish :test_passed, prose
     end
 
     def test_skipped prose
       self.skips += 1
-      output.test_skipped prose
+      publish :test_skipped, prose
     end
 
     def test_started prose
-      output.test_started prose
+      publish :test_started, prose
     end
 
     def tests

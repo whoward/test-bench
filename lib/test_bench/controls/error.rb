@@ -12,9 +12,9 @@ module TestBench
         indent = '  ' * indent
 
         <<-TEXT
-#{indent}#{Output::Palette.apply "#{file}:#{line}:in `#{method_name}': #{message} (#{error.class})", **colors}
-#{indent}#{Output::Palette.apply "        from #{file}:#{line + 1}:in `#{method_name}'", **colors}
-#{indent}#{Output::Palette.apply "        from #{file}:#{line + 2}:in `#{method_name}'", **colors}
+#{indent}#{TestBench::Output::Palette.apply "#{file}:#{line}:in `#{method_name}': #{message} (#{error.class})", **colors}
+#{indent}#{TestBench::Output::Palette.apply "        from #{file}:#{line + 1}:in `#{method_name}'", **colors}
+#{indent}#{TestBench::Output::Palette.apply "        from #{file}:#{line + 2}:in `#{method_name}'", **colors}
         TEXT
       end
 

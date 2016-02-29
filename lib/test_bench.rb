@@ -1,5 +1,11 @@
+require 'observer'
 require 'pathname'
 require 'time'
+
+require 'test_bench/telemetry'
+require 'test_bench/telemetry/assertions'
+require 'test_bench/telemetry/registry'
+require 'test_bench/telemetry/subscriber'
 
 require 'test_bench/assert'
 require 'test_bench/assert/failed'
@@ -15,8 +21,5 @@ require 'test_bench/settings/defaults'
 require 'test_bench/settings/environment'
 require 'test_bench/settings/registry'
 require 'test_bench/structure'
-require 'test_bench/telemetry'
-require 'test_bench/telemetry/assertions'
-require 'test_bench/telemetry/registry'
 
 require 'test_bench/test_bench'

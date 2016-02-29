@@ -1,5 +1,7 @@
 module TestBench
   class Output
+    include Telemetry::Subscriber
+
     attr_accessor :force_color
     attr_writer :device
     attr_accessor :indentation

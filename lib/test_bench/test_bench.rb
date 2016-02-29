@@ -3,6 +3,6 @@ module TestBench
     TOPLEVEL_BINDING.receiver.extend Structure
 
     telemetry = Telemetry::Registry.get TOPLEVEL_BINDING
-    telemetry.output = Output.instance
+    telemetry.add_observer Output.instance
   end
 end

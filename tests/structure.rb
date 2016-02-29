@@ -60,7 +60,7 @@ context "Test structure" do
 
     test "Indentation" do
       binding = Controls::Binding.example
-      telemetry = TestBench::Telemetry::Registry.get binding
+      output = Controls::Output.attach binding
 
       binding.eval <<~RUBY, __FILE__, __LINE__
       context "Outer context" do
@@ -68,7 +68,7 @@ context "Test structure" do
       end
       RUBY
 
-      assert telemetry.output do
+      assert output do
         wrote_line? 'Inner context', :fg => :green, :indent => 1
       end
     end
@@ -96,11 +96,11 @@ context "Test structure" do
 
     test %{Prose defaults to "Test"} do
       binding = Controls::Binding.example
-      telemetry = TestBench::Telemetry::Registry.get binding
+      output = Controls::Output.attach binding
 
       binding.eval 'test do end', __FILE__, __LINE__
 
-      assert telemetry.output do
+      assert output do
         wrote_line? "Test", :fg => :green
       end
     end
