@@ -7,8 +7,8 @@ Gem::Specification.new do |s|
   s.homepage = 'https://github.com/ntl/test-bench'
   s.email = 'nathanladd+github@gmail.com'
   s.licenses = %w(MIT)
-  s.summary = "Frugal ruby test framework"
-  s.description = "Test framework designed for code that can be tested effectively without an elaborate test framework."
+  s.summary = "A frugal test framework for ruby"
+  s.description = "Test Bench is a test framework for ruby designed to offer the minimum set of features necessary to test well designed code effectively."
 
   s.executables = ['bench']
   s.bindir = 'bin'

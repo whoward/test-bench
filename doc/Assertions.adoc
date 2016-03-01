@@ -10,11 +10,11 @@ assert x > y
 assert x.some_method(:some_argument)
 ----
 
-This is enough to get started with testing. There are no elaborate matchers or assertion methods that print out exactly what went wrong (see link:Rational.adoc[Rationale]). However, assertions can be made more powerful through assert's block form syntax and assertion modules.
+This is enough to get started. There are no elaborate matchers or assertion methods that print out exactly what went wrong (see link:Rationale.adoc[Rationale]). However, assertions can be made more powerful through assert's block form syntax and assertion modules.
 
 == Block form syntax
 
-+assert+ takes an optional block which, when supplied, changes the way +assert+ operates. Without a block, +assert+ simply expects the value passed in to be "truthy." When a block is passed, the block is evaluated, and _it's_ result is then expected to be "truthy." The argument passed to the block is the argument passed to assert:
++assert+ takes an optional block which, when supplied, changes the way +assert+ operates. Without a block, +assert+ simply expects the value passed in to be "truthy." When a block is passed, the block is evaluated, and _its_ result is then expected to be "truthy." The argument passed to assert is then passed to the block:
 
 [source,ruby]
 ----
@@ -23,7 +23,7 @@ assert "Some test subject" do |subject|
 end
 ----
 
-The argument +subject+ is actually optional; the block is _evaluated_ in the instance context of the test subject, so the above can be rewritten like this:
+The argument +subject+ is actually optional; the block is evaluated in the instance context of the test subject, so the above can be rewritten like this:
 
 [source,ruby]
 ----
@@ -47,7 +47,7 @@ end
 
 == Assertion Modules
 
-When a block is supplied to +assert+, you can extend the test subject with predicate methods useful specific for assertions by passing a +Module+ as the second argument to +assert. For instance, suppose you want to test that a particular piece of text was written to a file:
+You can extend the test subject with predicate methods useful specific for assertions by passing a +Module+ as the second argument to +assert+. Those methods are then available within the supplied block. For instance, suppose you want to test that a particular piece of text was written to a file. Your could define a module that implements a +written?+ predicate, and pass that into +assert+:
 
 [source,ruby]
 ----
@@ -70,7 +70,7 @@ test "File can be written to" do
 end
 ----
 
-As you implement your ruby classes and modules, you can actually place +Assertions+ modules inside your implementations, and Test Bench will detect their presence automatically and +extend+ the modules onto the subject for you!
+You can actually place modules named +Assertions+ within the namespace of your classes and modules, and Test Bench will detect their presence automatically and +extend+ the modules onto the subject for you! Here is an example, where a +done?+ predicate is defined in an +Assertions+ module for +SomeClass+, and then later used to test an instance of +SomeClass+:
 
 [source,ruby]
 ----
@@ -94,13 +94,12 @@ test "Some class" do
   assert object do
     done?
   end
-
-  # Succinctly, via Symbol#to_proc
-  assert object, &:done?
 end
 ----
 
-It is recommended to ship assertion modules with your classes and modules wherever possible. They greatly improve the readability of tests; they are similar to matchers in RSpec, or assertion in Minitest/+test/unit+, but they keep the code specific to a particular class with the namespace of that particular class, rather than sharing a low cohesion namespace with unrelated tenants.
+TIP: The above assertion can be further shortened via +Symbol#to_proc+: +assert object, &:done?+
+
+It is recommended to ship assertion modules with your classes and modules wherever possible. They are conceptually similar to matchers in RSpec, or assertion in Minitest/+test/unit+, but they keep the code specific to a particular class with the namespace of that particular class. In other test frameworks, all the special code to test particular types of objects ends up lumped together with all the other special code for testing other types of objects; this is a cohesion problem. With Test Bench, design principles apply equally to test code.
 
 == Testing Errors
 
