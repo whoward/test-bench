@@ -87,5 +87,15 @@ If no paths are specified, #{program_name} runs all files in ./tests. The follow
     def settings
       @settings ||= Settings.new
     end
+
+    def version
+      spec = Gem.loaded_specs['test_bench']
+
+      if spec
+        spec.version
+      else
+        '(local)'.freeze
+      end
+    end
   end
 end
