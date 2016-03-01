@@ -1,0 +1,57 @@
+Basic Usage
+===========
+
+Test Bench can be used for testing projects as small as a code snippet. Just +require 'test_bench/activate'+ and +assert+, +context+ and +test+ are available.
+
+=== Inline Usage
+
+[source,ruby]
+----
+require 'test_bench/activate'
+
+def fib(n)
+  if n == 2
+    [1, 1]
+  else
+    result = fib(n - 1)
+    result << result[-2] + result[-1]
+    result
+  end
+end
+
+assert fib(3) == [1, 1, 2]
+assert fib(4) == [1, 1, 2, 3]
+----
+
+If you only +require 'test_bench'+ without the +activate+ bit, then the +test_bench+ library will be loaded, but the global context (e.g. +main+) will not have +context+, +test+, and +assert+ monkeypatched onto it.
+
+=== Using Test Bench for a larger project
+
+Larger projects can be set up to use Test Bench easily. Simply define a test initialization file (often called +test_helper.rb+ by ruby projects) and issue the +require 'test_bench/activate'+ there:
+
+[source,ruby]
+----
+require 'test_bench/activate'
+
+# Assuming you can load your project by requiring lib/my_project
+lib_dir = File.expand_path '../lib', __dir__
+$LOAD_PATH.unshift lib_dir unless $LOAD_PATH.include? lib_dir
+require 'my_project'
+----
+
+Then, just define test files that require the test initializer:
+
+[source,ruby]
+----
+require_relative './test_helper'
+
+context "My context" do
+  test "Some test" do
+    assert true
+  end
+end
+----
+
+=== Using the +bench+ binary
+
+Test Bench ships with an executable, +bench+. You can view its options by invoking +bench -h+. If you've placed your test files under +tests+, then +bench+ by itself will run all your tests for you. Otherwise, you can pass the directory that contains your tests, e.g. +bench ./spec+

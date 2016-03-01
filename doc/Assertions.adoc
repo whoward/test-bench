@@ -1,0 +1,107 @@
+Assertions
+==========
+
+Test Bench offers a fairly simple but flexible implementation of +assert+. The easiest way to use +assert+ is to simply pass it a single positional parameter that you expect won't be +nil+ or +false+:
+
+[source,ruby]
+----
+assert x == y
+assert x > y
+assert x.some_method(:some_argument)
+----
+
+This is enough to get started with testing. There are no elaborate matchers or assertion methods that print out exactly what went wrong (see link:Rational.adoc[Rationale]). However, assertions can be made more powerful through assert's block form syntax and assertion modules.
+
+== Block form syntax
+
++assert+ takes an optional block which, when supplied, changes the way +assert+ operates. Without a block, +assert+ simply expects the value passed in to be "truthy." When a block is passed, the block is evaluated, and _it's_ result is then expected to be "truthy." The argument passed to the block is the argument passed to assert:
+
+[source,ruby]
+----
+assert "Some test subject" do |subject|
+  subject == "Some test subject"
+end
+----
+
+The argument +subject+ is actually optional; the block is _evaluated_ in the instance context of the test subject, so the above can be rewritten like this:
+
+[source,ruby]
+----
+assert "Some test subject" do
+  self == "Some test subject"
+end
+----
+
+In this way, you can pass the test subject itself into +assert+:
+
+[source,ruby]
+----
+test "Any number plus zero equals the number" do
+  number = 42
+
+  assert number do
+    (self + 0) == num
+  end
+end
+----
+
+== Assertion Modules
+
+When a block is supplied to +assert+, you can extend the test subject with predicate methods useful specific for assertions by passing a +Module+ as the second argument to +assert. For instance, suppose you want to test that a particular piece of text was written to a file:
+
+[source,ruby]
+----
+module WrittenPredicate
+  def written?(expected_text)
+    self.rewind
+    actual_text = read
+    actual_text == expected_text
+  end
+end
+
+test "File can be written to" do
+  file = Tempfile.new
+
+  file.write "Some text"
+
+  assert file, WrittenPredicate do
+    written? "Some text"
+  end
+end
+----
+
+As you implement your ruby classes and modules, you can actually place +Assertions+ modules inside your implementations, and Test Bench will detect their presence automatically and +extend+ the modules onto the subject for you!
+
+[source,ruby]
+----
+class SomeClass
+  def do_it
+    @done = true
+  end
+
+  module Assertions
+    def done?
+      @done
+    end
+  end
+end
+
+test "Some class" do
+  object = SomeClass.new
+
+  object.do_it
+
+  assert object do
+    done?
+  end
+
+  # Succinctly, via Symbol#to_proc
+  assert object, &:done?
+end
+----
+
+It is recommended to ship assertion modules with your classes and modules wherever possible. They greatly improve the readability of tests; they are similar to matchers in RSpec, or assertion in Minitest/+test/unit+, but they keep the code specific to a particular class with the namespace of that particular class, rather than sharing a low cohesion namespace with unrelated tenants.
+
+== Testing Errors
+
+Now that assertion modules are clear, the approach for testing errors using Test Bench can be demonstrated. Test Bench actually provides an assertion module for +Proc+ which defines a predicate method, +raises_error?+. This method can accept an optional argument that, when specified, corresponds to the exact class you are expecting the +Proc+ to raise. If no argument is specified, then the predicate method returns true if any exception of type +StandardError+ or its descendants is raised.
