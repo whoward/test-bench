@@ -105,12 +105,15 @@ module TestBench
     end
 
     def run_finished
-      files = if telemetry.files.size == 1 then 'file' else 'files' end
+      files_label = if telemetry.files.size == 1 then 'file' else 'files' end
 
-      quiet "Finished running #{telemetry.files.size} #{files}", :fg => :cyan
+      quiet "Finished running #{telemetry.files.size} #{files_label}"
 
       summary = summarize_telemetry telemetry
-      quiet summary, :fg => :cyan
+
+      color = if telemetry.passed? then :cyan else :red end
+
+      quiet summary, :fg => color
     end
 
     def summarize_telemetry telemetry
@@ -120,10 +123,11 @@ module TestBench
       elapsed << "#{minutes}m" unless minutes.zero?
       elapsed << "%.3fs" % seconds
 
-      tests = if telemetry.tests == 1 then 'test' else 'tests' end
+      test_label = if telemetry.tests == 1 then 'test' else 'tests' end
+      error_label = if telemetry.errors == 1 then 'error' else 'errors' end
 
-      "Ran %d #{tests} in #{elapsed} (%.3fs tests/second); %d passed, %d skipped, %d failed" %
-        [telemetry.tests, telemetry.tests_per_second, telemetry.passes, telemetry.skips, telemetry.failures]
+      "Ran %d #{test_label} in #{elapsed} (%.3fs tests/second); %d passed, %d skipped, %d failed, %d #{error_label}" %
+        [telemetry.tests, telemetry.tests_per_second, telemetry.passes, telemetry.skips, telemetry.failures, telemetry.errors]
     end
 
     def telemetry

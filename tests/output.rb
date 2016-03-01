@@ -158,7 +158,7 @@ context "Output" do
 
   context "File has finished being executed" do
     output = TestBench::Output.new :verbose
-    output.telemetry = telemetry = Controls::Telemetry.example
+    output.telemetry = telemetry = Controls::Telemetry::Passed.example
     path = Controls::Path.example
 
     output.file_finished path
@@ -179,22 +179,41 @@ context "Output" do
   end
 
   context "The run has finished" do
-    output = TestBench::Output.new :quiet
-    output.telemetry = telemetry = Controls::Telemetry.example
+    context "Passing" do
+      output = TestBench::Output.new :quiet
+      output.telemetry = telemetry = Controls::Telemetry::Passed.example
 
-    output.run_finished
+      output.run_finished
 
-    test "Run finished" do
-      assert output do
-        wrote_line? "Finished running 1 file", :fg => :cyan
+      test "Top line" do
+        assert output do
+          wrote_line? "Finished running 1 file"
+        end
+      end
+
+      test "Summary" do
+        control_summary = Controls::Telemetry::Summary.example telemetry
+
+        output.run_finished
+
+        assert output do
+          wrote_line? control_summary, :fg => :cyan
+        end
       end
     end
 
-    test "Telemetry summary" do
-      control_summary = Controls::Telemetry::Summary.example telemetry
+    context "Failing" do
+      output = TestBench::Output.new :quiet
+      output.telemetry = telemetry = Controls::Telemetry::Failed.example
 
-      assert output do
-        wrote_line? control_summary, :fg => :cyan
+      output.run_finished
+
+      test "Summary" do
+        control_summary = Controls::Telemetry::Summary.example telemetry
+
+        assert output do
+          wrote_line? control_summary, :fg => :red
+        end
       end
     end
   end
