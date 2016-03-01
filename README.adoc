@@ -133,4 +133,6 @@ Test Bench ships with an executable, +bench+. You can view its options by invoki
 
 === License
 
-Test Bench is licensed under the MIT license.
+Test Bench is licensed under the link:doc/MIT-License.txt[MIT license].
+
+Copyright © Nathan Ladd
