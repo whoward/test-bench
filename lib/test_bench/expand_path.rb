@@ -15,7 +15,7 @@ module TestBench
 
       dir = Dir
 
-      root_directory = Pathname(root_directory)
+      root_directory = Pathname root_directory
 
       instance = new root_directory, dir
       instance.exclude_pattern = exclude_pattern
@@ -38,12 +38,11 @@ module TestBench
 
     def expand full_pattern
       dir[full_pattern].flat_map do |file|
-        pathname = Pathname.new file
-        pathname = pathname.relative_path_from root_directory
-
-        path = pathname.to_s
-
-        if exclude_pattern.match path then [] else [path] end
+        if exclude_pattern.match file
+          []
+        else
+          [file]
+        end
       end
     end
   end

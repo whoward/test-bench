@@ -9,7 +9,11 @@ context "Expanding a path into a set of files" do
 
     files = expand_path.('**/*.rb')
 
-    assert files == %w(some/path/1.rb some/path/2.rb other/path.rb)
+    assert files == %w(
+      /root/some/path/1.rb
+      /root/some/path/2.rb
+      /root/other/path.rb
+    )
   end
 
   test "Exclude pattern" do
@@ -21,6 +25,6 @@ context "Expanding a path into a set of files" do
 
     files = expand_path.('**/*.rb')
 
-    assert files == %w(some/path/1.rb some/path/2.rb)
+    assert files == %w(/root/some/path/1.rb /root/some/path/2.rb)
   end
 end
