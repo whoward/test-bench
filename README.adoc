@@ -3,76 +3,9 @@ Test Bench
 
 Test Bench is a test framework for ruby designed to offer the minimum set of features necessary to test well designed code effectively. There are no hooks for test setup, teardown, defining variables, sharing tests, custom reporters, or plugins. There is no mocking library. There is but one output format, inspired by RSpec's original output. There is no DSL in play that resembles human language. There are no matchers or a large bank of esoteric assertions you will probably never use. In fact, there are only three methods: +assert+, +test+, and +context+.
 
-== Rationale
+== Why?
 
-There are already numerous test frameworks for ruby, but Test Bench offers something quite different. Test Bench has a very small API with few methods or method parameters to learn. No mocking library is provided; you are expected to construct your own doubles and substitute them for dependencies. Test files are structured using +context+ and +test+ -- which are analogous to +describe+ or +context+ and +specify+ or +it+, respectively, from RSpec or +minitest/spec+. +assert+ is very simple method; no elaborate matchers are provided to output assertion failure messages. Additionally, the test files are executed as they are loaded in a single pass. Finally, the output format breaks from the standard "green dots" common to other test frameworks; the prose included in +context+ and +test+ blocks are written to +stdout+ with their nesting intact. These design choices are ~rationalized~ explained in detail below.
-
-=== No Mocking Necessary
-
-There are generally two reasons to pass in a test double to a test subject; to prevent the test subject from triggering behavior on a "real" dependency, and to verify that the test subject's interaction with the dependency in isolation. In both cases, either pure null objects or specialized substitutes that mimic the dependency are preferred to a mock. Mocks bind to the actual method calls of the dependency, causing test code to couple to implementation details. Specialized substitutes can act as test doubles, but expose their own interface for querying their state. For instance, a substitute for a payment processor can implement a method named +charged?(amount)+ that returns true if a certain amount was charged. The implementation of the substitute can then be updated along with the implementation of the payment processor without necessitating pervasive changes to mocks.
-
-The approach can be seen in the test suite for Test Bench itself; no mocks are used. Just dependency inversion and substitution.
-
-=== Simple Test Structure
-
-Test files can be arranged by +context+ and +test+ blocks:
-
-[source,ruby]
-----
-context "Arithmetic" do
-  context "Multiplication" do
-    test "Anything multiplied by zero is zero" do
-      # ...
-    end
-  end
-end
-----
-
-The purpose of +context+ is to narrow the scope of what is being tested. No sentences need be constructed by conjoining the prose supplied to the various +context+ and +test+ blocks. The output indents the nested blocks to enable human review of the prose:
-
-----
-# ruby tests/arithmetic.rb
-Arithmetic
-  Multiplication
-    Anything multiplied by zero is zero
-----
-
-This is quite similar to +describe+ and +context+ in RSpec, but without any pretense of being suitable for actually composing human language sentences.
-
-=== Just Assert
-
-Unlike RSpec, which offers an API for defining custom matchers, and +test/unit+ and Minitest, which offer many different assertion methods designed to format errors for easy human readability, Test Bench simply ships with +assert+. This is intentional; while detailed error output is useful when working on a test, the output is often confusing down the road when the code under test regresses. This is because a matcher output will inevitably leak implementation details of the test itself, which are not at all apparent when the user is not operating within the context of the implementation.
-
-Similarly, +refute+ (e.g. "assert not") is not supplied, either. In practice, programmers often frequently choose `assert x != y` over `refute x == y`. In practice, this variability negates a lot of the clarity that +refute+ offers. It may be a nice to have, but it is also very easy to live without. Test Bench's design goal is to only offer the essentials.
-
-One feature that Test Bench offers is the ability to extend modules that define _customized_ assertion predicates on test subjects. This is discussed later in this document.
-
-=== Single Pass Execution
-
-Test Bench does not load all the files containing tests and _then_ run them. Instead, it runs the test files as they are loaded. This greatly simplifies the framework at the expense of some potentially valuable features. Principally, this means that test order cannot be randomized within a single file. Test order randomization is a valid and valuable countermeasure against writing implementations or tests that couple to global state. However, avoiding global state and temporal coupling is a skill that can be learned over time. The trade off is that the behavior of a test file is extremely easy to follow; there is no `let`, `setup`, or any other hooks into the test lifecycle because the lifecycle never deviates from the flow of the test. There is _one_ way to share data across tests, and that is to leverage the closures provided naturally by +context+ blocks:
-
-[source,ruby]
-----
-context "Addition" do
-  number = 1
-
-  test "Adding zero returns the number" do
-    result = number + 0
-    assert result == number
-  end
-
-  test "Adding one returns one plus the number" do
-    result = number + 1
-    assert result == 2
-  end
-end
-----
-
-Of course, +let+ offers the ability to only load the value when it is dereferenced. However, this "feature" in practice often leads to extremely confusing test files.
-
-=== Output
-
-There is a single output format for Test Bench, and it resembles RSpec's original spec output. The intention is to enable human review of the prose that is used to describe the tests and contexts. In practice, green dots offer absolutely no useful information, and they obscure all that prose, which tends to lead to bizarre test descriptions that remain unchanged even as implementation drifts.
+See link:doc/Rationale.adoc[Rationale]
 
 == Basic Usage
 
