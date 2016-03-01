@@ -1,5 +1,8 @@
 module TestBench
   def self.activate
+    # TestBench.activate can be called multiple times
+    return if TOPLEVEL_BINDING.receiver.is_a? Structure
+
     # "Monkeypatch" assert, context, and test onto the main object
     TOPLEVEL_BINDING.receiver.extend Structure
 
