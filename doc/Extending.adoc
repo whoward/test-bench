@@ -15,8 +15,8 @@ module MyPlugin
       puts "About to run a test"
     end
 
-    def test_finished
-      puts "Just finished running a test"
+    def test_finished(test_title)
+      puts "Just finished running a test: #{test_title}"
     end
   end
 end
