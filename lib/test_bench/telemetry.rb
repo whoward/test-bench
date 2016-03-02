@@ -125,9 +125,13 @@ module TestBench
       Rational tests, elapsed_time
     end
 
-    def self.observe observer
+    def self.subscribe subscriber
+      subscription = Subscription.new subscriber
+
       toplevel_telemetry = Registry.get TOPLEVEL_BINDING
-      toplevel_telemetry.add_observer observer
+      toplevel_telemetry.add_observer subscription
+
+      subscription
     end
   end
 end

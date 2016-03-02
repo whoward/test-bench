@@ -5,7 +5,7 @@ require 'time'
 require 'test_bench/telemetry'
 require 'test_bench/telemetry/assertions'
 require 'test_bench/telemetry/registry'
-require 'test_bench/telemetry/subscriber'
+require 'test_bench/telemetry/subscription'
 
 require 'test_bench/assert'
 require 'test_bench/assert/failed'

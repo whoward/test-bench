@@ -91,12 +91,12 @@ context "Telemetry" do
     end
   end
 
-  test "Top level telemetry can be observed" do
-    observer = Object.new
-    observer.extend TestBench::Telemetry::Subscriber
-    toplevel_telemetry = TestBench::Telemetry::Registry.get TOPLEVEL_BINDING
+  test "Top level telemetry can be subscribed to" do
+    subscriber = Object.new
 
-    TestBench::Telemetry.observe observer
+    observer = TestBench::Telemetry.subscribe subscriber
+
+    toplevel_telemetry = TestBench::Telemetry::Registry.get TOPLEVEL_BINDING
     deleted = toplevel_telemetry.delete_observer observer
 
     assert deleted

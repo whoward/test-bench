@@ -16,8 +16,8 @@ module TestBench
 
     # Telemetry pushes updates to output for display, and output reads telemetry
     # for summary data (e.g. tests per second, number of failures, etc.)
+    Telemetry.subscribe output
     telemetry = Telemetry::Registry.get TOPLEVEL_BINDING
-    telemetry.add_observer output
     output.telemetry = telemetry
   end
 end

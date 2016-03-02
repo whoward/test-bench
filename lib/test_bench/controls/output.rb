@@ -6,8 +6,10 @@ module TestBench
 
         output = TestBench::Output.new level
 
+        subscription = TestBench::Telemetry::Subscription.new output
+
         telemetry = TestBench::Telemetry::Registry.get binding
-        telemetry.add_observer output
+        telemetry.add_observer subscription
 
         output
       end
