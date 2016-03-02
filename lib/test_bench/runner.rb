@@ -31,13 +31,7 @@ module TestBench
       files = gather_files
       execute files
 
-    rescue SystemExit => system_exit
-
-    ensure
       telemetry.run_finished
-
-      raise system_exit if system_exit
-
       return telemetry.passed?
     end
 
