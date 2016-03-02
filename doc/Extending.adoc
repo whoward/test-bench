@@ -27,21 +27,21 @@ subscriber = MyPlugin::TelemetrySubscription.new
 There are many events written to telemetry. Many include an optional argument, which you can access by simply adding a positional argument to your subscriber's event handler method. Here is a list:
 
 [options="header"]
-|====================================================================================|
-| *Event*           | *Description*                         | *Argument*             |
-| +context_entered+ | A +context+ block was entered         | Context title/prose    |
-| +context_exited+  | A +context+ block was exited          | Context title/prose    |
-| +error_raised+    | An error was just raised              | The +Exception+ object |
-| +file_started+    | One file is about to be executed      | Filename               |
-| +file_finished+   | One file just finished being executed | Filename               |
-| +run_started+     | The entire test run is about to start | (none)                 |
-| +run_finished+    | The entire test run just finished     | (none)                 |
-| +test_started+    | A test is about to be executed        | Test title/prose       |
-| +test_finished+   | A test just finished being executed   | Test title/prose       |
-| +test_passed+     | A test just passed                    | Test title/prose       |
-| +test_failed+     | A test just failed                    | Test title/prose       |
-| +test_skipped+    | A test was just skipped               | Test title/prose       |
-|====================================================================================|
+|=============================================================================
+| *Event*           | *Description*                         | *Argument*
+| +context_entered+ | A +context+ block was entered         | Context title/prose
+| +context_exited+  | A +context+ block was exited          | Context title/prose
+| +error_raised+    | An error was just raised              | The +Exception+ object
+| +file_started+    | One file is about to be executed      | Filename
+| +file_finished+   | One file just finished being executed | Filename
+| +run_started+     | The entire test run is about to start | (none)
+| +run_finished+    | The entire test run just finished     | (none)
+| +test_started+    | A test is about to be executed        | Test title/prose
+| +test_finished+   | A test just finished being executed   | Test title/prose
+| +test_passed+     | A test just passed                    | Test title/prose
+| +test_failed+     | A test just failed                    | Test title/prose
+| +test_skipped+    | A test was just skipped               | Test title/prose
+|=============================================================================
 
 === Attaching a Subscriber to Telemetry
 
