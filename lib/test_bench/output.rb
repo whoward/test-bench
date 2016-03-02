@@ -35,7 +35,10 @@ module TestBench
     end
 
     def context_exited prose
-      deindent if prose
+      if prose
+        deindent
+        normal ' ' if indentation.zero?
+      end
     end
 
     def deindent
@@ -63,7 +66,6 @@ module TestBench
 
     def file_finished file
       telemetry ||= self.telemetry
-      normal ' '
 
       summary = summarize_telemetry telemetry
 
