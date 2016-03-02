@@ -99,6 +99,10 @@ module TestBench
       publish :test_failed, prose
     end
 
+    def test_finished prose
+      publish :test_finished, prose
+    end
+
     def test_passed prose
       self.passes += 1
       publish :test_passed, prose

@@ -45,6 +45,9 @@ module TestBench
       rescue => error
         telemetry.test_failed prose
         Structure.error error, binding
+
+      ensure
+        telemetry.test_finished prose
       end
     end
 
