@@ -69,7 +69,8 @@ module TestBench
 
       verbose "Finished running #{file}"
       verbose summary
-      verbose ' '
+
+      normal ' '
     end
 
     def file_started file
@@ -125,8 +126,7 @@ module TestBench
 
       test_label = if telemetry.tests == 1 then 'test' else 'tests' end
       error_label = if telemetry.errors == 1 then 'error' else 'errors' end
-
-      "Ran %d #{test_label} in #{elapsed} (%.3fs tests/second); %d passed, %d skipped, %d failed, %d #{error_label}" %
+      "Ran %d #{test_label} in #{elapsed} (%.3fs tests/second)\n%d passed, %d skipped, %d failed, %d #{error_label}" %
         [telemetry.tests, telemetry.tests_per_second, telemetry.passes, telemetry.skips, telemetry.failures, telemetry.errors]
     end
 
