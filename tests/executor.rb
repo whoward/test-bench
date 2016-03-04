@@ -60,4 +60,17 @@ context "Executor" do
       assert telemetry.errors == 1
     end
   end
+
+  context "Files that include an __END__ part" do
+    test do
+      file_module.file_map['/end.rb'] = '__END__'
+
+      binding = Controls::Binding.example
+      executor = TestBench::Executor.new binding, file_module
+
+      result = executor.(['/end.rb'])
+
+      assert result == true
+    end
+  end
 end

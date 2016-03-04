@@ -25,12 +25,14 @@ module TestBench
 
     def execute file
       test_script = file_module.read file
-      test_script = "context do; #{test_script}; end"
 
       telemetry.file_started file
 
       begin
-        binding.eval test_script, file
+        binding.receiver.context do
+          binding.eval test_script, file
+        end
+
       ensure
         telemetry.file_finished file
         telemetry.stopped
