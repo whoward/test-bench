@@ -69,8 +69,7 @@ module TestBench
 
       verbose "Finished running #{file}"
       verbose summary
-
-      normal ' '
+      verbose ' '
     end
 
     def file_started file
