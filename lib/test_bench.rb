@@ -1,5 +1,6 @@
 require 'observer'
 require 'pathname'
+require 'stringio'
 require 'time'
 
 require 'test_bench/telemetry'
