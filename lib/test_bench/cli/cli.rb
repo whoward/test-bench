@@ -51,16 +51,6 @@ If no paths are specified, #{program_name} runs all files in ./tests. The follow
           exit 0
         end
 
-        parser.on '-p', '--preload FILE', "Preload FILE before loading test scripts" do |file|
-          file = File.expand_path file
-
-          current_path = Pathname.new __dir__
-          file_path = Pathname.new file
-
-          relative_path = file_path.relative_path_from current_path
-          require_relative relative_path
-        end
-
         parser.on '-q', '--quiet', "Lower verbosity level" do
           settings.lower_verbosity
         end
