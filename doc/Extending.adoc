@@ -3,7 +3,7 @@ Extending Test Bench (Plugins)
 
 Test Bench offers an API for writing plugins. Internally, Test Bench records all telemetry that goes on during a test run. Plugins are written as subscribers of that telemetry.
 
-=== Defining a Sbuscriber
+=== Defining a Subscriber
 
 Any object can subscribe to telemetry, it just needs to implement methods that correspond to telemetry events. Here is an example of a subscriber that hooks in to the lifecycle of each test:
 
