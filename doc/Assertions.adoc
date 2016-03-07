@@ -105,4 +105,19 @@ It is recommended to ship assertion modules with your classes and modules wherev
 
 Now that assertion modules are clear, the approach for testing errors using Test Bench can be demonstrated. Test Bench actually provides an assertion module for +Proc+ which defines a predicate method, +raises_error?+. This method can accept an optional argument that, when specified, corresponds to the exact class you are expecting the +Proc+ to raise. If no argument is specified, then the predicate method returns true if any exception of type +StandardError+ or its descendants is raised.
 
+[source,ruby]
+----
+test "Expect a particular error type to be raised" do
+  assert proc { nil.some_method } do
+    raises_error? NoMethodError
+  end
+end
+
+test "Expect any error type to be raised" do
+  assert proc { nil.some_method } do
+    raises_error?
+  end
+end
+----
+
 **Next**: link:Extending.adoc[Extending]
