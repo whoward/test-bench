@@ -43,6 +43,8 @@ Similarly, +refute+ (e.g. "assert not") is also not supplied. +refute+ does read
 
 One feature offered by Test Bench's assertion mechanism is the ability to extend modules that define _customized_ assertion predicates on test subjects. This is discussed in detail in the link:Assertions.adoc[assertions] guide.
 
+It is possible that in the future link:https://github.com/k-tsj/power_assert[Power Assert] will be integrated to offer improved assertion failure output messages.
+
 === Single Pass Execution
 
 Test Bench does not load all the files containing tests and _then_ run them. Instead, it runs the test files as they are loaded. This greatly simplifies the framework at the expense of some potentially valuable features. Principally, this means that test order cannot be randomized within a single file. Test order randomization is a valid and valuable countermeasure against writing implementations or tests that couple to global state. However, avoiding global state and temporal coupling is also a skill that can be learned over time. In exchange for deterministic ordering, the behavior of a test file under Test Bench is extremely easy to follow; there is no `let`, `setup`, or any other hooks into the test lifecycle because there is no test lifecycle apart from the flow of the test. There is _one_ way to share data across tests, and that is to leverage the closures provided naturally by +context+ blocks. See below, where +number+ is shared across two tests:
