@@ -33,7 +33,7 @@ Arithmetic
     Anything multiplied by zero is zero
 ----
 
-This is quite similar to +describe+ and +context+ in RSpec, but without any pretense of being suitable for actually composing human language sentences.
+This is quite similar to +describe+ and +context+ in RSpec, but without any intention of being used for actually connecting the prose into sentences. In addition, the blocks don't also perform the double duty of providing hooks for altering the tests defined within the block. Data can be shared across tests naturally by simply leveraging the closure provided by the blocks.
 
 === Just Assert
 
