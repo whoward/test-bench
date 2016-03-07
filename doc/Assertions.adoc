@@ -45,6 +45,8 @@ test "Any number plus zero equals the number" do
 end
 ----
 
+In some cases, the block form syntax will help make the test clearer by separating the test subject from the assertion itself. In other cases, it will add unnecessary confusion. Be tasteful.
+
 == Assertion Modules
 
 You can extend the test subject with predicate methods useful specific for assertions by passing a +Module+ as the second argument to +assert+. Those methods are then available within the supplied block. For instance, suppose you want to test that a particular piece of text was written to a file. Your could define a module that implements a +written?+ predicate, and pass that into +assert+:
