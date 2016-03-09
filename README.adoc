@@ -10,6 +10,55 @@ Test Bench is a test framework for ruby designed to offer the minimum set of fea
 1. link:doc/Assertions.adoc[Assertions]
 1. link:doc/Extending.adoc[Extending Test Bench (Plugins)]
 
+=== Quick Start Guide
+
+After reading the above documentation, you are ready to set up a project to use Test Bench. First, add the +test_bench+ gem to your project via e.g. Bundler. Second, write a test loader, e.g. +tests/test_helper+:
+
+[source,ruby]
+----
+# Begin tests/test_helper.rb
+
+# Load Test Bench and then activate it
+require 'test_bench/activate'
+
+# Load the code under test
+require_relative '../lib/my/code.rb'
+
+# End tests/test_helper.rb
+----
+
+Then add ruby files to your test directory that require the test loader via +require_relative+:
+
+[source,ruby]
+----
+# Begin tests/some_test_file.rb
+
+require_relative './test_helper'
+
+context "Some subject" do
+  test "Some test" do
+    assert true
+  end
+
+  context "Some nuance" do
+    test "Some other test" do
+      assert false # Will fail!
+    end
+  end
+end
+
+# End tests/some_test_file.rb
+----
+
+Now, if you want to run that test file, just load it through the ruby executable, e.g. +ruby tests/some_test_file.rb+. If you want to run all the tests in the +tests/+ directory, the +bench+ executable that ships with the +test_bench+ gem can do just that:
+
+[source,sh]
+----
+bench tests/
+----
+
+That will get you started. It's a good idea to read through all the documentation, though. Also, that +bench+ executable offers a few useful options, so be sure to check out the help via +bench --help+. Finally, Test Bench's test suite itself serves as an example for reference.
+
 === License
 
 Test Bench is licensed under the link:doc/MIT-License.txt[MIT license].
