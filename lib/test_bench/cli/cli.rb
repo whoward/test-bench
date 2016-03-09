@@ -33,7 +33,7 @@ module TestBench
 If no paths are specified, #{program_name} runs all files in ./tests. The following environment variables can also control execution:
 
         TEST_BENCH_COLOR           Set color on or off
-        TEST_BENCH_FAIL_FAST       Same as -f or --fail-fast
+        TEST_BENCH_ABORT_ON_ERROR  Same as -a or --abort-on-error
         TEST_BENCH_QUIET           Same as -q or --quiet
         TEST_BENCH_VERBOSE         Same as -v or --verbose
 
@@ -42,7 +42,7 @@ If no paths are specified, #{program_name} runs all files in ./tests. The follow
 
     def option_parser
       @option_parser ||= OptionParser.new do |parser|
-        parser.on '-f', '--fail-fast', "Exit immediately after any test script fails" do
+        parser.on '-a', '--abort-on-error', "Exit immediately after any test script fails" do
           settings.fail_fast = true
         end
 

@@ -65,7 +65,7 @@ module TestBench
       end
 
       def fail_fast
-        if activated? env['TEST_BENCH_FAIL_FAST']
+        if activated? env['TEST_BENCH_ABORT_ON_ERROR']
           settings.fail_fast = true
         end
       end

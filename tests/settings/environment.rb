@@ -14,7 +14,7 @@ context "Pulling settings from the environment" do
   test "Fail fast" do
     settings = TestBench::Settings.new
     environment = TestBench::Settings::Environment.build settings,
-      'TEST_BENCH_FAIL_FAST' => 'on'
+      'TEST_BENCH_ABORT_ON_ERROR' => 'on'
 
     environment.()
 
