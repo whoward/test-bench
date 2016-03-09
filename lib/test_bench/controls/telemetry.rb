@@ -38,7 +38,7 @@ module TestBench
 
           error_label = if telemetry.errors == 1 then 'error' else 'errors' end
 
-          "Ran %d tests in 1m1.111s (%.3fs tests/second)\n1 passed, 1 skipped, %d failed, 0 errors" %
+          "Ran %d tests in 1m1.111s (%.3fs tests/second)\n1 passed, 1 skipped, %d failed, 0 total errors" %
             [telemetry.tests, tests_per_second, telemetry.failures]
         end
       end
