@@ -8,6 +8,7 @@ Test Bench is a test framework for ruby designed to offer the minimum set of fea
 1. link:doc/Rationale.adoc[Rationale]
 1. link:doc/Basic-Usage.adoc[Basic Usage]
 1. link:doc/Assertions.adoc[Assertions]
+1. link:doc/Controlling-Execution.adoc[Controlling Execution]
 1. link:doc/Extending.adoc[Extending Test Bench (Plugins)]
 
 === Quick Start Guide
