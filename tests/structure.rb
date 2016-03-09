@@ -39,7 +39,7 @@ context "Test structure" do
       binding = Controls::Binding.example
       telemetry = TestBench::Telemetry::Registry.get binding
 
-      binding.eval 'context do fail end', __FILE__, __LINE__
+      binding.eval 'context :suppress_exit => true do fail end', __FILE__, __LINE__
 
       assert telemetry.errors == 1
     end
@@ -50,7 +50,7 @@ context "Test structure" do
       settings.fail_fast = true
 
       begin
-        binding.eval 'context do fail end', __FILE__, __LINE__
+        binding.eval 'context :suppress_exit => true do fail end', __FILE__, __LINE__
       rescue SystemExit => error
       end
 

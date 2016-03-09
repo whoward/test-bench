@@ -11,7 +11,9 @@ module TestBench
       telemetry.asserted
     end
 
-    def context prose=nil, &block
+    def context prose=nil, suppress_exit: nil, &block
+      suppress_exit ||= false
+
       telemetry = Telemetry::Registry.get binding
       settings = Settings::Registry.get binding
 
@@ -23,7 +25,11 @@ module TestBench
         Structure.error error, binding
 
       ensure
-        telemetry.context_exited prose
+        nesting = telemetry.context_exited prose
+
+        if nesting.zero? and telemetry.failed?
+          exit 1 unless suppress_exit
+        end
       end
     end
 

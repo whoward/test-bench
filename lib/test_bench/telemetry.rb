@@ -3,6 +3,7 @@ module TestBench
     include Observable
 
     attr_writer :clock
+    attr_writer :nesting
 
     def self.build
       instance = new [], 0, 0, 0, 0, 0
@@ -37,10 +38,16 @@ module TestBench
 
     def context_entered prose
       publish :context_entered, prose
+
+      self.nesting += 1
     end
 
     def context_exited prose
       publish :context_exited, prose
+
+      self.nesting -= 1
+
+      nesting
     end
 
     def elapsed_time
@@ -65,6 +72,10 @@ module TestBench
     def file_started file
       started
       publish :file_started, file
+    end
+
+    def nesting
+      @nesting ||= 0
     end
 
     def passed?

@@ -29,7 +29,7 @@ module TestBench
       telemetry.file_started file
 
       begin
-        binding.receiver.context do
+        binding.receiver.context :suppress_exit => true do
           binding.eval test_script, file
         end
 
