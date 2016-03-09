@@ -13,7 +13,14 @@ Test Bench is a test framework for ruby designed to offer the minimum set of fea
 
 === Quick Start Guide
 
-After reading the above documentation, you are ready to set up a project to use Test Bench. First, add the +test_bench+ gem to your project via e.g. Bundler. Second, write a test loader, e.g. +tests/test_helper+:
+After reading the above documentation, you are ready to set up a project to use Test Bench. First, either install the +test_bench+ gem or add it to your project via e.g. Bundler. To install the gem:
+
+[source]
+----
+# gem install test_bench
+----
+
+Second, write a test loader, e.g. +tests/test_helper+:
 
 [source,ruby]
 ----
