@@ -1,6 +1,80 @@
 Controlling Execution
 =====================
 
-**TBD**
+There are three ways to use Test Bench to run your tests: directly invoking the test file, using the +bench+ executable that ships with the +test_bench+ gem, and by writing and then invoking a test runner for the project. All that is needed for tests to run is that Test Bench is loaded and activated. This can be done explicitly via +require "test_bench/activate"+. All three of these approaches are compatible with one another. For the remainder of this document, suppose the following two files are placed in the +tests/+ directory:
+
+[source,ruby]
+----
+# Begin tests/test_helper.rb
+
+# Load Test Bench and then activate it
+require 'test_bench/activate'
+
+# Load the code under test
+require_relative '../lib/my/code.rb'
+
+# End tests/test_helper.rb
+----
+
+[source,ruby]
+----
+# Begin tests/some_test_file.rb
+
+require_relative './test_helper'
+
+context "Some subject" do
+  test "Some test" do
+    assert true
+  end
+
+  context "Some nuance" do
+    test "Some other test" do
+      assert false # Will fail!
+    end
+  end
+end
+
+# End tests/some_test_file.rb
+----
+
+== Directly Invoking the Test File
+
+Test scripts that properly load and activate both Test Bench (via +require "test_bench/activate"+) as well as any code actually under test can simply be invoked as files passed to the +ruby+ executable. For instance, the following command will execute +tests/some_test_file.rb+:
+
+[source]
+----
+# ruby tests/some_test_file.rb
+----
+
+== Using the Bench Executable
+
+The +test_bench+ gem ships with +bench+, an executable that can run your entire test suite as well as particular files and directories. By default, with no arguments passed, it runs all files under the +tests/+ directory. If you want to run tests in a different directory, or if you want to run specific files, simply pass them as arguments to +bench+. For example, suppose a project held its test files under a directory called +spec++, instead of +tests/+:
+
+[source]
+----
+# bench spec/some_directory/ spec/some_spec.rb
+----
+
+In addition, +bench+ offers some invaluable command line options. Particularly, +--fail-fast+ causes Test Bench to halt execution immediately after _any_ test fails (or any other error is raised). This can be useful for focusing exclusively on the output of a test that failed early on in the test run, since the remainder of the test run after the failure would otherwise generate additional test output that would push the error out of view. Also, the verbosity of the test output can be controlled via `--verbose` and `--quiet`.
+
+For other information as well as documentation of other command line opptions that +bench+ accepts, run +bench --help+.
+
+== Writing a Custom Test Runner
+
+It is valuable for projects to include a single command that can run the entire test suite. For instance, in many ruby projects, running +rake test+ or even +rake+ will cause the test suite to run. Test Bench can support this as well, through +TestBench::Runner+. Here is an example Rake task that will run all tests under the +tests/+ directory, excluding the +test_helper.rb+ file itself:
+
+[source,ruby]
+----
+# Begin Rakefile
+
+task :test do
+  require 'bundler/setup' # If using bundler
+  require 'test_bench/activate'
+
+  TestBench::Runner.('tests/**/*.rb', :exclude_pattern => /test_helper\.rb/) or exit 1
+end
+----
+
+The +or exit 1+ at the end ensures that the exit status of the command is nonzero if the test run failed. This is important for any tooling built on top of the test suite. For instance, a test run that exits with a nonzero status might cause a CI build to fail.
 
 **Next**: link:Extending.adoc[Extending]

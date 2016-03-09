@@ -53,9 +53,9 @@ end
 
 Now, if you want to run that test file, just load it through the ruby executable, e.g. +ruby tests/some_test_file.rb+. If you want to run all the tests in the +tests/+ directory, the +bench+ executable that ships with the +test_bench+ gem can do just that:
 
-[source,sh]
+[source]
 ----
-bench tests/
+# bench tests/
 ----
 
 That will get you started. It's a good idea to read through all the documentation, though. Also, that +bench+ executable offers a few useful options, so be sure to check out the help via +bench --help+. Finally, Test Bench's test suite itself serves as an example for reference.
