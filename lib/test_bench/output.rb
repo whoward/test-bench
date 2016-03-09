@@ -134,7 +134,7 @@ module TestBench
     end
 
     def test_failed prose
-      normal prose, :fg => :white, :bg => :red
+      quiet prose, :fg => :white, :bg => :red
     end
 
     def test_passed prose
