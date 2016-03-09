@@ -11,14 +11,14 @@ context "Pulling settings from the environment" do
     assert settings.color == false
   end
 
-  test "Fail fast" do
+  test "Abort on error" do
     settings = TestBench::Settings.new
     environment = TestBench::Settings::Environment.build settings,
       'TEST_BENCH_ABORT_ON_ERROR' => 'on'
 
     environment.()
 
-    assert settings.fail_fast == true
+    assert settings.abort_on_error == true
   end
 
   test "Quiet" do

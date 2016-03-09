@@ -37,7 +37,7 @@ module TestBench
 
       def call
         color
-        fail_fast
+        abort_on_error
         quiet
         verbose
       end
@@ -64,9 +64,9 @@ module TestBench
         @env ||= {}
       end
 
-      def fail_fast
+      def abort_on_error
         if activated? env['TEST_BENCH_ABORT_ON_ERROR']
-          settings.fail_fast = true
+          settings.abort_on_error = true
         end
       end
 

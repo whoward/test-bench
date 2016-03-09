@@ -43,7 +43,7 @@ If no paths are specified, #{program_name} runs all files in ./tests. The follow
     def option_parser
       @option_parser ||= OptionParser.new do |parser|
         parser.on '-a', '--abort-on-error', "Exit immediately after any test script fails" do
-          settings.fail_fast = true
+          settings.abort_on_error = true
         end
 
         parser.on '-h', '--help', "Print this help message and exit successfully" do

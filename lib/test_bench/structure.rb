@@ -63,7 +63,7 @@ module TestBench
 
       telemetry.error_raised error
 
-      exit 1 if settings.fail_fast
+      exit 1 if settings.abort_on_error
     end
   end
 end

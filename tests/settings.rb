@@ -33,19 +33,19 @@ context "Settings" do
     end
   end
 
-  context "Fail fast" do
+  context "Abort on error" do
     test do
       settings = TestBench::Settings.new
 
-      settings.fail_fast = true
+      settings.abort_on_error = true
 
-      assert settings.fail_fast == true
+      assert settings.abort_on_error == true
     end
 
     test "Default is not activated" do
       settings = TestBench::Settings.new
 
-      assert settings.fail_fast == false
+      assert settings.abort_on_error == false
     end
   end
 

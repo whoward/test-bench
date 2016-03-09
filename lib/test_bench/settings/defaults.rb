@@ -9,7 +9,7 @@ module TestBench
         "_init\\.rb$"
       end
 
-      def self.fail_fast
+      def self.abort_on_error
         false
       end
     end

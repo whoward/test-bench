@@ -44,10 +44,10 @@ context "Test structure" do
       assert telemetry.errors == 1
     end
 
-    test "The system exits immediately when fail fast is set" do
+    test "The system exits immediately when abort on error is set" do
       binding = Controls::Binding.example
       settings = TestBench::Settings::Registry.get binding
-      settings.fail_fast = true
+      settings.abort_on_error = true
 
       begin
         binding.eval 'context :suppress_exit => true do fail end', __FILE__, __LINE__

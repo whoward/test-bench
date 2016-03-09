@@ -1,7 +1,7 @@
 module TestBench
   class Settings
     attr_writer :exclude_pattern
-    attr_writer :fail_fast
+    attr_writer :abort_on_error
     attr_writer :output
 
     def self.build
@@ -22,8 +22,8 @@ module TestBench
       nil_coalesce :@exclude_pattern, Defaults.exclude_pattern
     end
 
-    def fail_fast
-      nil_coalesce :@fail_fast, Defaults.fail_fast
+    def abort_on_error
+      nil_coalesce :@abort_on_error, Defaults.abort_on_error
     end
 
     def lower_verbosity
