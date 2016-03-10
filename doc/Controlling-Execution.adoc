@@ -55,7 +55,7 @@ The +test_bench+ gem ships with +bench+, an executable that can run your entire 
 # bench spec/some_directory/ spec/some_spec.rb
 ----
 
-In addition, +bench+ offers some invaluable command line options. Particularly, +--fail-fast+ causes Test Bench to halt execution immediately after _any_ test fails (or any other error is raised). This can be useful for focusing exclusively on the output of a test that failed early on in the test run, since the remainder of the test run after the failure would otherwise generate additional test output that would push the error out of view. Also, the verbosity of the test output can be controlled via `--verbose` and `--quiet`.
+In addition, +bench+ offers some invaluable command line options. Particularly, +--abort-on-error+, or +-a+, causes Test Bench to halt execution immediately after _any_ test fails (or any other error is raised). This can be useful for focusing exclusively on the output of a test that failed early on in the test run, since the remainder of the test run after the failure would otherwise generate additional test output that would push the error out of view. Also, the verbosity of the test output can be controlled via `--verbose` and `--quiet`.
 
 For other information as well as documentation of other command line opptions that +bench+ accepts, run +bench --help+.
 
