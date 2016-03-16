@@ -70,7 +70,6 @@ module TestBench
     end
 
     def file_started file
-      started
       publish :file_started, file
     end
 
