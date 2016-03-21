@@ -41,6 +41,16 @@ context "Pulling settings from the environment" do
     assert settings.output.level == :verbose
   end
 
+  test "Recording telemetry" do
+    settings = TestBench::Settings.new
+    environment = TestBench::Settings::Environment.build settings,
+      'TEST_BENCH_RECORD_TELEMETRY' => 'on'
+
+    environment.()
+
+    assert settings.record_telemetry == true
+  end
+
   context "Boolean interpretation" do
     settings = TestBench::Settings.new
     environment = TestBench::Settings::Environment.build settings

@@ -6,7 +6,7 @@ module TestBench
         errors ||= 1
         file ||= Path.example
 
-        TestBench::Telemetry.new(
+        telemetry = TestBench::Telemetry.new(
           [file],   # files
           1,        # passes
           failures, # failures
@@ -16,6 +16,8 @@ module TestBench
           t0,       # start_time
           t1,       # stop_time
         )
+        telemetry.failed = true unless failures.zero? and errors.zero?
+        telemetry
       end
 
       def self.t0
@@ -40,38 +42,6 @@ module TestBench
 
           "Ran %d tests in 1m1.111s (%.3fs tests/second)\n1 passed, 1 skipped, %d failed, 0 total errors" %
             [telemetry.tests, tests_per_second, telemetry.failures]
-        end
-      end
-
-      module Merged
-        def self.example
-          files = [Passed.file, Failed.file, Error.file]
-
-          t0 = Telemetry.t0
-          t1 = Telemetry.t1
-
-          TestBench::Telemetry.new(
-            files,
-            3,   # passes
-            1,   # failures
-            3,   # skips
-            33,  # assertions
-            1,   # errors
-            t0,  # start_time
-            t1,  # stop_time
-          )
-        end
-
-        def self.first
-          Passed.example
-        end
-
-        def self.second
-          Failed.example
-        end
-
-        def self.third
-          Error.example
         end
       end
 

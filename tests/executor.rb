@@ -57,7 +57,7 @@ context "Executor" do
       executor = TestBench::Executor.new binding, file_module
       executor.(files)
 
-      assert telemetry.errors == 1
+      assert telemetry.failed?
     end
   end
 

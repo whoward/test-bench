@@ -41,7 +41,7 @@ context "Test structure" do
 
       binding.eval 'context :suppress_exit => true do fail end', __FILE__, __LINE__
 
-      assert telemetry.errors == 1
+      assert telemetry, &:recorded_error?
     end
 
     test "The system exits immediately when abort on error is set" do
@@ -91,7 +91,7 @@ context "Test structure" do
       binding.eval 'test "Some test" do fail end', __FILE__, __LINE__
 
       assert telemetry.failures == 1
-      assert telemetry.errors == 1
+      assert telemetry, &:recorded_error?
     end
 
     test %{Prose defaults to "Test"} do

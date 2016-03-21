@@ -66,4 +66,20 @@ context "Settings" do
       assert settings.output.level == :quiet
     end
   end
+
+  context "Recording telemetry" do
+    test do
+      settings = TestBench::Settings.new
+
+      settings.record_telemetry = true
+
+      assert settings.record_telemetry == true
+    end
+
+    test "Default is not activated" do
+      settings = TestBench::Settings.new
+
+      assert settings.record_telemetry == false
+    end
+  end
 end

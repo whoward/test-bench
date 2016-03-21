@@ -3,10 +3,18 @@ module TestBench
     include Observable
 
     attr_writer :clock
+    attr_accessor :failed
     attr_writer :nesting
+    attr_writer :sink
 
     def self.build
-      new [], 0, 0, 0, 0, 0
+      instance = new [], 0, 0, 0, 0, 0
+
+      if Settings.toplevel.record_telemetry
+        instance.sink = []
+      end
+
+      instance
     end
 
     def << other
@@ -55,12 +63,13 @@ module TestBench
     end
 
     def error_raised error
-      self.errors += 1
+      self.failed = true
+
       publish :error_raised, error
     end
 
     def failed?
-      not passed?
+      if failed then true else false end
     end
 
     def file_finished file
@@ -78,12 +87,13 @@ module TestBench
     end
 
     def passed?
-      failures.zero? and errors.zero?
+      not failed?
     end
 
     def publish event, *arguments
       changed
       notify_observers event, *arguments
+      sink << event
     end
 
     def run_started
@@ -94,6 +104,10 @@ module TestBench
     def run_finished
       stopped
       publish :run_finished
+    end
+
+    def sink
+      @sink ||= NullSink
     end
 
     def started
@@ -111,6 +125,8 @@ module TestBench
     end
 
     def test_failed prose
+      self.failed = true
+
       self.failures += 1
       publish :test_failed, prose
     end
@@ -144,6 +160,16 @@ module TestBench
     def self.subscribe subscriber
       toplevel_telemetry = Registry.get TOPLEVEL_BINDING
       toplevel_telemetry.subscribe subscriber
+    end
+
+    module NullSink
+      extend Enumerable
+
+      def self.<< event
+      end
+
+      def self.each &block
+      end
     end
   end
 end

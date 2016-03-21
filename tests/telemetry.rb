@@ -31,7 +31,7 @@ context "Telemetry" do
 
     telemetry.error_raised error
 
-    assert telemetry.errors == 1
+    assert telemetry, &:recorded_error?
   end
 
   test "Record that a test was skipped" do

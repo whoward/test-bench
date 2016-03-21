@@ -3,6 +3,7 @@ module TestBench
     attr_writer :exclude_pattern
     attr_writer :abort_on_error
     attr_writer :output
+    attr_writer :record_telemetry
 
     def self.build
       instance = new
@@ -44,6 +45,10 @@ module TestBench
 
     def raise_verbosity
       output.raise_verbosity
+    end
+
+    def record_telemetry
+      nil_coalesce :@record_telemetry, Defaults.record_telemetry
     end
 
     def self.toplevel
