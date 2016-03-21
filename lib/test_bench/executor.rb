@@ -35,7 +35,6 @@ module TestBench
 
       ensure
         telemetry.file_finished file
-        telemetry.stopped
       end
     end
 

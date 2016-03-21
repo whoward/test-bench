@@ -1,93 +1,118 @@
 require_relative './test_init'
 
 context "Telemetry" do
-  test "Record that a file was executed" do
-    telemetry = TestBench::Telemetry.build
-
-    telemetry.file_finished 'some/file.rb'
-
-    assert telemetry.files.include? 'some/file.rb'
-  end
-
-  test "Record that a test passed" do
-    telemetry = TestBench::Telemetry.build
-
-    telemetry.test_passed "Some test"
-
-    assert telemetry.passes == 1
-  end
-
-  test "Record that a test failed" do
-    telemetry = TestBench::Telemetry.build
-
-    telemetry.test_failed "Some test"
-
-    assert telemetry.failures == 1
-  end
-
-  test "Record that an error was raised" do
-    telemetry = TestBench::Telemetry.build
-    error = Controls::Error.example
-
-    telemetry.error_raised error
-
-    assert telemetry, &:recorded_error?
-  end
-
-  test "Record that a test was skipped" do
-    telemetry = TestBench::Telemetry.build
-
-    telemetry.test_skipped "Some test"
-
-    assert telemetry.skips == 1
-  end
-
   test "Record that an assertion was made" do
     telemetry = TestBench::Telemetry.build
 
     telemetry.asserted
 
-    assert telemetry.assertions == 1
+    assert telemetry, &:asserted
   end
 
-  test "Calculating total number of tests" do
-    telemetry = TestBench::Telemetry.new
-
-    telemetry.failures = 1
-    telemetry.passes = 2
-    telemetry.skips = 3
-
-    assert telemetry.tests == 6
-  end
-
-  test "Calculating elapsed time" do
-    t0 = Controls::Clock::Elapsed.t0
-    t1 = Controls::Clock::Elapsed.t1
-    elapsed_time = Controls::Clock::Elapsed.seconds
-
+  test "Record that a context was entered" do
     telemetry = TestBench::Telemetry.build
 
-    telemetry.start_time = t0
-    telemetry.stop_time = t1
+    telemetry.context_entered nil
 
-    assert telemetry.elapsed_time == elapsed_time
+    assert telemetry, &:recorded_context_entered?
+  end
+
+  test "Record that a context was exited" do
+    telemetry = TestBench::Telemetry.build
+
+    telemetry.context_exited nil
+
+    assert telemetry, &:recorded_context_exited?
+  end
+
+  test "Record that an error was raised" do
+    result = TestBench::Result.build
+    error = Controls::Error.example
+
+    result.error_raised error
+
+    assert result, &:recorded_error_raised?
+  end
+
+  test "Record that a file began executing" do
+    telemetry = TestBench::Telemetry.build
+
+    telemetry.file_started 'some/file.rb'
+
+    assert telemetry, &:recorded_file_started?
+  end
+
+  test "Record that a file was finished executing" do
+    telemetry = TestBench::Telemetry.build
+
+    telemetry.file_finished 'some/file.rb'
+
+    assert telemetry, &:recorded_file_finished?
+  end
+
+  test "Record that a test run began" do
+    telemetry = TestBench::Telemetry.build
+
+    telemetry.run_started
+
+    assert telemetry, &:recorded_run_started?
+  end
+
+  test "Record that a test run finished" do
+    telemetry = TestBench::Telemetry.build
+
+    telemetry.run_finished
+
+    assert telemetry, &:recorded_run_finished?
+  end
+
+  test "Record that a test passed" do
+    result = TestBench::Result.build
+
+    result.test_passed "Some test"
+
+    assert result, &:recorded_test_passed?
+  end
+
+  test "Record that a test failed" do
+    result = TestBench::Result.build
+
+    result.test_failed "Some test"
+
+    assert result, &:recorded_test_failed?
+  end
+
+  test "Record that a test was skipped" do
+    result = TestBench::Result.build
+
+    result.test_skipped "Some test"
+
+    assert result, &:recorded_test_skipped?
+  end
+
+  test "Record that a test started" do
+    result = TestBench::Result.build
+
+    result.test_started "Some test"
+
+    assert result, &:recorded_test_started?
   end
 
   context "Pass/fail results" do
-    passed = Controls::Telemetry::Passed.example
-    failed = Controls::Telemetry::Failed.example
-    error = Controls::Telemetry::Error.example
+    telemetry = Controls::Telemetry.example
 
     test "Passed" do
-      assert passed.passed?
-      assert !error.passed?
-      assert !failed.passed?
+      telemetry.failed = false
+
+      assert telemetry.passed?
+      assert !telemetry.failed?
     end
 
     test "Failed" do
-      assert error.failed?
-      assert failed.failed?
-      assert !passed.failed?
+      telemetry.failed = true
+
+      assert !telemetry.passed?
+      assert telemetry.failed?
     end
   end
 

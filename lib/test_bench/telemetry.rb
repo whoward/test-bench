@@ -36,8 +36,6 @@ module TestBench
 
     def asserted
       publish :asserted
-
-      self.assertions += 1
     end
 
     def clock
@@ -73,8 +71,6 @@ module TestBench
     end
 
     def file_finished file
-      files << file
-      stopped
       publish :file_finished, file
     end
 
@@ -93,29 +89,22 @@ module TestBench
     def publish event, *arguments
       changed
       notify_observers event, *arguments
-      sink << event
+
+      record = Record.new event, *arguments
+
+      sink << record
     end
 
     def run_started
-      started
       publish :run_started
     end
 
     def run_finished
-      stopped
       publish :run_finished
     end
 
     def sink
       @sink ||= NullSink
-    end
-
-    def started
-      self.start_time ||= clock.now
-    end
-
-    def stopped
-      self.stop_time ||= clock.now
     end
 
     def subscribe subscriber
@@ -125,9 +114,6 @@ module TestBench
     end
 
     def test_failed prose
-      self.failed = true
-
-      self.failures += 1
       publish :test_failed, prose
     end
 
@@ -136,12 +122,10 @@ module TestBench
     end
 
     def test_passed prose
-      self.passes += 1
       publish :test_passed, prose
     end
 
     def test_skipped prose
-      self.skips += 1
       publish :test_skipped, prose
     end
 
@@ -161,6 +145,8 @@ module TestBench
       toplevel_telemetry = Registry.get TOPLEVEL_BINDING
       toplevel_telemetry.subscribe subscriber
     end
+
+    Record = Struct.new :event, :data
 
     module NullSink
       extend Enumerable

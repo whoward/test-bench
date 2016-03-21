@@ -24,9 +24,8 @@ context "Runner" do
 
     runner.()
 
-    assert telemetry do
-      elapsed? Controls::Clock::Elapsed.seconds
-    end
+    assert telemetry, &:recorded_run_started?
+    assert telemetry, &:recorded_run_finished?
   end
 
   context "Return value" do

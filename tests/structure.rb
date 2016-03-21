@@ -8,7 +8,7 @@ context "Test structure" do
 
       binding.eval 'assert true', __FILE__, __LINE__
 
-      assert telemetry.assertions == 1
+      assert telemetry, &:recorded_asserted?
     end
 
     test "Negative" do
@@ -21,7 +21,7 @@ context "Test structure" do
       end
 
       assert error
-      assert telemetry.assertions == 1
+      assert telemetry, &:recorded_asserted?
     end
   end
 
@@ -41,7 +41,7 @@ context "Test structure" do
 
       binding.eval 'context :suppress_exit => true do fail end', __FILE__, __LINE__
 
-      assert telemetry, &:recorded_error?
+      assert telemetry, &:recorded_error_raised?
     end
 
     test "The system exits immediately when abort on error is set" do
@@ -81,7 +81,7 @@ context "Test structure" do
 
       binding.eval 'test "Some test" do end', __FILE__, __LINE__
 
-      assert telemetry.passes == 1
+      assert telemetry, &:recorded_test_passed?
     end
 
     test "Errors are recorded both as as test failures and errors" do
@@ -90,8 +90,8 @@ context "Test structure" do
 
       binding.eval 'test "Some test" do fail end', __FILE__, __LINE__
 
-      assert telemetry.failures == 1
-      assert telemetry, &:recorded_error?
+      assert telemetry, &:recorded_test_failed?
+      assert telemetry, &:recorded_error_raised?
     end
 
     test %{Prose defaults to "Test"} do
@@ -111,7 +111,7 @@ context "Test structure" do
 
       binding.eval 'test', __FILE__, __LINE__
 
-      assert telemetry.skips == 1
+      assert telemetry, &:recorded_test_skipped?
     end
   end
 end
