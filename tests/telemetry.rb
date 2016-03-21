@@ -26,7 +26,7 @@ context "Telemetry" do
   end
 
   test "Record that an error was raised" do
-    result = TestBench::Result.build
+    result = TestBench::Telemetry.build
     error = Controls::Error.example
 
     result.error_raised error
@@ -67,7 +67,7 @@ context "Telemetry" do
   end
 
   test "Record that a test passed" do
-    result = TestBench::Result.build
+    result = TestBench::Telemetry.build
 
     result.test_passed "Some test"
 
@@ -75,7 +75,7 @@ context "Telemetry" do
   end
 
   test "Record that a test failed" do
-    result = TestBench::Result.build
+    result = TestBench::Telemetry.build
 
     result.test_failed "Some test"
 
@@ -83,7 +83,7 @@ context "Telemetry" do
   end
 
   test "Record that a test was skipped" do
-    result = TestBench::Result.build
+    result = TestBench::Telemetry.build
 
     result.test_skipped "Some test"
 
@@ -91,7 +91,7 @@ context "Telemetry" do
   end
 
   test "Record that a test started" do
-    result = TestBench::Result.build
+    result = TestBench::Telemetry.build
 
     result.test_started "Some test"
 

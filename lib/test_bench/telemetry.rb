@@ -2,13 +2,12 @@ module TestBench
   class Telemetry < Struct.new :files, :passes, :failures, :skips, :assertions, :errors, :start_time, :stop_time
     include Observable
 
-    attr_writer :clock
     attr_accessor :failed
     attr_writer :nesting
     attr_writer :sink
 
     def self.build
-      instance = new [], 0, 0, 0, 0, 0
+      instance = new
 
       if Settings.toplevel.record_telemetry
         instance.sink = []
@@ -17,29 +16,8 @@ module TestBench
       instance
     end
 
-    def << other
-      self.assertions += other.assertions
-      self.errors += other.errors
-      self.files.concat other.files
-      self.failures += other.failures
-      self.passes += other.passes
-      self.skips += other.skips
-      self.start_time = [start_time, other.start_time].compact.min
-      self.stop_time = [stop_time, other.stop_time].compact.max
-    end
-
-    def + other
-      result = self.dup
-      result << other
-      result
-    end
-
     def asserted
       publish :asserted
-    end
-
-    def clock
-      @clock ||= Time
     end
 
     def context_entered prose
@@ -54,10 +32,6 @@ module TestBench
       self.nesting -= 1
 
       nesting
-    end
-
-    def elapsed_time
-      stop_time - start_time
     end
 
     def error_raised error
@@ -131,14 +105,6 @@ module TestBench
 
     def test_started prose
       publish :test_started, prose
-    end
-
-    def tests
-      failures + passes + skips
-    end
-
-    def tests_per_second
-      Rational tests, elapsed_time
     end
 
     def self.subscribe subscriber

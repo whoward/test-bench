@@ -17,7 +17,6 @@ context "Runner" do
 
   test "Records that the run started and stopped" do
     telemetry = TestBench::Telemetry.build
-    telemetry.clock = Controls::Clock::Elapsed.example
 
     runner = TestBench::Runner.new %w(some/path other/path.rb)
     runner.telemetry = telemetry

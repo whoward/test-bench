@@ -16,7 +16,7 @@ context "Result" do
 
     result.test_passed "Some test"
 
-    assert result, &:recorded_test_passed?
+    assert result.passes == 1
   end
 
   test "Record that a test failed" do
@@ -24,7 +24,7 @@ context "Result" do
 
     result.test_failed "Some test"
 
-    assert result, &:recorded_test_failed?
+    assert result.failures == 1
   end
 
   test "Record that an error was raised" do
@@ -33,15 +33,7 @@ context "Result" do
 
     result.error_raised error
 
-    assert result, &:recorded_error_raised?
-  end
-
-  test "Record that a test passed" do
-    result = TestBench::Result.build
-
-    result.test_passed "Test passed"
-
-    assert result, &:recorded_test_passed?
+    assert result.errors == 1
   end
 
   test "Record that a test was skipped" do
@@ -49,7 +41,7 @@ context "Result" do
 
     result.test_skipped "Some test"
 
-    assert result, &:recorded_test_skipped?
+    assert result.skips == 1
   end
 
   test "Record that an assertion was made" do
