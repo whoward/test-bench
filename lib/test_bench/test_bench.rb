@@ -14,10 +14,7 @@ module TestBench
     settings = Settings::Registry.get TOPLEVEL_BINDING
     settings.output = output
 
-    # Telemetry pushes updates to output for display, and output reads telemetry
-    # for summary data (e.g. tests per second, number of failures, etc.)
+    # Telemetry pushes updates to output for display
     Telemetry.subscribe output
-    telemetry = Telemetry::Registry.get TOPLEVEL_BINDING
-    output.telemetry = telemetry
   end
 end

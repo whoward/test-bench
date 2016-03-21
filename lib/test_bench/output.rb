@@ -4,7 +4,7 @@ module TestBench
     attr_writer :device
     attr_accessor :indentation
     attr_accessor :level
-    attr_writer :telemetry
+    attr_writer :nesting
 
     def initialize level
       @level = level
@@ -17,6 +17,10 @@ module TestBench
       instance = new level
       instance.device = $stdout
       instance
+    end
+
+    def asserted
+      result.asserted
     end
 
     def color_enabled?
@@ -57,23 +61,35 @@ module TestBench
     end
 
     def error_raised error
+      result.error_raised error
+
       indent
       detail_error error
       deindent
     end
 
     def file_finished file
-      telemetry ||= self.telemetry
+      result.file_finished file
+      result.stopped
 
-      summary = summarize_telemetry telemetry
+      summary = summarize_result
+
+      nesting.pop
 
       verbose "Finished running #{file}"
       verbose summary
       verbose ' '
     end
 
-    def file_started file
+    def file_started file, file_result=nil
       normal "Running #{file}"
+
+      file_result ||= Result.build
+      file_result.started
+      file_result.subscribe result
+
+      result.file_started file
+      nesting << file_result
     end
 
     def indent
@@ -86,6 +102,10 @@ module TestBench
       elsif level == :normal
         self.level = :quiet
       end
+    end
+
+    def nesting
+      @nesting ||= [Result.build]
     end
 
     def normal prose, **colors
@@ -104,44 +124,56 @@ module TestBench
       end
     end
 
+    def result
+      nesting.fetch -1
+    end
+
+    def run_started
+      result.run_started
+    end
+
     def run_finished
-      files_label = if telemetry.files.size == 1 then 'file' else 'files' end
+      result.run_finished
 
-      quiet "Finished running #{telemetry.files.size} #{files_label}"
+      files_label = if result.files.size == 1 then 'file' else 'files' end
 
-      summary = summarize_telemetry telemetry
+      quiet "Finished running #{result.files.size} #{files_label}"
 
-      color = if telemetry.passed? then :cyan else :red end
+      summary = summarize_result
+
+      color = if result.passed? then :cyan else :red end
 
       quiet summary, :fg => color
     end
 
-    def summarize_telemetry telemetry
-      minutes, seconds = telemetry.elapsed_time.divmod 60
+    def summarize_result
+      minutes, seconds = result.elapsed_time.divmod 60
 
       elapsed = String.new
       elapsed << "#{minutes}m" unless minutes.zero?
       elapsed << "%.3fs" % seconds
 
-      test_label = if telemetry.tests == 1 then 'test' else 'tests' end
-      error_label = if telemetry.errors == 1 then 'error' else 'errors' end
+      test_label = if result.tests == 1 then 'test' else 'tests' end
+      error_label = if result.errors == 1 then 'error' else 'errors' end
       "Ran %d #{test_label} in #{elapsed} (%.3fs tests/second)\n%d passed, %d skipped, %d failed, %d total #{error_label}" %
-        [telemetry.tests, telemetry.tests_per_second, telemetry.passes, telemetry.skips, telemetry.failures, telemetry.errors]
-    end
-
-    def telemetry
-      @telemetry ||= Telemetry.build
+        [result.tests, result.tests_per_second, result.passes, result.skips, result.failures, result.errors]
     end
 
     def test_failed prose
+      result.test_failed prose
+
       quiet prose, :fg => :white, :bg => :red
     end
 
     def test_passed prose
+      result.test_passed prose
+
       normal prose, :fg => :green
     end
 
     def test_skipped prose
+      result.test_skipped prose
+
       normal prose, :fg => :brown
     end
 

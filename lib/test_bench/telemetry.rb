@@ -6,9 +6,7 @@ module TestBench
     attr_writer :nesting
 
     def self.build
-      instance = new [], 0, 0, 0, 0, 0
-      instance.started
-      instance
+      new [], 0, 0, 0, 0, 0
     end
 
     def << other
@@ -29,6 +27,8 @@ module TestBench
     end
 
     def asserted
+      publish :asserted
+
       self.assertions += 1
     end
 
@@ -97,11 +97,17 @@ module TestBench
     end
 
     def started
-      self.start_time = clock.now
+      self.start_time ||= clock.now
     end
 
     def stopped
-      self.stop_time = clock.now
+      self.stop_time ||= clock.now
+    end
+
+    def subscribe subscriber
+      subscription = Subscription.new subscriber
+      add_observer subscription
+      subscription
     end
 
     def test_failed prose
@@ -136,12 +142,8 @@ module TestBench
     end
 
     def self.subscribe subscriber
-      subscription = Subscription.new subscriber
-
       toplevel_telemetry = Registry.get TOPLEVEL_BINDING
-      toplevel_telemetry.add_observer subscription
-
-      subscription
+      toplevel_telemetry.subscribe subscriber
     end
   end
 end

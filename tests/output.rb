@@ -158,9 +158,10 @@ context "Output" do
 
   context "File has finished being executed" do
     output = TestBench::Output.new :verbose
-    output.telemetry = telemetry = Controls::Telemetry::Passed.example
+    result = Controls::Result::Passed.example
     path = Controls::Path.example
 
+    output.file_started path, result
     output.file_finished path
 
     test "File finished" do
@@ -169,8 +170,8 @@ context "Output" do
       end
     end
 
-    test "Telemetry summary" do
-      control_summary = Controls::Telemetry::Summary.example telemetry
+    test "Result summary" do
+      control_summary = Controls::Result::Summary.example result
 
       assert output do
         wrote_line? control_summary
@@ -181,7 +182,8 @@ context "Output" do
   context "The run has finished" do
     context "Passing" do
       output = TestBench::Output.new :quiet
-      output.telemetry = telemetry = Controls::Telemetry::Passed.example
+      result = Controls::Result::Passed.example
+      output.nesting = [result]
 
       output.run_finished
 
@@ -192,7 +194,7 @@ context "Output" do
       end
 
       test "Summary" do
-        control_summary = Controls::Telemetry::Summary.example telemetry
+        control_summary = Controls::Result::Summary.example result
 
         output.run_finished
 
@@ -204,12 +206,13 @@ context "Output" do
 
     context "Failing" do
       output = TestBench::Output.new :quiet
-      output.telemetry = telemetry = Controls::Telemetry::Failed.example
+      result = Controls::Result::Failed.example
+      output.nesting = [result]
 
       output.run_finished
 
       test "Summary" do
-        control_summary = Controls::Telemetry::Summary.example telemetry
+        control_summary = Controls::Result::Summary.example result
 
         assert output do
           wrote_line? control_summary, :fg => :red
