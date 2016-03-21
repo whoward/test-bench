@@ -182,8 +182,7 @@ context "Output" do
   context "The run has finished" do
     context "Passing" do
       output = TestBench::Output.new :quiet
-      result = Controls::Result::Passed.example
-      output.nesting = [result]
+      output.run_result = run_result = Controls::Result::Passed.example
 
       output.run_finished
 
@@ -194,9 +193,7 @@ context "Output" do
       end
 
       test "Summary" do
-        control_summary = Controls::Result::Summary.example result
-
-        output.run_finished
+        control_summary = Controls::Result::Summary.example run_result
 
         assert output do
           wrote_line? control_summary, :fg => :cyan
@@ -206,13 +203,12 @@ context "Output" do
 
     context "Failing" do
       output = TestBench::Output.new :quiet
-      result = Controls::Result::Failed.example
-      output.nesting = [result]
+      output.run_result = run_result = Controls::Result::Failed.example
 
       output.run_finished
 
       test "Summary" do
-        control_summary = Controls::Result::Summary.example result
+        control_summary = Controls::Result::Summary.example run_result
 
         assert output do
           wrote_line? control_summary, :fg => :red

@@ -1,10 +1,11 @@
 module TestBench
   class Output
+    attr_writer :file_result
     attr_accessor :force_color
     attr_writer :device
     attr_accessor :indentation
     attr_accessor :level
-    attr_writer :nesting
+    attr_writer :run_result
 
     def initialize level
       @level = level
@@ -20,7 +21,8 @@ module TestBench
     end
 
     def asserted
-      result.asserted
+      file_result.asserted
+      run_result.asserted
     end
 
     def color_enabled?
@@ -61,7 +63,8 @@ module TestBench
     end
 
     def error_raised error
-      result.error_raised error
+      run_result.error_raised error
+      file_result.error_raised error
 
       indent
       detail_error error
@@ -69,27 +72,28 @@ module TestBench
     end
 
     def file_finished file
-      result.file_finished file
-      result.stopped
+      run_result.file_finished file
+      file_result.stopped
 
-      summary = summarize_result
+      summary = summarize_result file_result
 
-      nesting.pop
+      self.file_result = nil
 
       verbose "Finished running #{file}"
       verbose summary
       verbose ' '
     end
 
+    def file_result
+      @file_result or Result::Null
+    end
+
     def file_started file, file_result=nil
       normal "Running #{file}"
 
       file_result ||= Result.build
-      file_result.started
-      file_result.subscribe result
 
-      result.file_started file
-      nesting << file_result
+      self.file_result = file_result
     end
 
     def indent
@@ -102,10 +106,6 @@ module TestBench
       elsif level == :normal
         self.level = :quiet
       end
-    end
-
-    def nesting
-      @nesting ||= [Result.build]
     end
 
     def normal prose, **colors
@@ -124,29 +124,29 @@ module TestBench
       end
     end
 
-    def result
-      nesting.fetch -1
-    end
-
-    def run_started
-      result.run_started
-    end
-
     def run_finished
-      result.run_finished
+      run_result.run_finished
 
-      files_label = if result.files.size == 1 then 'file' else 'files' end
+      files_label = if run_result.files.size == 1 then 'file' else 'files' end
 
-      quiet "Finished running #{result.files.size} #{files_label}"
+      quiet "Finished running #{run_result.files.size} #{files_label}"
 
-      summary = summarize_result
+      summary = summarize_result run_result
 
-      color = if result.passed? then :cyan else :red end
+      color = if run_result.passed? then :cyan else :red end
 
       quiet summary, :fg => color
     end
 
-    def summarize_result
+    def run_started
+      self.run_result
+    end
+
+    def run_result
+      @run_result ||= Result.build
+    end
+
+    def summarize_result result
       minutes, seconds = result.elapsed_time.divmod 60
 
       elapsed = String.new
@@ -160,19 +160,22 @@ module TestBench
     end
 
     def test_failed prose
-      result.test_failed prose
+      file_result.test_failed prose
+      run_result.test_failed prose
 
       quiet prose, :fg => :white, :bg => :red
     end
 
     def test_passed prose
-      result.test_passed prose
+      file_result.test_passed prose
+      run_result.test_passed prose
 
       normal prose, :fg => :green
     end
 
     def test_skipped prose
-      result.test_skipped prose
+      file_result.test_skipped prose
+      run_result.test_skipped prose
 
       normal prose, :fg => :brown
     end

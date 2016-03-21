@@ -42,38 +42,6 @@ module TestBench
         end
       end
 
-      module Merged
-        def self.example
-          files = [Passed.file, Failed.file, Error.file]
-
-          t0 = Result.t0
-          t1 = Result.t1
-
-          TestBench::Result.new(
-            files,
-            3,   # passes
-            1,   # failures
-            3,   # skips
-            33,  # assertions
-            1,   # errors
-            t0,  # start_time
-            t1,  # stop_time
-          )
-        end
-
-        def self.first
-          Passed.example
-        end
-
-        def self.second
-          Failed.example
-        end
-
-        def self.third
-          Error.example
-        end
-      end
-
       module Error
         def self.example
           Result.example file, :errors => 1, :failures => 0

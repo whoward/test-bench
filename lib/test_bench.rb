@@ -3,6 +3,8 @@ require 'pathname'
 require 'stringio'
 require 'time'
 
+require 'test_bench/publisher'
+
 require 'test_bench/telemetry'
 require 'test_bench/telemetry/assertions'
 require 'test_bench/telemetry/registry'
