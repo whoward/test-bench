@@ -157,6 +157,7 @@ context "Output" do
   end
 
   context "File has finished being executed" do
+    next
     output = TestBench::Output.new :verbose
     result = Controls::Result::Passed.example
     path = Controls::Path.example
@@ -193,6 +194,7 @@ context "Output" do
       end
 
       test "Summary" do
+        next
         control_summary = Controls::Result::Summary.example run_result
 
         assert output do
@@ -208,6 +210,7 @@ context "Output" do
       output.run_finished
 
       test "Summary" do
+        next
         control_summary = Controls::Result::Summary.example run_result
 
         assert output do

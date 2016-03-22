@@ -73,7 +73,7 @@ module TestBench
 
     def file_finished file
       run_result.file_finished file
-      file_result.stopped
+      file_result.finished
 
       summary = summarize_result file_result
 

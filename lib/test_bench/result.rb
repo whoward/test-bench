@@ -32,25 +32,19 @@ module TestBench
       files << file
     end
 
+    def finished
+      self.stop_time = clock.now
+    end
+    alias_method :run_finished, :finished
+
     def passed?
       failures.zero? and errors.zero?
     end
 
-    def run_started
-      started
-    end
-
-    def run_finished
-      stopped
-    end
-
     def started
-      self.start_time ||= clock.now
+      self.start_time = clock.now
     end
-
-    def stopped
-      self.stop_time ||= clock.now
-    end
+    alias_method :run_started, :started
 
     def test_failed prose
       self.failures += 1
@@ -70,23 +64,6 @@ module TestBench
 
     def tests_per_second
       Rational tests, elapsed_time
-    end
-
-    module Null
-      def self.method_missing *;
-      end
-
-      def self.respond_to? _
-        true
-      end
-    end
-
-    module Assertions
-      def executed? *control_files
-        control_files.all? do |control_file|
-          files.include? control_file
-        end
-      end
     end
   end
 end
