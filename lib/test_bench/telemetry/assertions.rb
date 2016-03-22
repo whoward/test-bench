@@ -66,6 +66,12 @@ module TestBench
       def recorded_test_started?
         recorded_any? :test_started
       end
+
+      def test? prose
+        record_count do |record|
+          record.event == :test_started and record.data == prose
+        end
+      end
     end
   end
 end

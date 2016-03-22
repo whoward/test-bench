@@ -13,10 +13,6 @@ module TestBench
       telemetry.asserted
     end
 
-    def refute *arguments, &block
-      assert *arguments, :assert_class => Assert::Refute, &block
-    end
-
     def context prose=nil, suppress_exit: nil, &block
       suppress_exit ||= false
 
@@ -37,6 +33,10 @@ module TestBench
           exit 1 unless suppress_exit
         end
       end
+    end
+
+    def refute *arguments, &block
+      assert *arguments, :assert_class => Assert::Refute, &block
     end
 
     def test prose=nil, &block
