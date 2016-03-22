@@ -2,7 +2,6 @@ module TestBench
   module Controls
     module Telemetry
       def self.example failed=nil
-
         telemetry = TestBench::Telemetry.new
         telemetry.failed = failed
         telemetry

@@ -4,7 +4,7 @@ module TestBench
       def self.example filename=nil
         filename ||= 'file.rb'
 
-        "some/#{filename}"
+        "path/to/#{filename}"
       end
     end
   end
