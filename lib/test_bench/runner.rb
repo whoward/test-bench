@@ -3,17 +3,19 @@ module TestBench
     attr_writer :executor
     attr_writer :expand_path
     attr_reader :paths
-    attr_writer :telemetry
+    attr_reader :telemetry
 
-    def initialize paths
+    def initialize paths, telemetry
       @paths = paths
+      @telemetry = telemetry
     end
 
     def self.build paths, root_directory, exclude_pattern: nil
-      instance = new paths
+      telemetry = Telemetry::Registry.get TOPLEVEL_BINDING
+
+      instance = new paths, telemetry
       instance.executor = Executor.build
       instance.expand_path = ExpandPath.build root_directory, exclude_pattern
-      instance.telemetry = Telemetry::Registry.get TOPLEVEL_BINDING
       instance
     end
 
@@ -51,11 +53,7 @@ module TestBench
     end
 
     def expand_path
-      @expand_path ||= Proc.new do [] end
-    end
-
-    def telemetry
-      @telemetry ||= Telemetry.build
+      @expand_path ||= proc do [] end
     end
   end
 end
