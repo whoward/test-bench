@@ -5,12 +5,6 @@ module TestBench
     attr_writer :output
     attr_writer :record_telemetry
 
-    def self.build
-      instance = new
-      Settings::Environment.(instance)
-      instance
-    end
-
     def abort_on_error
       nil_coalesce :@abort_on_error, Defaults.abort_on_error
     end
