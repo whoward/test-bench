@@ -30,13 +30,17 @@ module TestBench
 
       result = subject.instance_exec subject, &block
 
-      if result then true else false end
+      interpret_result result
     end
 
     def extend_subject mod
       raise TypeError if subject.frozen?
       subject.extend mod
     rescue TypeError
+    end
+
+    def interpret_result result
+      if result then true else false end
     end
 
     def subject_namespace
