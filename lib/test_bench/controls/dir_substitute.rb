@@ -51,7 +51,7 @@ module TestBench
       end
 
       def exist? directory
-        directories.include? dir
+        directories.include? directory.to_s
       end
     end
   end

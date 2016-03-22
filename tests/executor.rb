@@ -10,6 +10,7 @@ context "Executor" do
     executor = TestBench::Executor.new binding, file_module
     executor.(files)
 
+    assert executor.telemetry, &:recorded_file_started?
     assert executor.telemetry, &:recorded_file_finished?
   end
 
