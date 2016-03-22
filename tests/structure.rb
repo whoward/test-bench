@@ -120,6 +120,7 @@ context "Test structure" do
 
       assert telemetry, &:recorded_test_started?
       assert telemetry, &:recorded_test_passed?
+      assert telemetry, &:recorded_test_finished?
     end
 
     test "Failing" do
@@ -128,9 +129,7 @@ context "Test structure" do
 
       binding.eval 'test "Some test" do assert false end', __FILE__, __LINE__
 
-      assert telemetry, &:recorded_test_started?
       assert telemetry, &:recorded_test_failed?
-      assert telemetry, &:recorded_error_raised?
     end
 
     test "Skipping" do

@@ -34,20 +34,20 @@ context "Telemetry" do
     assert result, &:recorded_error_raised?
   end
 
+  test "Record that a file finished executing" do
+    telemetry = TestBench::Telemetry.build
+
+    telemetry.file_finished 'some/file.rb'
+
+    assert telemetry, &:recorded_file_finished?
+  end
+
   test "Record that a file began executing" do
     telemetry = TestBench::Telemetry.build
 
     telemetry.file_started 'some/file.rb'
 
     assert telemetry, &:recorded_file_started?
-  end
-
-  test "Record that a file was finished executing" do
-    telemetry = TestBench::Telemetry.build
-
-    telemetry.file_finished 'some/file.rb'
-
-    assert telemetry, &:recorded_file_finished?
   end
 
   test "Record that a test run began" do
@@ -66,20 +66,28 @@ context "Telemetry" do
     assert telemetry, &:recorded_run_finished?
   end
 
-  test "Record that a test passed" do
-    result = TestBench::Telemetry.build
-
-    result.test_passed "Some test"
-
-    assert result, &:recorded_test_passed?
-  end
-
   test "Record that a test failed" do
     result = TestBench::Telemetry.build
 
     result.test_failed "Some test"
 
     assert result, &:recorded_test_failed?
+  end
+
+  test "Record that a test finished" do
+    result = TestBench::Telemetry.build
+
+    result.test_finished "Some test"
+
+    assert result, &:recorded_test_finished?
+  end
+
+  test "Record that a test passed" do
+    result = TestBench::Telemetry.build
+
+    result.test_passed "Some test"
+
+    assert result, &:recorded_test_passed?
   end
 
   test "Record that a test was skipped" do

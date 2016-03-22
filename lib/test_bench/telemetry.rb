@@ -1,6 +1,6 @@
 module TestBench
   class Telemetry
-    include Publisher
+    include Observable
 
     attr_accessor :failed
     attr_writer :nesting
@@ -61,10 +61,10 @@ module TestBench
     end
 
     def publish event, *arguments
-      super
+      changed
+      notify_observers event, *arguments
 
       record = Record.new event, *arguments
-
       sink << record
     end
 
@@ -78,6 +78,12 @@ module TestBench
 
     def sink
       @sink ||= NullSink
+    end
+
+    def subscribe subscriber
+      subscription = Subscription.new subscriber
+      add_observer subscription
+      subscription
     end
 
     def test_failed prose

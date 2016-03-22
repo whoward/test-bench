@@ -55,6 +55,10 @@ module TestBench
         recorded_any? :test_failed
       end
 
+      def recorded_test_finished?
+        recorded_any? :test_finished
+      end
+
       def recorded_test_passed?
         recorded_any? :test_passed
       end
