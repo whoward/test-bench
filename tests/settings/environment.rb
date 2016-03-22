@@ -1,16 +1,6 @@
 require_relative '../test_init'
 
 context "Pulling settings from the environment" do
-  test "Color" do
-    settings = TestBench::Settings.new
-    environment = TestBench::Settings::Environment.build settings,
-      'TEST_BENCH_COLOR' => 'off'
-
-    environment.()
-
-    assert settings.color == false
-  end
-
   test "Abort on error" do
     settings = TestBench::Settings.new
     environment = TestBench::Settings::Environment.build settings,
@@ -19,6 +9,16 @@ context "Pulling settings from the environment" do
     environment.()
 
     assert settings.abort_on_error == true
+  end
+
+  test "Color" do
+    settings = TestBench::Settings.new
+    environment = TestBench::Settings::Environment.build settings,
+      'TEST_BENCH_COLOR' => 'off'
+
+    environment.()
+
+    assert settings.color == false
   end
 
   test "Quiet" do
@@ -31,16 +31,6 @@ context "Pulling settings from the environment" do
     assert settings.output.level == :quiet
   end
 
-  test "Verbose" do
-    settings = TestBench::Settings.new
-    environment = TestBench::Settings::Environment.build settings,
-      'TEST_BENCH_VERBOSE' => 'on'
-
-    environment.()
-
-    assert settings.output.level == :verbose
-  end
-
   test "Recording telemetry" do
     settings = TestBench::Settings.new
     environment = TestBench::Settings::Environment.build settings,
@@ -49,6 +39,16 @@ context "Pulling settings from the environment" do
     environment.()
 
     assert settings.record_telemetry == true
+  end
+
+  test "Verbose" do
+    settings = TestBench::Settings.new
+    environment = TestBench::Settings::Environment.build settings,
+      'TEST_BENCH_VERBOSE' => 'on'
+
+    environment.()
+
+    assert settings.output.level == :verbose
   end
 
   context "Boolean interpretation" do

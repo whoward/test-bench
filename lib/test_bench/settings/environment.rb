@@ -36,8 +36,8 @@ module TestBench
       end
 
       def call
-        color
         abort_on_error
+        color
         quiet
         record_telemetry
         verbose

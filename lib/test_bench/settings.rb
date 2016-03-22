@@ -1,7 +1,7 @@
 module TestBench
   class Settings
-    attr_writer :exclude_pattern
     attr_writer :abort_on_error
+    attr_writer :exclude_pattern
     attr_writer :output
     attr_writer :record_telemetry
 
@@ -9,6 +9,10 @@ module TestBench
       instance = new
       Settings::Environment.(instance)
       instance
+    end
+
+    def abort_on_error
+      nil_coalesce :@abort_on_error, Defaults.abort_on_error
     end
 
     def color
@@ -21,10 +25,6 @@ module TestBench
 
     def exclude_pattern
       nil_coalesce :@exclude_pattern, Defaults.exclude_pattern
-    end
-
-    def abort_on_error
-      nil_coalesce :@abort_on_error, Defaults.abort_on_error
     end
 
     def lower_verbosity

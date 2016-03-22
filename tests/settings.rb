@@ -1,6 +1,22 @@
 require_relative './test_init'
 
 context "Settings" do
+  context "Abort on error" do
+    test do
+      settings = TestBench::Settings.new
+
+      settings.abort_on_error = true
+
+      assert settings.abort_on_error == true
+    end
+
+    test "Default is not activated" do
+      settings = TestBench::Settings.new
+
+      assert settings.abort_on_error == false
+    end
+  end
+
   context "Color" do
     test do
       settings = TestBench::Settings.new
@@ -30,22 +46,6 @@ context "Settings" do
       settings = TestBench::Settings.new
 
       assert settings.exclude_pattern == "_init\\.rb$"
-    end
-  end
-
-  context "Abort on error" do
-    test do
-      settings = TestBench::Settings.new
-
-      settings.abort_on_error = true
-
-      assert settings.abort_on_error == true
-    end
-
-    test "Default is not activated" do
-      settings = TestBench::Settings.new
-
-      assert settings.abort_on_error == false
     end
   end
 
