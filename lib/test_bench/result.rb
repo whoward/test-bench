@@ -33,7 +33,7 @@ module TestBench
     end
 
     def finished
-      self.stop_time = clock.now
+      self.stop_time ||= clock.now
     end
     alias_method :run_finished, :finished
 

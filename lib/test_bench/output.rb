@@ -1,13 +1,13 @@
 module TestBench
   class Output
     attr_writer :file_result
-    attr_accessor :force_color
+    attr_accessor :color
     attr_writer :device
     attr_accessor :indentation
-    attr_accessor :level
+    attr_writer :level
     attr_writer :run_result
 
-    def initialize level
+    def initialize level=nil
       @level = level
       @indentation = 0
     end
@@ -25,37 +25,26 @@ module TestBench
       run_result.asserted
     end
 
-    def color_enabled?
-      return force_color unless force_color.nil?
+    def color?
+      return color unless color.nil?
       return true if device.is_a? StringIO
       device.tty?
     end
 
-    def context_entered prose
-      if prose
-        normal prose, :fg => :green
-        indent
-      end
+    def context_entered prose=nil
+      return if prose.nil?
+
+      normal prose, :fg => :green
+
+      self.indentation += 1 unless level == :quiet
     end
 
-    def context_exited prose
-      if prose
-        deindent
-        normal ' ' if indentation.zero?
-      end
-    end
+    def context_exited prose=nil
+      return if prose.nil?
 
-    def deindent
       self.indentation -= 1 unless level == :quiet
-    end
 
-    def detail_error error
-      detail_summary = "#{error.backtrace[0]}: #{error.message} (#{error.class})"
-
-      quiet detail_summary, :fg => :red
-      error.backtrace[1..-1].each do |frame|
-        quiet "        from #{frame}", :fg => :red
-      end
+      normal ' ' if indentation.zero?
     end
 
     def device
@@ -66,20 +55,23 @@ module TestBench
       run_result.error_raised error
       file_result.error_raised error
 
-      indent
-      detail_error error
-      deindent
+      detail_summary = "#{error.backtrace[0]}: #{error.message} (#{error.class})"
+
+      quiet detail_summary, :fg => :red
+      error.backtrace[1..-1].each do |frame|
+        quiet "        from #{frame}", :fg => :red
+      end
     end
 
-    def file_finished file
-      run_result.file_finished file
+    def file_finished path
+      run_result.file_finished path
       file_result.finished
 
       summary = summarize_result file_result
 
       self.file_result = nil
 
-      verbose "Finished running #{file}"
+      verbose "Finished running #{path}"
       verbose summary
       verbose ' '
     end
@@ -88,16 +80,18 @@ module TestBench
       @file_result or Result::Null
     end
 
-    def file_started file, file_result=nil
-      normal "Running #{file}"
+    def file_started path
+      normal "Running #{path}"
 
-      file_result ||= Result.build
+      file_result = Result.build
 
       self.file_result = file_result
+
+      file_result
     end
 
-    def indent
-      self.indentation += 1 unless level == :quiet
+    def level
+      @level ||= :normal
     end
 
     def lower_verbosity
@@ -129,11 +123,11 @@ module TestBench
 
       files_label = if run_result.files.size == 1 then 'file' else 'files' end
 
+      color = if run_result.passed? then :cyan else :red end
+
       quiet "Finished running #{run_result.files.size} #{files_label}"
 
       summary = summarize_result run_result
-
-      color = if run_result.passed? then :cyan else :red end
 
       quiet summary, :fg => color
     end
@@ -189,9 +183,7 @@ module TestBench
     end
 
     def write prose, **colors
-      if color_enabled?
-        prose = Palette.apply prose, **colors
-      end
+      prose = Palette.apply prose, **colors if color?
 
       prose = "#{'  ' * indentation}#{prose}"
 

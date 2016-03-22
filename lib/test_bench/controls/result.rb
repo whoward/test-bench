@@ -30,18 +30,6 @@ module TestBench
         "1m1.111s"
       end
 
-      module Summary
-        def self.example result=nil
-          result ||= Result.example
-
-          tests_per_second = Rational result.tests, result.elapsed_time
-
-          error_label = if result.errors == 1 then 'error' else 'errors' end
-
-          "Ran %d tests in 1m1.111s (%.3fs tests/second)\n1 passed, 1 skipped, %d failed, 0 total errors" % [result.tests, tests_per_second, result.failures]
-        end
-      end
-
       module Error
         def self.example
           Result.example file, :errors => 1, :failures => 0

@@ -10,11 +10,11 @@ module TestBench
     end
 
     def color
-      output.force_color
+      output.color
     end
 
     def color= value
-      output.force_color = value
+      output.color = value
     end
 
     def exclude_pattern
