@@ -28,7 +28,7 @@ context "Pulling settings from the environment" do
 
     environment.()
 
-    assert settings.output.level == :quiet
+    assert settings.writer.level == :quiet
   end
 
   test "Recording telemetry" do
@@ -48,7 +48,7 @@ context "Pulling settings from the environment" do
 
     environment.()
 
-    assert settings.output.level == :verbose
+    assert settings.writer.level == :verbose
   end
 
   context "Boolean interpretation" do

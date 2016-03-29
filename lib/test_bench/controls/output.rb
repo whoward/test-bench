@@ -4,7 +4,7 @@ module TestBench
       def self.attach binding, level=nil
         level ||= :verbose
 
-        output = TestBench::Output.new level
+        output = TestBench::Output.build level
 
         subscription = TestBench::Telemetry::Subscription.new output
 
@@ -35,23 +35,18 @@ module TestBench
       end
 
       module Error
-        def self.example color=nil
-          color = true if color.nil?
-
+        def self.example
           error = Controls::Error.example
-          palette = TestBench::Output::Palette
 
           file = Controls::Error.file
           line = Controls::Error.line
           method_name = Controls::Error.method_name
           message = Controls::Error.message
 
-          fg = if color then :red else nil end
-
           <<~TEXT
-          #{palette.apply "#{file}:#{line}:in `#{method_name}': #{message} (#{error.class})", :fg => fg}
-          #{palette.apply "        from #{file}:#{line + 1}:in `#{method_name}'", :fg => fg}
-          #{palette.apply "        from #{file}:#{line + 2}:in `#{method_name}'", :fg => fg}
+          #{file}:#{line}:in `#{method_name}': #{message} (#{error.class})
+                  from #{file}:#{line + 1}:in `#{method_name}'
+                  from #{file}:#{line + 2}:in `#{method_name}'
           TEXT
         end
       end

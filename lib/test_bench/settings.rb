@@ -2,7 +2,7 @@ module TestBench
   class Settings
     attr_writer :abort_on_error
     attr_writer :exclude_pattern
-    attr_writer :output
+    attr_writer :writer
     attr_writer :record_telemetry
 
     def abort_on_error
@@ -10,11 +10,11 @@ module TestBench
     end
 
     def color
-      output.color
+      writer.color
     end
 
     def color= value
-      output.color = value
+      writer.color = value
     end
 
     def exclude_pattern
@@ -22,7 +22,7 @@ module TestBench
     end
 
     def lower_verbosity
-      output.lower_verbosity
+      writer.lower_verbosity
     end
 
     def nil_coalesce ivar, default_value
@@ -33,12 +33,12 @@ module TestBench
       end
     end
 
-    def output
-      @output ||= Output.new :normal
+    def writer
+      @writer ||= Output::Writer.new
     end
 
     def raise_verbosity
-      output.raise_verbosity
+      writer.raise_verbosity
     end
 
     def record_telemetry

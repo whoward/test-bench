@@ -13,7 +13,7 @@ module TestBench
     # object into the toplevel settings object and then apply environment
     # variables to it.
     settings = Settings::Registry.get TOPLEVEL_BINDING
-    settings.output = output
+    settings.writer = output.writer
     Settings::Environment.(settings)
 
     # Telemetry pushes updates to output for display

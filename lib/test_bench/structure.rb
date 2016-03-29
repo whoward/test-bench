@@ -1,12 +1,13 @@
 module TestBench
   module Structure
-    def assert subject=nil, mod=nil, assert_class: nil, &block
+    def assert subject=nil, mod=nil, assert_class: nil, caller_location: nil, &block
       assert_class ||= Assert
+      caller_location ||= caller_locations[0]
 
       telemetry = Telemetry::Registry.get binding
 
       unless assert_class.(subject, mod, &block)
-        raise Assert::Failed.build caller_locations[0]
+        raise Assert::Failed.build caller_location
       end
 
     ensure
@@ -36,7 +37,7 @@ module TestBench
     end
 
     def refute *arguments, &block
-      assert *arguments, :assert_class => Assert::Refute, &block
+      assert *arguments, :assert_class => Assert::Refute, :caller_location => caller_locations[0], &block
     end
 
     def test prose=nil, &block

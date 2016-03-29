@@ -55,7 +55,7 @@ context "Settings" do
 
       settings.raise_verbosity
 
-      assert settings.output.level == :verbose
+      assert settings.writer.level == :verbose
     end
 
     test "Lowering" do
@@ -63,7 +63,7 @@ context "Settings" do
 
       settings.lower_verbosity
 
-      assert settings.output.level == :quiet
+      assert settings.writer.level == :quiet
     end
   end
 
