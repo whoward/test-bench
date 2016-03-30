@@ -1,9 +1,22 @@
 module TestBench
   class Output
     module Assertions
+      def color_output?
+        text = 'Some Text'
+        color = :gray
+
+        write text, :fg => color, :bg => color
+
+        wrote_line? text, :fg => color, :bg => color
+      end
+
       def text_written
         device.rewind
         device.read
+      end
+
+      def wrote? text
+        text_written == text
       end
 
       def wrote_line? text, indent: nil, **colors

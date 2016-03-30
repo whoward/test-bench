@@ -32,10 +32,11 @@ module TestBench
       puts <<-TEXT
 If no paths are specified, #{program_name} runs all files in ./tests. The following environment variables can also control execution:
 
-        TEST_BENCH_COLOR           Set color on or off
-        TEST_BENCH_ABORT_ON_ERROR  Same as -a or --abort-on-error
-        TEST_BENCH_QUIET           Same as -q or --quiet
-        TEST_BENCH_VERBOSE         Same as -v or --verbose
+        TEST_BENCH_COLOR             Set color on or off
+        TEST_BENCH_ABORT_ON_ERROR    Same as -a or --abort-on-error
+        TEST_BENCH_RECORD_TELEMETRY  Causes Test Bench to preserve telemetry events (needed for testing Test Bench itself)
+        TEST_BENCH_QUIET             Same as -q or --quiet
+        TEST_BENCH_VERBOSE           Same as -v or --verbose
 
       TEXT
     end

@@ -27,6 +27,6 @@ context "Registry" do
     object1 = registry.get binding1
     object2 = registry.get binding2
 
-    assert object1.object_id != object2.object_id
+    refute object1.object_id == object2.object_id
   end
 end

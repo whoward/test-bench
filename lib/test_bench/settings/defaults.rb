@@ -1,6 +1,10 @@
 module TestBench
   class Settings
     module Defaults
+      def self.abort_on_error
+        false
+      end
+
       def self.color
         nil
       end
@@ -9,7 +13,7 @@ module TestBench
         "_init\\.rb$"
       end
 
-      def self.abort_on_error
+      def self.record_telemetry
         false
       end
     end

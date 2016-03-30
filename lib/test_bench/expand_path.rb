@@ -1,39 +1,34 @@
 module TestBench
   class ExpandPath
     attr_reader :dir
-    attr_writer :exclude_pattern
+    attr_reader :exclude_pattern
     attr_reader :root_directory
 
-    def initialize root_directory, dir
+    def initialize root_directory, exclude_pattern, dir
       @dir = dir
+      @exclude_pattern = exclude_pattern
       @root_directory = root_directory
     end
 
-    def self.build root_directory, exclude_pattern=nil
+    def self.build root_directory, exclude_pattern=nil, dir: nil
+      dir ||= Dir
+
       exclude_pattern ||= Settings.toplevel.exclude_pattern
       exclude_pattern = Regexp.new exclude_pattern if exclude_pattern.is_a? String
 
-      dir = Dir
-
       root_directory = Pathname root_directory
 
-      instance = new root_directory, dir
-      instance.exclude_pattern = exclude_pattern
-      instance
+      new root_directory, exclude_pattern, dir
     end
 
     def call pattern
       full_pattern = root_directory.join pattern
 
-      if full_pattern.directory?
+      if dir.exist? full_pattern
         full_pattern = full_pattern.join '**/*.rb'
       end
 
       expand full_pattern.to_s
-    end
-
-    def exclude_pattern
-      @exclude_pattern ||= /^$/
     end
 
     def expand full_pattern

@@ -5,7 +5,7 @@ module TestBench
 
       def registry
         @registry ||= TestBench::Registry.build do
-          Settings.build
+          Settings.new
         end
       end
 

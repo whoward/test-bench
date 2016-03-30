@@ -10,9 +10,8 @@ context "Executor" do
     executor = TestBench::Executor.new binding, file_module
     executor.(files)
 
-    assert executor.telemetry do
-      executed? *files
-    end
+    assert executor.telemetry, &:recorded_file_started?
+    assert executor.telemetry, &:recorded_file_finished?
   end
 
   context "Result" do
@@ -34,30 +33,6 @@ context "Executor" do
       result = executor.(files)
 
       assert result == false
-    end
-  end
-
-  test "Aggregated telemetry" do
-    test "Assertions" do
-      binding = Controls::Binding.example
-      telemetry = TestBench::Telemetry::Registry.get binding
-      files = [Controls::FileSubstitute::TestScript::Passing.file] * 3
-
-      executor = TestBench::Executor.new binding, file_module
-      executor.(files)
-
-      assert executor.telemetry.assertions == 3
-    end
-
-    test "Errors" do
-      binding = Controls::Binding.example
-      telemetry = TestBench::Telemetry::Registry.get binding
-      files = [Controls::FileSubstitute::TestScript::Error.file]
-
-      executor = TestBench::Executor.new binding, file_module
-      executor.(files)
-
-      assert telemetry.errors == 1
     end
   end
 

@@ -1,30 +1,51 @@
 require_relative './test_init'
 
 context "Expanding a path into a set of files" do
-  test do
-    dir = Controls::DirSubstitute.example
-    root_directory = Controls::ExpandPath::RootDirectory.example
+  dir = Controls::DirSubstitute.example
+  root_directory = Controls::ExpandPath::RootDirectory.example
+  control_files = %w(/root/some/path/1.rb /root/some/path/2.rb /root/other/path.rb)
 
-    expand_path = TestBench::ExpandPath.new root_directory, dir
+  test "Directories" do
+    expand_path = TestBench::ExpandPath.build root_directory, :dir => dir
 
-    files = expand_path.('**/*.rb')
+    files = expand_path.('./')
 
-    assert files == %w(
-      /root/some/path/1.rb
-      /root/some/path/2.rb
-      /root/other/path.rb
-    )
+    assert files == control_files
   end
 
-  test "Exclude pattern" do
-    dir = Controls::DirSubstitute.example
-    root_directory = Controls::ExpandPath::RootDirectory.example
-
-    expand_path = TestBench::ExpandPath.new root_directory, dir
-    expand_path.exclude_pattern = /other\/path\.rb$/
+  test "Glob patterns" do
+    expand_path = TestBench::ExpandPath.build root_directory, :dir => dir
 
     files = expand_path.('**/*.rb')
 
-    assert files == %w(/root/some/path/1.rb /root/some/path/2.rb)
+    assert files == control_files
+  end
+
+  context "Exclude pattern" do
+    control_files = %w(/root/some/path/1.rb /root/some/path/2.rb)
+
+    test do
+      expand_path = TestBench::ExpandPath.build(
+        root_directory,
+        %r{other\/path\.rb$},
+        :dir => dir,
+      )
+
+      files = expand_path.('**/*.rb')
+
+      assert files == control_files
+    end
+
+    test "Pattern can also be supplied as a string" do
+      expand_path = TestBench::ExpandPath.build(
+        root_directory,
+        "other/path.rb$",
+        :dir => dir,
+      )
+
+      files = expand_path.('**/*.rb')
+
+      assert files == control_files
+    end
   end
 end

@@ -5,19 +5,6 @@ module TestBench
         new backtrace_locations
       end
 
-      def self.detail indent: nil, **colors
-        indent ||= 0
-
-        error = example
-        indent = '  ' * indent
-
-        <<-TEXT
-#{indent}#{TestBench::Output::Palette.apply "#{file}:#{line}:in `#{method_name}': #{message} (#{error.class})", **colors}
-#{indent}#{TestBench::Output::Palette.apply "        from #{file}:#{line + 1}:in `#{method_name}'", **colors}
-#{indent}#{TestBench::Output::Palette.apply "        from #{file}:#{line + 2}:in `#{method_name}'", **colors}
-        TEXT
-      end
-
       def self.file
         Path.example
       end

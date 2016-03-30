@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+
+ENV['GEM_HOME'] = '/'
+
+require_relative '../init'
+require_relative '../tests/test_init'
+
+require 'test_bench/activate'
+require 'test_bench/cli'
+
+TestBench::CLI.() or exit 1

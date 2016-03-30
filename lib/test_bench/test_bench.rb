@@ -10,14 +10,13 @@ module TestBench
     output = Output.build
 
     # Settings can affect the output (verbosity & color), so we pass the output
-    # object into the toplevel settings object.
+    # object into the toplevel settings object and then apply environment
+    # variables to it.
     settings = Settings::Registry.get TOPLEVEL_BINDING
-    settings.output = output
+    settings.writer = output.writer
+    Settings::Environment.(settings)
 
-    # Telemetry pushes updates to output for display, and output reads telemetry
-    # for summary data (e.g. tests per second, number of failures, etc.)
+    # Telemetry pushes updates to output for display
     Telemetry.subscribe output
-    telemetry = Telemetry::Registry.get TOPLEVEL_BINDING
-    output.telemetry = telemetry
   end
 end

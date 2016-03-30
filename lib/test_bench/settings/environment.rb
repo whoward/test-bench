@@ -36,9 +36,10 @@ module TestBench
       end
 
       def call
-        color
         abort_on_error
+        color
         quiet
+        record_telemetry
         verbose
       end
 
@@ -76,6 +77,12 @@ module TestBench
 
       def negative_pattern
         @@negative_pattern ||= %r{\A(?:off|no|n|0)\z}i
+      end
+
+      def record_telemetry
+        if activated? env['TEST_BENCH_RECORD_TELEMETRY']
+          settings.record_telemetry = true
+        end
       end
 
       def quiet

@@ -39,8 +39,6 @@ This is quite similar to +describe+ and +context+ in RSpec, but without any inte
 
 Unlike RSpec, which offers an API for defining custom matchers, and +test/unit+ and Minitest, which offer many different assertion methods designed to format errors for human readability, Test Bench simply ships with +assert+. This is intentional; while detailed error output is useful when working on a test, the output is often confusing down the road when the code under test regresses. This is because a matcher output will inevitably leak implementation details of the test itself, which are not at all apparent when the user is operating outside the context of the implementation -- for instance, when the build breaks on a CI server.
 
-Similarly, +refute+ (e.g. "assert not") is also not supplied. +refute+ does read better than a negated assertion, but in practice, programmers often choose `assert x != y` over `refute x == y`. This variability negates a lot of the clarity that +refute+ offers. Test Bench's design goal is to only offer the essentials.
-
 One feature offered by Test Bench's assertion mechanism is the ability to extend modules that define _customized_ assertion predicates on test subjects. This is discussed in detail in the link:Assertions.adoc[assertions] guide.
 
 It is possible that in the future link:https://github.com/k-tsj/power_assert[Power Assert] will be integrated to offer improved assertion failure output messages.

@@ -14,10 +14,9 @@ module TestBench
       new binding, File
     end
 
-    def call files, &block
+    def call files
       files.each do |file|
         execute file
-        block.(file) if block_given?
       end
 
       telemetry.passed?
@@ -35,12 +34,7 @@ module TestBench
 
       ensure
         telemetry.file_finished file
-        telemetry.stopped
       end
-    end
-
-    def settings
-      Settings::Registry.get binding
     end
 
     def telemetry

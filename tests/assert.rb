@@ -1,37 +1,49 @@
 require_relative './test_init'
 
 context "Assert" do
-  test "Passing" do
+  test "Passing assertion returns true" do
     assert TestBench::Assert.(true)
   end
 
-  test "Failing" do
-    assert !TestBench::Assert.(false)
+  test "Failing assertion returns false" do
+    refute TestBench::Assert.(false)
   end
 
-  context "Block" do
-    test "Instance (0-arity)" do
-      result = TestBench::Assert.(:some_object) do
-        self == :some_object
+  context "Block form" do
+    context "Instance evaluation (0-arity)" do
+      test "Passing" do
+        result = TestBench::Assert.(:some_object) do
+          self == :some_object
+        end
+
+        assert result
       end
 
-      assert result
+      test "Failing" do
+        result = TestBench::Assert.(:some_object) do
+          self == :some_other_object
+        end
+
+        refute result
+      end
     end
 
-    test "Using block parameter (1-arity)" do
-      result = TestBench::Assert.(:some_object) do |subject|
-        subject == :some_object
+    context "Referencing block parameter (1-arity)" do
+      test "Passing" do
+        result = TestBench::Assert.(:some_object) do |subject|
+          subject == :some_object
+        end
+
+        assert result
       end
 
-      assert result
-    end
+      test "Failing" do
+        result = TestBench::Assert.(:some_object) do |subject|
+          subject == :some_other_object
+        end
 
-    test "Failing" do
-      result = TestBench::Assert.(:some_object) do
-        self == :some_other_object
+        refute result
       end
-
-      assert !result
     end
   end
 
@@ -39,7 +51,7 @@ context "Assert" do
     example_class = Class.new do
       module Assertions
         def predicate?
-          true
+          :some_true_value
         end
       end
     end
@@ -67,7 +79,7 @@ context "Assert" do
     context "Module can be overridden" do
       mod = Module.new do
         def other_predicate?
-          true
+          :some_true_value
         end
       end
 
@@ -118,7 +130,7 @@ context "Assert" do
             raises_error? error_superclass
           end
 
-          assert not(result)
+          refute result
         end
 
         test "Error types that differ from expected remain uncaught" do

@@ -1,258 +1,406 @@
 require_relative './test_init'
 
 context "Output" do
-  test "File has begun being executed" do
-    output = TestBench::Output.new :normal
-    path = Controls::Path.example
+  context "Assertion was made" do
+    test "Run result assertion totals are updated" do
+      output = TestBench::Output.build
+      output.run_result = run_result = TestBench::Result.build
 
-    output.file_started path
+      output.asserted
 
-    assert output do
-      wrote_line? "Running #{path}"
+      assert run_result.assertions == 1
+    end
+
+    test "File result assertion totals are updated" do
+      output = TestBench::Output.build
+      output.file_result = file_result = TestBench::Result.build
+
+      output.asserted
+
+      assert file_result.assertions == 1
     end
   end
 
-  context "Context step was entered" do
-    test do
-      output = TestBench::Output.new :normal
+  context "Context was entered" do
+    test "Prose is written at the normal level" do
+      output = TestBench::Output.new
+      output.writer.level = :normal
 
-      output.context_entered "Some context"
+      output.context_entered "Some Context"
 
-      assert output do
-        wrote_line? "Some context", :fg => :green
+      assert output.writer do
+        wrote_line? "Some Context"
       end
     end
 
-    context "Indentation is increased" do
-      test do
-        output = TestBench::Output.new :normal
+    context "Indentation" do
+      output = TestBench::Output.new
 
-        output.context_entered "Some context"
+      output.context_entered "Some Context"
 
-        assert output.indentation == 1
-      end
-
-      test "Unless output is in quiet mode" do
-        output = TestBench::Output.new :quiet
-
-        output.context_entered "Some context"
-
-        assert output.indentation == 0
+      test "Level is increased" do
+        assert output.writer.indentation == 1
       end
     end
 
-    context "No prose given" do
-      test do
-        output = TestBench::Output.new :normal
+    context "Output level is quiet" do
+      output = TestBench::Output.new
+      output.writer.level = :quiet
 
-        output.context_entered nil
+      output.context_entered "Some Context"
 
+      test "Nothing is written" do
+        assert output.writer, &:wrote_nothing?
+      end
+
+      test "Indentation is unchanged" do
+        assert output.writer.indentation == 0
+      end
+    end
+
+    context "Prose is not supplied" do
+      output = TestBench::Output.new
+      output.writer.level = :normal
+      output.context_entered
+
+      test "Nothing is written" do
         assert output, &:wrote_nothing?
       end
 
-      test "Indentation is not increased" do
-        output = TestBench::Output.new :normal
-
-        output.context_entered nil
-
-        assert output.indentation == 0
+      test "Indentation is unchanged" do
+        assert output.writer.indentation == 0
       end
     end
   end
 
-  context "Context step was exited" do
-    test do
-      output = TestBench::Output.new :normal
+  context "Context was exited" do
+    context "Outer context was exited" do
+      output = TestBench::Output.new
+      output.writer.level = :normal
+      output.writer.indentation = 1
 
-      output.context_exited "Some context"
+      output.context_exited "Some Context"
 
-      assert output, &:wrote_nothing?
-    end
-
-    context "Indentation is decreased" do
-      test do
-        output = TestBench::Output.new :normal
-        output.indentation = 1
-
-        output.context_exited "Some context"
-
-        assert output.indentation == 0
+      test "Indentation is decreased" do
+        assert output.writer.indentation == 0
       end
 
-      test "Unless output is in quiet mode" do
-        output = TestBench::Output.new :quiet
-        output.indentation = 1
-
-        output.context_exited "Some context"
-
-        assert output.indentation == 1
+      test "A blank line is written" do
+        assert output.writer do
+          wrote_line? ' '
+        end
       end
     end
 
-    context "No prose given" do
-      test "Indentation is not decreased" do
-        output = TestBench::Output.new :normal
-        output.indentation = 1
+    context "Inner context was exited" do
+      output = TestBench::Output.new
+      output.writer.indentation = 2
 
-        output.context_exited nil
-        output.context_entered "Inner context"
+      output.context_exited "Inner Context"
 
-        assert output do
-          wrote_line? "Inner context", :fg => :green, :indent => 1
+      test "A blank line is not written" do
+        refute output.writer do
+          wrote_line? ' '
+        end
+      end
+    end
+
+    context "Output level is quiet" do
+      output = TestBench::Output.new
+      output.writer.level = :quiet
+      output.writer.indentation = 1
+
+      output.context_exited
+
+      test "Indentation is unchanged" do
+        assert output.writer.indentation == 1
+      end
+    end
+
+    context "Prose is not supplied" do
+      output = TestBench::Output.new
+      output.writer.indentation = 1
+
+      output.context_exited
+
+      test "Indentation is unchanged" do
+        assert output.writer.indentation == 1
+      end
+    end
+  end
+
+  context "An error was raised" do
+    test "Error message and stacktrace are rendered in red at the quiet level" do
+      error = Controls::Error.example
+      control_text = TestBench::Controls::Output::Error.example
+
+      output = TestBench::Output.new
+      output.writer.level = :quiet
+
+      output.error_raised error
+
+      assert output.writer do
+        raw_text == control_text
+      end
+    end
+  end
+
+  context "File has finished executing" do
+    path = Controls::Path.example
+
+    test "Run result is updated to include file" do
+      output = TestBench::Output.new
+
+      output.file_started path
+      output.file_finished path
+
+      assert output.run_result.files == [path]
+    end
+
+    context "Current file result" do
+      test "Stop time is recorded" do
+        output = TestBench::Output.new
+        file_result = output.file_started path
+
+        output.file_finished path
+
+        assert file_result.stop_time
+      end
+
+      test "Is reset" do
+        output = TestBench::Output.new
+        output.file_result = file_result = TestBench::Result.build
+
+        output.file_finished path
+
+        refute output.file_result == file_result
+      end
+
+      context "Summary" do
+        file_result = Controls::Result.example
+        summary = Controls::Output::Summary::File.example file_result
+
+        test "Rendered at the verbose output level" do
+          output = TestBench::Output.new
+          output.writer.level = :verbose
+          output.file_result = file_result
+
+          output.file_finished path
+
+          assert output.writer do
+            wrote? summary
+          end
+        end
+
+        test "Not rendered at the normal output level" do
+          output = TestBench::Output.new
+          output.writer.level = :normal
+          output.file_result = file_result
+
+          output.file_finished path
+
+          assert output, &:wrote_nothing?
         end
       end
     end
   end
 
-  test "Test was started" do
-    output = TestBench::Output.new :verbose
-
-    output.test_started "Some test"
-
-    assert output do
-      wrote_line? %{Started test "Some test"}, :fg => :gray
-    end
-  end
-
-  test "Test passed" do
-    output = TestBench::Output.new :normal
-
-    output.test_passed "Some test"
-
-    assert output do
-      wrote_line? "Some test", :fg => :green
-    end
-  end
-
-  test "Test failed" do
-    output = TestBench::Output.new :normal
-
-    output.test_failed "Some test"
-
-    assert output do
-      wrote_line? "Some test", :fg => :white, :bg => :red
-    end
-  end
-
-  test "Test skipped" do
-    output = TestBench::Output.new :normal
-
-    output.test_skipped "Some test"
-
-    assert output do
-      wrote_line? "Some test", :fg => :brown
-    end
-  end
-
-  test "An error was raised" do
-    error = Controls::Error.example
-    output = TestBench::Output.new :quiet
-    control_text_written = TestBench::Controls::Error.detail :fg => :red
-
-    output.error_raised error
-
-    assert output do
-      text_written == control_text_written
-    end
-  end
-
-  context "File has finished being executed" do
-    output = TestBench::Output.new :verbose
-    output.telemetry = telemetry = Controls::Telemetry::Passed.example
+  context "File has started executing" do
     path = Controls::Path.example
 
-    output.file_finished path
+    context "Message that the file is running" do
+      test "Rendered at the normal output level" do
+        output = TestBench::Output.new
+        output.writer.level = :normal
 
-    test "File finished" do
-      assert output do
-        wrote_line? "Finished running #{path}"
+        output.file_started path
+
+        assert output.writer do
+          wrote? "Running #{path}\n"
+        end
+      end
+
+      test "Not rendered at the quiet output level" do
+        output = TestBench::Output.new
+        output.writer.level = :quiet
+
+        output.file_started path
+
+        assert output, &:wrote_nothing?
       end
     end
 
-    test "Telemetry summary" do
-      control_summary = Controls::Telemetry::Summary.example telemetry
+    test "Current file result is set" do
+      output = TestBench::Output.new
+      original_file_result = output.file_result
 
-      assert output do
-        wrote_line? control_summary
-      end
+      output.file_started path
+
+      refute output.file_result == original_file_result
     end
   end
 
   context "The run has finished" do
-    context "Passing" do
-      output = TestBench::Output.new :quiet
-      output.telemetry = telemetry = Controls::Telemetry::Passed.example
+    context "Summary" do
+      run_result = Controls::Result::Passed.example
+      summary = Controls::Output::Summary::Run.example run_result
 
-      output.run_finished
-
-      test "Top line" do
-        assert output do
-          wrote_line? "Finished running 1 file"
-        end
-      end
-
-      test "Summary" do
-        control_summary = Controls::Telemetry::Summary.example telemetry
+      test "Rendered at the quiet log level" do
+        output = TestBench::Output.new
+        output.writer.level = :quiet
+        output.run_result = run_result
 
         output.run_finished
 
-        assert output do
-          wrote_line? control_summary, :fg => :cyan
-        end
-      end
-    end
-
-    context "Failing" do
-      output = TestBench::Output.new :quiet
-      output.telemetry = telemetry = Controls::Telemetry::Failed.example
-
-      output.run_finished
-
-      test "Summary" do
-        control_summary = Controls::Telemetry::Summary.example telemetry
-
-        assert output do
-          wrote_line? control_summary, :fg => :red
+        assert output.writer do
+          wrote? summary
         end
       end
     end
   end
 
-  context "Color" do
-    test "Output is not a tty" do
-      output = TestBench::Output.new :normal
-      output.device = Tempfile.new
+  context "Test failed" do
+    test "Run result total for failing tests is updated" do
+      output = TestBench::Output.new
 
-      output.normal 'Some text', :fg => :red
+      output.test_failed "Some test"
 
-      assert output do
-        wrote_line? 'Some text'
-      end
+      assert output.run_result.failures == 1
     end
 
-    test "Color is deactivated" do
-      output = TestBench::Output.new :normal
-      output.force_color = false
+    test "File result total for failing tests is updated" do
+      output = TestBench::Output.new
+      output.file_result = file_result = TestBench::Result.build
 
-      output.normal 'Some text', :fg => :red
+      output.test_failed "Some test"
 
-      assert output do
-        wrote_line? 'Some text'
+      assert file_result.failures == 1
+    end
+
+    context "Output" do
+      context "Quiet level" do
+        output = TestBench::Output.new
+        output.writer.level = :quiet
+
+        output.test_failed "Some test"
+
+        test "Prose is rendered" do
+          assert output.writer do
+            wrote_line? "Some test"
+          end
+        end
       end
     end
   end
 
-  context "Color is enabled" do
-    test "Output is not a tty but color is activated" do
-      output = TestBench::Output.new :normal
-      output.force_color = true
-      output.device = Tempfile.new
+  context "Test passed" do
+    test "Run result total for passing tests is updated" do
+      output = TestBench::Output.new
 
-      output.normal 'Some text', :fg => :red
+      output.test_passed "Some test"
 
-      assert output do
-        wrote_line? 'Some text', :fg => :red
+      assert output.run_result.passes == 1
+    end
+
+    test "File result total for passing tests is updated" do
+      output = TestBench::Output.new
+      output.file_result = file_result = TestBench::Result.build
+
+      output.test_passed "Some test"
+
+      assert file_result.passes == 1
+    end
+
+    context "Output" do
+      context "Normal level" do
+        output = TestBench::Output.new
+
+        output.test_passed "Some test"
+
+        test "Prose is rendered" do
+          assert output.writer do
+            wrote_line? "Some test"
+          end
+        end
       end
+
+      context "Quiet level" do
+        output = TestBench::Output.new
+        output.writer.level = :quiet
+
+        output.test_passed "Some test"
+
+        test "Prose is not rendered" do
+          assert output.writer, &:wrote_nothing?
+        end
+      end
+    end
+  end
+
+  context "Test was skipped" do
+    test "Run result total for skipped tests is updated" do
+      output = TestBench::Output.new
+
+      output.test_skipped "Some test"
+
+      assert output.run_result.skips == 1
+    end
+
+    test "File result total for skipped tests is updated" do
+      output = TestBench::Output.new
+      output.file_result = file_result = TestBench::Result.build
+
+      output.test_skipped "Some test"
+
+      assert file_result.skips == 1
+    end
+
+    context "Output" do
+      context "Normal level" do
+        output = TestBench::Output.new
+        output.writer.level = :normal
+
+        output.test_skipped "Some test"
+
+        test "Prose is rendered" do
+          assert output.writer do
+            wrote_line? "Some test"
+          end
+        end
+      end
+
+      context "Quiet level" do
+        output = TestBench::Output.new
+        output.writer.level = :quiet
+
+        output.test_skipped "Some test"
+
+        test "Prose is not rendered" do
+          assert output.writer, &:wrote_nothing?
+        end
+      end
+    end
+  end
+
+  context "Test was started" do
+    test "Start of test message is rendered at the verbose level" do
+      output = TestBench::Output.new
+      output.writer.level = :verbose
+
+      output.test_started "Some test"
+
+      assert output.writer do
+        wrote_line? %{Started test "Some test"}
+      end
+    end
+
+    test "No message is rendered at the normal level" do
+      output = TestBench::Output.new
+      output.writer.level = :normal
+
+      output.test_started "Some test"
+
+      assert output.writer, &:wrote_nothing?
     end
   end
 end

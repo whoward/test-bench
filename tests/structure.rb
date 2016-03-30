@@ -1,27 +1,29 @@
 require_relative './test_init'
 
 context "Test structure" do
-  context "Assertions" do
+  context "Assert" do
     test "Positive" do
       binding = Controls::Binding.example
+      script = Controls::TestScript::Passing.example
       telemetry = TestBench::Telemetry::Registry.get binding
 
-      binding.eval 'assert true', __FILE__, __LINE__
+      binding.eval script, __FILE__, __LINE__
 
-      assert telemetry.assertions == 1
+      assert telemetry, &:recorded_asserted?
     end
 
     test "Negative" do
       binding = Controls::Binding.example
+      script = Controls::TestScript::Failing.example
       telemetry = TestBench::Telemetry::Registry.get binding
 
       begin
-        binding.eval 'assert false', __FILE__, __LINE__
+        binding.eval script, __FILE__, __LINE__
       rescue TestBench::Assert::Failed => error
       end
 
       assert error
-      assert telemetry.assertions == 1
+      assert telemetry, &:recorded_asserted?
     end
   end
 
@@ -32,16 +34,20 @@ context "Test structure" do
 
       binding.eval 'context do end', __FILE__, __LINE__
 
-      assert telemetry.passed?
+      assert telemetry, &:recorded_context_entered?
+      assert telemetry, &:recorded_context_exited?
     end
 
     test "Errors are recorded" do
       binding = Controls::Binding.example
       telemetry = TestBench::Telemetry::Registry.get binding
 
-      binding.eval 'context :suppress_exit => true do fail end', __FILE__, __LINE__
+      begin
+        binding.eval 'context do fail end', __FILE__, __LINE__
+      rescue SystemExit => error
+      end
 
-      assert telemetry.errors == 1
+      assert telemetry, &:recorded_error_raised?
     end
 
     test "The system exits immediately when abort on error is set" do
@@ -50,68 +56,106 @@ context "Test structure" do
       settings.abort_on_error = true
 
       begin
-        binding.eval 'context :suppress_exit => true do fail end', __FILE__, __LINE__
+        binding.eval 'context do fail end', __FILE__, __LINE__
       rescue SystemExit => error
       end
 
       assert error
-      assert !error.success?
+      refute error.success?
     end
 
-    test "Indentation" do
-      binding = Controls::Binding.example
-      output = Controls::Output.attach binding
+    context "The outermost context exits unsuccessfully" do
+      test "System exits immediately" do
+        binding = Controls::Binding.example
+        settings = TestBench::Settings::Registry.get binding
 
-      binding.eval <<~RUBY, __FILE__, __LINE__
-      context "Outer context" do
-        context "Inner context" do end
+        begin
+          binding.eval 'context do fail end', __FILE__, __LINE__
+        rescue SystemExit => error
+        end
+
+        assert error
+        refute error.success?
       end
-      RUBY
 
-      assert output do
-        wrote_line? 'Inner context', :fg => :green, :indent => 1
+      test "System does not exit immediately if exit is suppressed" do
+        binding = Controls::Binding.example
+        settings = TestBench::Settings::Registry.get binding
+
+        begin
+          binding.eval 'context :suppress_exit => true do fail end', __FILE__, __LINE__
+        rescue SystemExit => error
+        end
+
+        refute error
       end
     end
   end
 
+  context "Refute" do
+    test "Positive" do
+      binding = Controls::Binding.example
+      telemetry = TestBench::Telemetry::Registry.get binding
+
+      binding.eval 'refute false', __FILE__, __LINE__
+
+      assert telemetry, &:recorded_asserted?
+    end
+
+    test "Negative" do
+      binding = Controls::Binding.example
+      telemetry = TestBench::Telemetry::Registry.get binding
+
+      begin
+        binding.eval 'refute true', __FILE__, __LINE__
+      rescue TestBench::Assert::Failed => error
+      end
+
+      assert error
+      assert telemetry, &:recorded_asserted?
+    end
+  end
+
   context "Test" do
-    test do
+    test "Passing" do
       binding = Controls::Binding.example
       telemetry = TestBench::Telemetry::Registry.get binding
 
       binding.eval 'test "Some test" do end', __FILE__, __LINE__
 
-      assert telemetry.passes == 1
+      assert telemetry, &:recorded_test_started?
+      assert telemetry, &:recorded_test_passed?
+      assert telemetry, &:recorded_test_finished?
     end
 
-    test "Errors are recorded both as as test failures and errors" do
+    test "Failing" do
       binding = Controls::Binding.example
       telemetry = TestBench::Telemetry::Registry.get binding
 
-      binding.eval 'test "Some test" do fail end', __FILE__, __LINE__
+      binding.eval 'test "Some test" do assert false end', __FILE__, __LINE__
 
-      assert telemetry.failures == 1
-      assert telemetry.errors == 1
+      assert telemetry, &:recorded_test_failed?
     end
 
-    test %{Prose defaults to "Test"} do
-      binding = Controls::Binding.example
-      output = Controls::Output.attach binding
-
-      binding.eval 'test do end', __FILE__, __LINE__
-
-      assert output do
-        wrote_line? "Test", :fg => :green
-      end
-    end
-
-    test "Skipping test" do
+    test "Skipping" do
       binding = Controls::Binding.example
       telemetry = TestBench::Telemetry::Registry.get binding
 
       binding.eval 'test', __FILE__, __LINE__
 
-      assert telemetry.skips == 1
+      assert telemetry, &:recorded_test_skipped?
+    end
+
+    test %{Prose defaults to "Test"} do
+      binding = Controls::Binding.example
+      output = Controls::Output.attach binding
+      telemetry = TestBench::Telemetry::Registry.get binding
+
+      binding.eval 'test do end', __FILE__, __LINE__
+
+      assert telemetry do
+        test? 'Test'
+      end
     end
   end
 end

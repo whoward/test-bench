@@ -12,6 +12,18 @@ assert x.some_method(:some_argument)
 
 This is enough to get started. There are no elaborate matchers or assertion methods that print out exactly what went wrong (see link:Rationale.adoc[Rationale]). However, assertions can be made more powerful through assert's block form syntax and assertion modules.
 
+Refutation
+==========
+
+It is common to assert that something is _not_ "truthy"; in such cases, +assert !subject+ is certainly viable, if slightly cryptic. To improve readability in these circumstances, +refute+ is offered as the negated complement of +assert+:
+
+[source,ruby]
+----
+refute false
+refute nil
+refute x == y
+----
+
 == Block form syntax
 
 +assert+ takes an optional block which, when supplied, changes the way +assert+ operates. Without a block, +assert+ simply expects the value passed in to be "truthy." When a block is passed, the block is evaluated, and _its_ result is then expected to be "truthy." The argument passed to assert is then passed to the block:

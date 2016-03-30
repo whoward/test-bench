@@ -1,10 +1,11 @@
 require_relative './test_init'
 
 context "Runner" do
-  test "Expands all paths into a concrete set of files and executes them" do
+  test "Executes all files found in paths" do
     executor = TestBench::Controls::Executor::Substitute.new
+    telemetry = TestBench::Telemetry.build
 
-    runner = TestBench::Runner.new %w(some/path other/path.rb)
+    runner = TestBench::Runner.new %w(some/path other/path.rb), telemetry
     runner.expand_path = Controls::ExpandPath.example
     runner.executor = executor
 
@@ -17,31 +18,27 @@ context "Runner" do
 
   test "Records that the run started and stopped" do
     telemetry = TestBench::Telemetry.build
-    telemetry.clock = Controls::Clock::Elapsed.example
-
-    runner = TestBench::Runner.new %w(some/path other/path.rb)
-    runner.telemetry = telemetry
+    runner = TestBench::Runner.new %w(some/path other/path.rb), telemetry
 
     runner.()
 
-    assert telemetry do
-      elapsed? Controls::Clock::Elapsed.seconds
-    end
+    assert telemetry, &:recorded_run_started?
+    assert telemetry, &:recorded_run_finished?
   end
 
   context "Return value" do
     test "True if tests passed" do
-      runner = TestBench::Runner.new []
-      runner.telemetry = Controls::Telemetry::Passed.example
+      telemetry = Controls::Telemetry::Passed.example
+      runner = TestBench::Runner.new [], telemetry
 
       return_value = runner.()
 
-      assert return_value
+      assert return_value == true
     end
 
     test "False if tests failed" do
-      runner = TestBench::Runner.new []
-      runner.telemetry = Controls::Telemetry::Failed.example
+      telemetry = Controls::Telemetry::Failed.example
+      runner = TestBench::Runner.new [], telemetry
 
       return_value = runner.()
 

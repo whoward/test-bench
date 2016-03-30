@@ -1,55 +1,37 @@
 module TestBench
   class Output
-    attr_accessor :force_color
-    attr_writer :device
-    attr_accessor :indentation
-    attr_accessor :level
-    attr_writer :telemetry
+    attr_writer :file_result
+    attr_writer :run_result
+    attr_writer :writer
 
-    def initialize level
-      @level = level
-      @indentation = 0
-    end
+    def self.build level=nil
+      writer = Writer.build $stdout
+      writer.level = level if level
 
-    def self.build
-      level = :normal
-
-      instance = new level
-      instance.device = $stdout
+      instance = new
+      instance.writer = writer
       instance
     end
 
-    def color_enabled?
-      return force_color unless force_color.nil?
-      return true if device.is_a? StringIO
-      device.tty?
+    def asserted
+      file_result.asserted
+      run_result.asserted
     end
 
-    def context_entered prose
-      if prose
-        normal prose, :fg => :green
-        indent
-      end
+    def context_entered prose=nil
+      return if prose.nil?
+
+      writer.normal prose, :fg => :green
+
+      writer.increase_indentation unless writer.level == :quiet
     end
 
-    def context_exited prose
-      if prose
-        deindent
-        normal ' ' if indentation.zero?
-      end
-    end
+    def context_exited prose=nil
+      return if prose.nil?
 
-    def deindent
-      self.indentation -= 1 unless level == :quiet
-    end
+      writer.decrease_indentation unless writer.level == :quiet
 
-    def detail_error error
-      detail_summary = "#{error.backtrace[0]}: #{error.message} (#{error.class})"
-
-      quiet detail_summary, :fg => :red
-      error.backtrace[1..-1].each do |frame|
-        quiet "        from #{frame}", :fg => :red
-      end
+      writer.normal ' ' if writer.indentation.zero?
     end
 
     def device
@@ -57,110 +39,106 @@ module TestBench
     end
 
     def error_raised error
-      indent
-      detail_error error
-      deindent
-    end
+      run_result.error_raised error
+      file_result.error_raised error
 
-    def file_finished file
-      telemetry ||= self.telemetry
+      detail_summary = "#{error.backtrace[0]}: #{error.message} (#{error.class})"
 
-      summary = summarize_telemetry telemetry
-
-      verbose "Finished running #{file}"
-      verbose summary
-      verbose ' '
-    end
-
-    def file_started file
-      normal "Running #{file}"
-    end
-
-    def indent
-      self.indentation += 1 unless level == :quiet
-    end
-
-    def lower_verbosity
-      if level == :verbose
-        self.level = :normal
-      elsif level == :normal
-        self.level = :quiet
+      writer.quiet detail_summary, :fg => :red
+      error.backtrace[1..-1].each do |frame|
+        writer.quiet "        from #{frame}", :fg => :red
       end
     end
 
-    def normal prose, **colors
-      write prose, **colors unless level == :quiet
+    def file_finished path
+      run_result.file_finished path
+      file_result.finished
+
+      summary = summarize_result file_result
+
+      self.file_result = nil
+
+      writer.verbose "Finished running #{path}"
+      writer.verbose summary
+      writer.verbose ' '
     end
 
-    def quiet prose, **colors
-      write prose, **colors
+    def file_result
+      @file_result or Result::Null
     end
 
-    def raise_verbosity
-      if level == :quiet
-        self.level = :normal
-      elsif level == :normal
-        self.level = :verbose
-      end
+    def file_started path
+      writer.normal "Running #{path}"
+
+      file_result = Result.build
+
+      self.file_result = file_result
+
+      file_result
     end
 
     def run_finished
-      files_label = if telemetry.files.size == 1 then 'file' else 'files' end
+      run_result.run_finished
 
-      quiet "Finished running #{telemetry.files.size} #{files_label}"
+      files_label = if run_result.files.size == 1 then 'file' else 'files' end
 
-      summary = summarize_telemetry telemetry
+      color = if run_result.passed? then :cyan else :red end
 
-      color = if telemetry.passed? then :cyan else :red end
+      writer.quiet "Finished running #{run_result.files.size} #{files_label}"
 
-      quiet summary, :fg => color
+      summary = summarize_result run_result
+
+      writer.quiet summary, :fg => color
     end
 
-    def summarize_telemetry telemetry
-      minutes, seconds = telemetry.elapsed_time.divmod 60
+    def run_started
+      self.run_result
+    end
+
+    def run_result
+      @run_result ||= Result.build
+    end
+
+    def summarize_result result
+      minutes, seconds = result.elapsed_time.divmod 60
 
       elapsed = String.new
       elapsed << "#{minutes}m" unless minutes.zero?
       elapsed << "%.3fs" % seconds
 
-      test_label = if telemetry.tests == 1 then 'test' else 'tests' end
-      error_label = if telemetry.errors == 1 then 'error' else 'errors' end
+      test_label = if result.tests == 1 then 'test' else 'tests' end
+      error_label = if result.errors == 1 then 'error' else 'errors' end
       "Ran %d #{test_label} in #{elapsed} (%.3fs tests/second)\n%d passed, %d skipped, %d failed, %d total #{error_label}" %
-        [telemetry.tests, telemetry.tests_per_second, telemetry.passes, telemetry.skips, telemetry.failures, telemetry.errors]
-    end
-
-    def telemetry
-      @telemetry ||= Telemetry.build
+        [result.tests, result.tests_per_second, result.passes, result.skips, result.failures, result.errors]
     end
 
     def test_failed prose
-      quiet prose, :fg => :white, :bg => :red
+      file_result.test_failed prose
+      run_result.test_failed prose
+
+      writer.quiet prose, :fg => :white, :bg => :red
     end
 
     def test_passed prose
-      normal prose, :fg => :green
+      file_result.test_passed prose
+      run_result.test_passed prose
+
+      writer.normal prose, :fg => :green
     end
 
     def test_skipped prose
-      normal prose, :fg => :brown
+      file_result.test_skipped prose
+      run_result.test_skipped prose
+
+      writer.normal prose, :fg => :brown
     end
 
     def test_started prose
-      verbose "Started test #{prose.inspect}", :fg => :gray
+      writer.verbose "Started test #{prose.inspect}", :fg => :gray
     end
 
-    def verbose prose, **colors
-      write prose, **colors if level == :verbose
-    end
-
-    def write prose, **colors
-      if color_enabled?
-        prose = Palette.apply prose, **colors
-      end
-
-      prose = "#{'  ' * indentation}#{prose}"
-
-      device.puts prose
+    def writer
+      @writer ||= Writer.new
     end
   end
 end
