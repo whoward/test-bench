@@ -383,7 +383,24 @@ context "Output" do
   end
 
   context "Test was started" do
-    test "Start of test message is rendered at the verbose level"
-    test "No message is rendered at the normal level"
+    test "Start of test message is rendered at the verbose level" do
+      output = TestBench::Output.new
+      output.writer.level = :verbose
+
+      output.test_started "Some test"
+
+      assert output.writer do
+        wrote_line? %{Started test "Some test"}
+      end
+    end
+
+    test "No message is rendered at the normal level" do
+      output = TestBench::Output.new
+      output.writer.level = :normal
+
+      output.test_started "Some test"
+
+      assert output.writer, &:wrote_nothing?
+    end
   end
 end
