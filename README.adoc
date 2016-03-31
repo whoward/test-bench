@@ -3,21 +3,24 @@ Test Bench
 
 Test Bench is a test framework for ruby designed to offer the minimum set of features necessary to test well designed code effectively. There are no hooks for test setup, teardown, defining variables, sharing tests, custom reporters, or plugins. There is no mocking library. There is but one output format, inspired by RSpec's original output. There is no DSL in play that resembles human language. There are no matchers or a large bank of esoteric assertions you will probably never use. In fact, there are only three methods: +assert+, +test+, and +context+.
 
-=== Documentation Links
-
-1. link:doc/Rationale.adoc[Rationale]
-1. link:doc/Basic-Usage.adoc[Basic Usage]
-1. link:doc/Assertions.adoc[Assertions]
-1. link:doc/Controlling-Execution.adoc[Controlling Execution]
-1. link:doc/Extending.adoc[Extending Test Bench (Plugins)]
+For more information about why Test Bench was created and the reasoning behind it's design, see link:doc/Rationale.adoc[Rationale].
 
 === Quick Start Guide
 
-After reading the above documentation, you are ready to set up a project to use Test Bench. First, either install the +test_bench+ gem or add it to your project via e.g. Bundler. To install the gem:
+Before getting started, I recommend skimming through the documentation referenced after this guide. Afterwards, to get started with Test Bench, either install the +test_bench+ gem on your local system or add it to a project you'd like to use Test Bench with.
+
+To install the gem locally:
 
 [source]
 ----
 # gem install test_bench
+----
+
+Or, to add it to the project via Bundler:
+
+[source]
+----
+gem 'test_bench'
 ----
 
 Second, write a test loader, e.g. +tests/test_helper+:
@@ -65,7 +68,15 @@ Now, if you want to run that test file, just load it through the ruby executable
 # bench tests/
 ----
 
-That will get you started. It's a good idea to read through all the documentation, though. Also, that +bench+ executable offers a few useful options, so be sure to check out the help via +bench --help+. Finally, Test Bench's test suite itself serves as an example for reference.
+That will get you started, though it's a good idea to read through all the documentation. Also, that +bench+ executable offers a few useful options, so be sure to check out the help via +bench --help+. Finally, Test Bench's test suite itself serves as an example for reference.
+
+=== Documentation Links
+
+1. link:doc/Rationale.adoc[Rationale]
+1. link:doc/Basic-Usage.adoc[Basic Usage]
+1. link:doc/Assertions.adoc[Assertions]
+1. link:doc/Controlling-Execution.adoc[Controlling Execution]
+1. link:doc/Extending.adoc[Extending Test Bench (Plugins)]
 
 === License
 
