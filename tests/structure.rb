@@ -64,6 +64,15 @@ context "Test structure" do
       refute error.success?
     end
 
+    test "No block is supplied" do
+      binding = Controls::Binding.example
+      telemetry = TestBench::Telemetry::Registry.get binding
+
+      binding.eval 'context', __FILE__, __LINE__
+
+      refute telemetry, &:recorded_error_raised?
+    end
+
     context "The outermost context exits unsuccessfully" do
       test "System exits immediately" do
         binding = Controls::Binding.example

@@ -22,7 +22,7 @@ module TestBench
 
       begin
         telemetry.context_entered prose
-        block.()
+        block.() if block
 
       rescue => error
         Structure.error error, binding
