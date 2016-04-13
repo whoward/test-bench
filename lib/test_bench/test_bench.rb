@@ -1,5 +1,14 @@
 module TestBench
   def self.activate
+    # Ruby pre 2.2 did not implement Binding#receiver
+    unless TOPLEVEL_BINDING.respond_to? :receiver
+      ::Binding.class_exec do
+        def receiver
+          eval "self"
+        end
+      end
+    end
+
     # TestBench.activate can be called multiple times
     return if TOPLEVEL_BINDING.receiver.is_a? Structure
 
