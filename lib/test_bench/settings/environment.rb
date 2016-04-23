@@ -38,6 +38,7 @@ module TestBench
       def call
         abort_on_error
         color
+        reverse_backtraces
         quiet
         record_telemetry
         verbose
@@ -82,6 +83,12 @@ module TestBench
       def record_telemetry
         if activated? env['TEST_BENCH_RECORD_TELEMETRY']
           settings.record_telemetry = true
+        end
+      end
+
+      def reverse_backtraces
+        if activated? env['TEST_BENCH_REVERSE_BACKTRACES']
+          settings.reverse_backtraces = true
         end
       end
 

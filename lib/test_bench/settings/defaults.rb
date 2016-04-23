@@ -16,6 +16,10 @@ module TestBench
       def self.record_telemetry
         false
       end
+
+      def self.reverse_backtraces
+        false
+      end
     end
   end
 end

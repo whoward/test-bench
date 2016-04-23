@@ -21,6 +21,16 @@ context "Pulling settings from the environment" do
     assert settings.color == false
   end
 
+  test "Reverse backtraces" do
+    settings = TestBench::Settings.new
+    environment = TestBench::Settings::Environment.build settings,
+      'TEST_BENCH_REVERSE_BACKTRACES' => 'on'
+
+    environment.()
+
+    assert settings.reverse_backtraces == true
+  end
+
   test "Quiet" do
     settings = TestBench::Settings.new
     environment = TestBench::Settings::Environment.build settings,

@@ -4,6 +4,7 @@ module TestBench
     attr_writer :exclude_pattern
     attr_writer :writer
     attr_writer :record_telemetry
+    attr_writer :reverse_backtraces
 
     def abort_on_error
       nil_coalesce :@abort_on_error, Defaults.abort_on_error
@@ -33,16 +34,20 @@ module TestBench
       end
     end
 
-    def writer
-      @writer ||= Output::Writer.new
-    end
-
     def raise_verbosity
       writer.raise_verbosity
     end
 
     def record_telemetry
       nil_coalesce :@record_telemetry, Defaults.record_telemetry
+    end
+
+    def reverse_backtraces
+      nil_coalesce :@reverse_backtraces, Defaults.reverse_backtraces
+    end
+
+    def writer
+      @writer ||= Output::Writer.new
     end
 
     def self.toplevel

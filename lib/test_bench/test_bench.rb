@@ -25,6 +25,9 @@ module TestBench
     settings.writer = output.writer
     Settings::Environment.(settings)
 
+    # Configure reverse backtraces on output
+    output.reverse_backtraces = settings.reverse_backtraces
+
     # Telemetry pushes updates to output for display
     Telemetry.subscribe output
   end

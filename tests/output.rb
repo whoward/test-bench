@@ -130,8 +130,9 @@ context "Output" do
   end
 
   context "An error was raised" do
+    error = Controls::Error.example
+
     test "Error message and stacktrace are rendered in red at the quiet level" do
-      error = Controls::Error.example
       control_text = TestBench::Controls::Output::Error.example
 
       output = TestBench::Output.new
@@ -141,6 +142,21 @@ context "Output" do
 
       assert output.writer do
         raw_text == control_text
+      end
+    end
+
+    context "Stacktraces are configured to be reversed" do
+      test "Stacktrace is reversed" do
+        control_text = TestBench::Controls::Output::Error::Reversed.example
+
+        output = TestBench::Output.new
+        output.reverse_backtraces = true
+
+        output.error_raised error
+
+        assert output.writer do
+          raw_text == control_text
+        end
       end
     end
   end

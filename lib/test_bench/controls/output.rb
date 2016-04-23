@@ -35,7 +35,9 @@ module TestBench
       end
 
       module Error
-        def self.example
+        def self.example reverse: nil
+          reverse ||= false
+
           error = Controls::Error.example
 
           file = Controls::Error.file
@@ -43,11 +45,21 @@ module TestBench
           method_name = Controls::Error.method_name
           message = Controls::Error.message
 
-          <<~TEXT
-          #{file}:#{line}:in `#{method_name}': #{message} (#{error.class})
-                  from #{file}:#{line + 1}:in `#{method_name}'
-                  from #{file}:#{line + 2}:in `#{method_name}'
-          TEXT
+          lines = [
+            %{#{file}:#{line}:in `#{method_name}': #{message} (#{error.class})\n},
+            %{        from #{file}:#{line + 1}:in `#{method_name}'\n},
+            %{        from #{file}:#{line + 2}:in `#{method_name}'\n},
+          ]
+
+          lines.reverse! if reverse
+
+          lines.join
+        end
+
+        module Reversed
+          def self.example
+            Error.example reverse: true
+          end
         end
       end
 

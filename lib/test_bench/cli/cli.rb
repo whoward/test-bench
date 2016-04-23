@@ -32,11 +32,12 @@ module TestBench
       puts <<-TEXT
 If no paths are specified, #{program_name} runs all files in ./tests. The following environment variables can also control execution:
 
-        TEST_BENCH_COLOR             Set color on or off
-        TEST_BENCH_ABORT_ON_ERROR    Same as -a or --abort-on-error
-        TEST_BENCH_RECORD_TELEMETRY  Causes Test Bench to preserve telemetry events (needed for testing Test Bench itself)
-        TEST_BENCH_QUIET             Same as -q or --quiet
-        TEST_BENCH_VERBOSE           Same as -v or --verbose
+        TEST_BENCH_COLOR               Set color on or off
+        TEST_BENCH_ABORT_ON_ERROR      Same as -a or --abort-on-error
+        TEST_BENCH_RECORD_TELEMETRY    Causes Test Bench to preserve telemetry events (needed for testing Test Bench itself)
+        TEST_BENCH_REVERSE_BACKTRACES  Prints exceptions in reverse order
+        TEST_BENCH_QUIET               Same as -q or --quiet
+        TEST_BENCH_VERBOSE             Same as -v or --verbose
 
       TEXT
     end
@@ -54,6 +55,10 @@ If no paths are specified, #{program_name} runs all files in ./tests. The follow
 
         parser.on '-q', '--quiet', "Lower verbosity level" do
           settings.lower_verbosity
+        end
+
+        parser.on '-r', '--reverse-backtraces', "Reverse error backtraces" do
+          settings.reverse_backtraces = true
         end
 
         parser.on '-v', '--verbose', "Raise verbosity level" do

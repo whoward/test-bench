@@ -1,6 +1,7 @@
 module TestBench
   class Output
     attr_writer :file_result
+    attr_writer :reverse_backtraces
     attr_writer :run_result
     attr_writer :writer
 
@@ -44,9 +45,15 @@ module TestBench
 
       detail_summary = "#{error.backtrace[0]}: #{error.message} (#{error.class})"
 
-      writer.quiet detail_summary, :fg => :red
+      lines = [detail_summary]
       error.backtrace[1..-1].each do |frame|
-        writer.quiet "        from #{frame}", :fg => :red
+        lines << "        from #{frame}"
+      end
+
+      lines.reverse! if reverse_backtraces
+
+      lines.each do |line|
+        writer.quiet line, :fg => :red
       end
     end
 
@@ -75,6 +82,16 @@ module TestBench
       self.file_result = file_result
 
       file_result
+    end
+
+    def reverse_backtraces
+      ivar = :@reverse_backtraces
+
+      if instance_variable_defined? ivar
+        instance_variable_get ivar
+      else
+        instance_variable_set ivar, false
+      end
     end
 
     def run_finished
