@@ -23,6 +23,8 @@ module TestBench
 
       current_directory = File.expand_path Dir.pwd
 
+      TestBench.activate
+
       TestBench::Runner.(paths, current_directory) or exit 1
     end
 
