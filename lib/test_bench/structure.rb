@@ -20,6 +20,10 @@ module TestBench
       telemetry = Telemetry::Registry.get binding
       settings = Settings::Registry.get binding
 
+      unless prose.nil? or prose.is_a? String
+        raise TypeError, "Prose must be a String"
+      end
+
       begin
         telemetry.context_entered prose
         block.() if block
@@ -44,6 +48,10 @@ module TestBench
       telemetry = Telemetry::Registry.get binding
 
       prose ||= 'Test'
+
+      unless prose.is_a? String
+        raise TypeError, "Prose must be a String"
+      end
 
       if block.nil?
         telemetry.test_skipped prose

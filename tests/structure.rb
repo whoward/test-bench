@@ -99,6 +99,15 @@ context "Test structure" do
         refute error
       end
     end
+
+    test "Prose must be a String" do
+      binding = Controls::Binding.example
+      settings = TestBench::Settings::Registry.get binding
+
+      assert proc { binding.eval 'context Object.new do end', __FILE__, __LINE__ } do
+        raises_error? TypeError
+      end
+    end
   end
 
   context "Refute" do
@@ -164,6 +173,15 @@ context "Test structure" do
 
       assert telemetry do
         test? 'Test'
+      end
+    end
+
+    test "Prose must be a String" do
+      binding = Controls::Binding.example
+      settings = TestBench::Settings::Registry.get binding
+
+      assert proc { binding.eval 'test Object.new do end', __FILE__, __LINE__ } do
+        raises_error? TypeError
       end
     end
   end
