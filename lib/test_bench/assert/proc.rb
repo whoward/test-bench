@@ -10,7 +10,11 @@ module TestBench
           return false
 
         rescue rescue_error_type => error
-          return error_type.nil? || error.class == error_type
+          if error_type.nil? or error.instance_of? rescue_error_type
+            return true
+          end
+
+          raise error
         end
       end
 
