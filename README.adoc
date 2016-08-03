@@ -1,7 +1,7 @@
 Test Bench
 ==========
 
-Test Bench is a test framework for ruby designed to offer the minimum set of features necessary to test well designed code effectively. There are no hooks for test setup, teardown, defining variables, sharing tests, custom reporters, or plugins. There is no mocking library. There is but one output format, inspired by RSpec's original output. There is no DSL in play that resembles human language. There are no matchers or a large bank of esoteric assertions you will probably never use. In fact, there are only three methods: +assert+, +test+, and +context+.
+Test Bench is a test framework for ruby designed to offer the minimum set of features necessary to test well designed code effectively. There are no hooks for test setup, teardown, defining variables, sharing tests, custom reporters, or plugins. There is no mocking library. There is but one output format, inspired by RSpec's original output. There is no DSL in play that resembles human language. There are no matchers or a large bank of esoteric assertions you will probably never use. In fact, there are only four methods: +assert+, +refute+, +test+, and +context+.
 
 For more information about why Test Bench was created and the reasoning behind it's design, see link:doc/Rationale.adoc[Rationale].
 
