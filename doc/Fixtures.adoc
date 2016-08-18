@@ -38,7 +38,7 @@ class Fixtures::Queue::HandleEvent
     queue.attach_handler handler
     queue << event
 
-    test "Handler receives a `#{input_event.class.name}'" do
+    test "Handler receives a `#{event.class.name}'" do
       block.()
     end
   end
@@ -51,7 +51,7 @@ The test can be rewritten to use the fixture:
 ----
 context "An event is handled" do
   handler = SomeHandler.new queue
-  input_event = SomeEvent.new 'some-data'
+  event = SomeEvent.new 'some-data'
 
   Fixtures::Queue::HandleEvent.call handler, event do |queue|
     assert queue do
