@@ -59,6 +59,8 @@ In addition, +bench+ offers some invaluable command line options. Particularly, 
 
 For other information as well as documentation of other command line opptions that +bench+ accepts, run +bench --help+.
 
+NOTE: The +bench+ executable does not activate TestBench by default. Make sure to do so in your test initialization script, e.g. `test/test_helper.rb`.
+
 == Writing a Custom Test Runner
 
 It is valuable for projects to include a single command that can run the entire test suite. For instance, in many ruby projects, running +rake test+ or even +rake+ will cause the test suite to run. Test Bench can support this as well, through +TestBench::Runner+. Here is an example Rake task that will run all tests under the +tests/+ directory, excluding the +test_helper.rb+ file itself:
