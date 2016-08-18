@@ -1,0 +1,64 @@
+Fixtures
+========
+
+It is often the case many tests will share very similar implementations. For instance, suppose an object that handles an event is being tested. In the same program, there might also be other objects that handle other events, but the _machinery_ behind how those events are emitted and passed to handlers might be shared by all event handlers. This may lead to excessive duplication between tests. As an example, suppose there are many tests that structurally resemble this example:
+
+[source,ruby]
+----
+context "An event is handled" do
+  handler = SomeHandler.new queue
+  event = SomeEvent.new 'some-data'
+
+  queue = EventQueue.new
+  queue.attach_handler handler
+  queue << event
+
+  test "Another event is published" do
+    assert queue do
+      published? SomeOtherEvent
+    end
+  end
+end
+----
+
+Test Bench offers a module, +TestBench::Fixture+, which allows custom objects to make use of Test Bench methods: +assert+, +context+, +refute+, and +test+. A fixture to suit the above example could look like this:
+
+[source,ruby]
+----
+class Fixtures::Queue::HandleEvent
+  include TestBench::Fixture
+
+  def self.call *arguments, &block
+    instance = new
+    instance.call *arguments, &block
+  end
+
+  def call handler, event, &block
+    queue = EventQueue.new
+    queue.attach_handler handler
+    queue << event
+
+    test "Handler receives a `#{input_event.class.name}'" do
+      block.()
+    end
+  end
+end
+----
+
+The test can be rewritten to use the fixture:
+
+[source,ruby]
+----
+context "An event is handled" do
+  handler = SomeHandler.new queue
+  input_event = SomeEvent.new 'some-data'
+
+  Fixtures::Queue::HandleEvent.call handler, event do |queue|
+    assert queue do
+      published? SomeOtherEvent
+    end
+  end
+end
+----
+
+**Next**: link:Extending.adoc[Extending]

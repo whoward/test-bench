@@ -76,6 +76,7 @@ That will get you started, though it's a good idea to read through all the docum
 1. link:doc/Basic-Usage.adoc[Basic Usage]
 1. link:doc/Assertions.adoc[Assertions]
 1. link:doc/Controlling-Execution.adoc[Controlling Execution]
+1. link:doc/Fixtures.adoc[Fixtures]
 1. link:doc/Extending.adoc[Extending Test Bench (Plugins)]
 
 === License

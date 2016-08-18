@@ -79,4 +79,4 @@ end
 
 The +or exit 1+ at the end ensures that the exit status of the command is nonzero if the test run failed. This is important for any tooling built on top of the test suite. For instance, a test run that exits with a nonzero status might cause a CI build to fail.
 
-**Next**: link:Extending.adoc[Extending]
+**Next**: link:Fixtures.adoc[Fixtures]
