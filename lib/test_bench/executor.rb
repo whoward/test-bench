@@ -28,7 +28,10 @@ module TestBench
       telemetry.file_started file
 
       begin
-        binding.receiver.context :suppress_exit => true do
+        unbound_context_method = TestBench::Structure.instance_method :context
+        bound_context_method = unbound_context_method.bind binding.receiver
+
+        bound_context_method.call :suppress_exit => true do
           binding.eval test_script, file
         end
 
