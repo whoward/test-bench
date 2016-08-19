@@ -32,7 +32,6 @@ context "Test blocks" do
 
   test %{Prose defaults to "Test"} do
     binding = Controls::Binding.example
-    output = Controls::Output.attach binding
     telemetry = TestBench::Telemetry::Registry.get binding
 
     binding.eval 'test do end', __FILE__, __LINE__
