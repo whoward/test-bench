@@ -61,4 +61,6 @@ context "An event is handled" do
 end
 ----
 
+*NOTE*: Excessive use of fixtures may succeed in de-duplicating code at the expense of readability. It is recommended to employ fixtures only in cases where they not only shorten the tests that use them, but also increase their clarity.
+
 **Next**: link:Extending.adoc[Extending]
