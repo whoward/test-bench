@@ -1,13 +1,13 @@
 require_relative './test_init'
 
 context "Executor" do
-  file_module = Controls::FileSubstitute.example
+  kernel_substitute = Controls::KernelSubstitute.example
 
   test "File execution" do
     binding = Controls::Binding.example
-    files = [Controls::FileSubstitute::TestScript::Passing.file]
+    files = [Controls::KernelSubstitute::TestScript::Passing.file]
 
-    executor = TestBench::Executor.new binding, file_module
+    executor = TestBench::Executor.new binding, kernel_substitute
     executor.(files)
 
     assert executor.telemetry, &:recorded_file_started?
@@ -17,9 +17,9 @@ context "Executor" do
   context "Result" do
     test "All passing tests returns true" do
       binding = Controls::Binding.example
-      files = [Controls::FileSubstitute::TestScript::Passing.file]
+      files = [Controls::KernelSubstitute::TestScript::Passing.file]
 
-      executor = TestBench::Executor.new binding, file_module
+      executor = TestBench::Executor.new binding, kernel_substitute
       result = executor.(files)
 
       assert result == true
@@ -27,9 +27,9 @@ context "Executor" do
 
     test "An uncaught error causes the result to be false" do
       binding = Controls::Binding.example
-      files = [Controls::FileSubstitute::TestScript::Error.file]
+      files = [Controls::KernelSubstitute::TestScript::Error.file]
 
-      executor = TestBench::Executor.new binding, file_module
+      executor = TestBench::Executor.new binding, kernel_substitute
       result = executor.(files)
 
       assert result == false
@@ -38,10 +38,10 @@ context "Executor" do
 
   context "Files that include an __END__ part" do
     test do
-      file_module.file_map['/end.rb'] = '__END__'
+      kernel_substitute.file_map['/end.rb'] = '__END__'
 
       binding = Controls::Binding.example
-      executor = TestBench::Executor.new binding, file_module
+      executor = TestBench::Executor.new binding, kernel_substitute
 
       result = executor.(['/end.rb'])
 

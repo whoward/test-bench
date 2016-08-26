@@ -1,6 +1,6 @@
 module TestBench
   module Controls
-    class FileSubstitute
+    class KernelSubstitute
       def self.example file_map=nil
         file_map ||= FileMap.example
 
@@ -14,8 +14,10 @@ module TestBench
         @file_map = file_map
       end
 
-      def read path
-        file_map[path]
+      def load path
+        ruby_text = file_map[path]
+
+        TOPLEVEL_BINDING.eval ruby_text, path
       end
 
       module FileMap

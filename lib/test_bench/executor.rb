@@ -1,17 +1,17 @@
 module TestBench
   class Executor
     attr_reader :binding
-    attr_reader :file_module
+    attr_reader :kernel
 
-    def initialize binding, file_module
+    def initialize binding, kernel
       @binding = binding
-      @file_module = file_module
+      @kernel = kernel
     end
 
     def self.build
       binding = TOPLEVEL_BINDING
 
-      new binding, File
+      new binding, Kernel
     end
 
     def call files
@@ -23,8 +23,6 @@ module TestBench
     end
 
     def execute file
-      test_script = file_module.read file
-
       telemetry.file_started file
 
       begin
@@ -32,7 +30,7 @@ module TestBench
         bound_context_method = unbound_context_method.bind binding.receiver
 
         bound_context_method.call :suppress_exit => true do
-          binding.eval test_script, file
+          kernel.load File.expand_path file
         end
 
       ensure
