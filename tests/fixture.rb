@@ -1,15 +1,13 @@
 require_relative './test_init'
 
 context "Defining a test fixture" do
-  fixture_class = TestBench::Controls::Fixture::Example
-
   context "Fixture executes a context block" do
     fixture, telemetry = TestBench::Controls::Fixture.pair
 
     fixture.example_context
 
     test "Context block is executed on binding delegate" do
-      events = telemetry.sink.map &:event
+      events = telemetry.sink.map(&:event)
 
       assert events == %i(context_entered context_exited)
     end
@@ -21,7 +19,7 @@ context "Defining a test fixture" do
     fixture.example_test
 
     test "Context block is invoked on binding delegate" do
-      events = telemetry.sink.map &:event
+      events = telemetry.sink.map(&:event)
 
       assert events == %i(test_started test_passed test_finished)
     end
@@ -33,7 +31,7 @@ context "Defining a test fixture" do
     fixture.example_assertions
 
     test "Context block is invoked on binding delegate" do
-      events = telemetry.sink.map &:event
+      events = telemetry.sink.map(&:event)
 
       assert events == %i(asserted asserted)
     end

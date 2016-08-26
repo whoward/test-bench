@@ -17,7 +17,7 @@ module TestBench
       end
 
       def self.call *arguments
-        instance = build *arguments
+        instance = build(*arguments)
         instance.()
       end
 

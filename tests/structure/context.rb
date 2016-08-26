@@ -17,7 +17,7 @@ context "Context blocks" do
 
     begin
       binding.eval 'context do fail end', __FILE__, __LINE__
-    rescue SystemExit => error
+    rescue SystemExit
     end
 
     assert telemetry, &:recorded_error_raised?
@@ -49,7 +49,6 @@ context "Context blocks" do
   context "The outermost context exits unsuccessfully" do
     test "System exits immediately" do
       binding = Controls::Binding.example
-      settings = TestBench::Settings::Registry.get binding
 
       begin
         binding.eval 'context do fail end', __FILE__, __LINE__
@@ -62,7 +61,6 @@ context "Context blocks" do
 
     test "System does not exit immediately if exit is suppressed" do
       binding = Controls::Binding.example
-      settings = TestBench::Settings::Registry.get binding
 
       begin
         binding.eval 'context :suppress_exit => true do fail end', __FILE__, __LINE__
@@ -75,7 +73,6 @@ context "Context blocks" do
 
   test "Prose must be a String" do
     binding = Controls::Binding.example
-    settings = TestBench::Settings::Registry.get binding
 
     assert proc { binding.eval 'context Object.new do end', __FILE__, __LINE__ } do
       raises_error? TypeError

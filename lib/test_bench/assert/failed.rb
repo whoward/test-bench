@@ -14,7 +14,7 @@ module TestBench
       end
 
       def backtrace
-        backtrace_locations.map &:to_s
+        backtrace_locations.map(&:to_s)
       end
 
       def to_s

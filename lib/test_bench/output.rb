@@ -5,6 +5,10 @@ module TestBench
     attr_writer :run_result
     attr_writer :writer
 
+    def initialize
+      @file_result = nil
+    end
+
     def self.build level=nil
       writer = Writer.build $stdout
       writer.level = level if level

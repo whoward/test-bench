@@ -23,7 +23,7 @@ module TestBench
         color ||= {}
         indent ||= 0
 
-        color_escape = Palette.escape_code **colors
+        color_escape = Palette.escape_code(**colors)
         unless color_escape.empty?
           text = "#{color_escape}#{text}\e[0m"
         end

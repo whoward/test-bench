@@ -2,7 +2,7 @@ module TestBench
   class Output
     module Palette
       def self.apply prose, **colors
-        escape_code = self.escape_code **colors
+        escape_code = self.escape_code(**colors)
 
         if escape_code.empty?
           prose

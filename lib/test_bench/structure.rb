@@ -18,7 +18,6 @@ module TestBench
       suppress_exit ||= false
 
       telemetry = Telemetry::Registry.get binding
-      settings = Settings::Registry.get binding
 
       unless prose.nil? or prose.is_a? String
         raise TypeError, "Prose must be a String"
@@ -41,7 +40,7 @@ module TestBench
     end
 
     def refute *arguments, &block
-      assert *arguments, :assert_class => Assert::Refute, :caller_location => caller_locations[0], &block
+      assert(*arguments, :assert_class => Assert::Refute, :caller_location => caller_locations[0], &block)
     end
 
     def test prose=nil, &block
