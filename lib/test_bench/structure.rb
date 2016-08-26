@@ -1,6 +1,6 @@
 module TestBench
   module Structure
-    def assert subject=nil, mod=nil, assert_class: nil, caller_location: nil, &block
+    def assert subject, mod=nil, assert_class: nil, caller_location: nil, &block
       assert_class ||= Assert
       caller_location ||= caller_locations[0]
 
