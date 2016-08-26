@@ -63,6 +63,8 @@ module TestBench
     end
 
     def tests_per_second
+      elapsed_time = self.elapsed_time
+      elapsed_time = elapsed_time.next_float if elapsed_time.zero?
       Rational tests, elapsed_time
     end
   end
