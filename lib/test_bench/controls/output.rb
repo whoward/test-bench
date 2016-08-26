@@ -30,7 +30,7 @@ module TestBench
         end
 
         def self.non_tty
-          Tempfile.new
+          Tempfile.new 'non-tty-control'
         end
       end
 
