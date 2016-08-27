@@ -75,7 +75,8 @@ module TestBench
           indentation = '  ' * self.indentation
           prose.insert 0, indentation
           prose = Palette.apply prose, bg: bg, fg: fg if color?
-          device.puts prose
+          prose << $INPUT_RECORD_SEPARATOR
+          device.write prose
         end
       end
     end
