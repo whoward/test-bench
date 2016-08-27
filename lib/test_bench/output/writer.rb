@@ -5,10 +5,12 @@ module TestBench
       attr_writer :device
       attr_accessor :indentation
       attr_writer :level
+      attr_reader :mutex
 
       def initialize level=nil
         @level = level
         @indentation = 0
+        @mutex = Mutex.new
       end
 
       def self.build device
@@ -23,7 +25,9 @@ module TestBench
       end
 
       def decrease_indentation
-        self.indentation -= 1
+        mutex.synchronize do
+          self.indentation -= 1
+        end
       end
 
       def device
@@ -31,7 +35,9 @@ module TestBench
       end
 
       def increase_indentation
-        self.indentation += 1
+        mutex.synchronize do
+          self.indentation += 1
+        end
       end
 
       def level
