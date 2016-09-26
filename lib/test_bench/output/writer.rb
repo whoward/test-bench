@@ -78,11 +78,15 @@ module TestBench
         render = true if render.nil?
 
         if render
+          text = String.new prose
+
           indentation = '  ' * self.indentation
-          prose.insert 0, indentation
+
           prose = Palette.apply prose, bg: bg, fg: fg if color?
-          prose << $INPUT_RECORD_SEPARATOR
-          device.write prose
+
+          text = "#{indentation}#{prose}#{$INPUT_RECORD_SEPARATOR}"
+
+          device.write text
         end
       end
     end
