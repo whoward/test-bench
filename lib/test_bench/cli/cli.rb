@@ -19,7 +19,7 @@ module TestBench
       option_parser.parse! argv
 
       paths = argv
-      paths << 'tests' if paths.empty?
+      paths << settings.tests_dir if paths.empty?
 
       current_directory = File.expand_path Dir.pwd
 
@@ -37,6 +37,7 @@ If no paths are specified, #{program_name} runs all files in ./tests. The follow
         TEST_BENCH_RECORD_TELEMETRY    Causes Test Bench to preserve telemetry events (needed for testing Test Bench itself)
         TEST_BENCH_REVERSE_BACKTRACES  Prints exceptions in reverse order
         TEST_BENCH_QUIET               Same as -q or --quiet
+        TEST_BENCH_TESTS_DIR           Specifies the default directory where Test Bench searches for tests
         TEST_BENCH_VERBOSE             Same as -v or --verbose
 
       TEXT

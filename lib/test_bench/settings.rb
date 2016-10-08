@@ -5,6 +5,7 @@ module TestBench
     attr_writer :writer
     attr_writer :record_telemetry
     attr_writer :reverse_backtraces
+    attr_writer :tests_dir
 
     def abort_on_error
       nil_coalesce :@abort_on_error, Defaults.abort_on_error
@@ -44,6 +45,10 @@ module TestBench
 
     def reverse_backtraces
       nil_coalesce :@reverse_backtraces, Defaults.reverse_backtraces
+    end
+
+    def tests_dir
+      nil_coalesce :@tests_dir, Defaults.tests_dir
     end
 
     def writer

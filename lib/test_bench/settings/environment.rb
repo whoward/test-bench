@@ -21,6 +21,16 @@ module TestBench
         instance.()
       end
 
+      def call
+        abort_on_error
+        color
+        reverse_backtraces
+        quiet
+        record_telemetry
+        tests_dir
+        verbose
+      end
+
       def activated? value
         if affirmative_pattern.match value
           true
@@ -33,15 +43,6 @@ module TestBench
 
       def affirmative_pattern
         @@affirmative_pattern ||= %r{\A(?:on|yes|y|1)\z}i
-      end
-
-      def call
-        abort_on_error
-        color
-        reverse_backtraces
-        quiet
-        record_telemetry
-        verbose
       end
 
       def color
@@ -97,6 +98,12 @@ module TestBench
           settings.lower_verbosity
           settings.lower_verbosity
         end
+      end
+
+      def tests_dir
+        tests_dir = env['TEST_BENCH_TESTS_DIR']
+
+        settings.tests_dir = tests_dir if tests_dir
       end
 
       def verbose

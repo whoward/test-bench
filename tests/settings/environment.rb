@@ -51,6 +51,16 @@ context "Pulling settings from the environment" do
     assert settings.record_telemetry == true
   end
 
+  test "Tests directory" do
+    settings = TestBench::Settings.new
+    environment = TestBench::Settings::Environment.build settings,
+      'TEST_BENCH_TESTS_DIR' => '/some/dir'
+
+    environment.()
+
+    assert settings.tests_dir == '/some/dir'
+  end
+
   test "Verbose" do
     settings = TestBench::Settings.new
     environment = TestBench::Settings::Environment.build settings,

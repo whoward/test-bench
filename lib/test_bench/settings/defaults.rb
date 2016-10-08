@@ -20,6 +20,10 @@ module TestBench
       def self.reverse_backtraces
         false
       end
+
+      def self.tests_dir
+        'tests'
+      end
     end
   end
 end
