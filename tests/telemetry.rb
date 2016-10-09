@@ -6,7 +6,15 @@ context "Telemetry" do
 
     telemetry.asserted
 
-    assert telemetry, &:asserted
+    assert telemetry, &:recorded_asserted?
+  end
+
+  test "Record that a comment was made" do
+    telemetry = TestBench::Telemetry.build
+
+    telemetry.commented nil
+
+    assert telemetry, &:recorded_comment?
   end
 
   test "Record that a context was entered" do
@@ -133,5 +141,7 @@ context "Telemetry" do
     deleted = toplevel_telemetry.delete_observer observer
 
     assert deleted
+
+    comment "Some Comment"
   end
 end

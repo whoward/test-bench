@@ -21,6 +21,30 @@ context "Output" do
     end
   end
 
+  context "Comment was made "do
+    test "Prose is written at the normal level" do
+      output = TestBench::Output.new
+      output.writer.level = :normal
+
+      output.commented "Some Comment"
+
+      assert output.writer do
+        wrote_line? "Some Comment"
+      end
+    end
+
+    context "Output level is quiet" do
+      output = TestBench::Output.new
+      output.writer.level = :quiet
+
+      output.commented "Some Comment"
+
+      test "Nothing is written" do
+        assert output.writer, &:wrote_nothing?
+      end
+    end
+  end
+
   context "Context was entered" do
     test "Prose is written at the normal level" do
       output = TestBench::Output.new

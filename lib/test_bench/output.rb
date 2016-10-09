@@ -23,6 +23,10 @@ module TestBench
       run_result.asserted
     end
 
+    def commented prose
+      writer.normal prose, :fg => :normal
+    end
+
     def context_entered prose=nil
       return if prose.nil?
 

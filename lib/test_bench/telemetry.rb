@@ -20,6 +20,10 @@ module TestBench
       publish :asserted
     end
 
+    def commented prose
+      publish :commented, prose
+    end
+
     def context_entered prose
       publish :context_entered, prose
 

@@ -79,4 +79,3 @@ context "Context blocks" do
     end
   end
 end
-

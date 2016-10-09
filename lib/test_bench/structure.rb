@@ -14,6 +14,12 @@ module TestBench
       telemetry.asserted
     end
 
+    def comment prose
+      telemetry = Telemetry::Registry.get binding
+
+      telemetry.commented prose
+    end
+
     def context prose=nil, suppress_exit: nil, &block
       suppress_exit ||= false
 

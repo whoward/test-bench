@@ -23,6 +23,10 @@ module TestBench
         recorded_any? :asserted
       end
 
+      def recorded_comment?
+        recorded_any? :commented
+      end
+
       def recorded_context_entered?
         recorded_any? :context_entered
       end
