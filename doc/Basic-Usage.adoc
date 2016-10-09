@@ -3,7 +3,7 @@ Basic Usage
 
 === Inline Usage
 
-Test Bench can be used for testing projects as small as a code snippet. Just +require "test_bench/activate"+ and +assert+, +context+ and +test+ are available. Here, the Fibonacci number sequence is implemented and tested in a single file:
+Test Bench can be used for testing projects as small as a code snippet. Once Test Bench is activated via  +require "test_bench/activate"+ +assert+, +refute+, +test+, +context+ and +comment+  are available. Here, the Fibonacci number sequence is implemented and tested in a single file:
 
 [source,ruby]
 ----
@@ -23,7 +23,7 @@ assert fib(3) == [1, 1, 2]
 assert fib(4) == [1, 1, 2, 3]
 ----
 
-If you only +require "test_bench"+ without the +activate+ bit the +test_bench+ library will be loaded, but the global context (e.g. +main+) will not have +context+, +test+, and +assert+ monkeypatched onto it.
+If you only +require "test_bench"+ without the +activate+ bit the +test_bench+ library will be loaded, but the global context (e.g. +main+) will not have +assert+, +refute+, +test+, +context+ and +comment+ monkeypatched onto it.
 
 === Using Test Bench for a larger project
 
