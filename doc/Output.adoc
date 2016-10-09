@@ -1,15 +1,15 @@
 Output
 ======
 
-The test output is intended to communicate both the prose supplied to +context+ and +test+ blocks as well as the structure of the test scripts themselves.
+By default, Test Bench emits the prose supplied to +context+ and +test+ blocks as well as the structure of the test scripts themselves.
 
 == Test Script Structure
 
 Test Bench tests are structured with +context+ and +test+, which can be nested similarly to +describe+, +context+, +specify+, and +it+ in RSpec.
 
-In general, the goal of a +context+ block is to provide contextual information about a test so that the reader of the test output may better understand the what is being tested and why. For this reason, a context is always supplied _prose_ -- Test Bench will not accept a class the way RSpec allows +describe SomeClass+. A test script should describe behavior that is implemented by some part of the system, and never the implementation itself.  That is a subtle but significant departure from RSpec test structures that commonly describe the implementation itself, both through class names supplied to +describe+ and the common convention of method names being used to structure the test script underneath the top level +describe+ block.
+In general, the goal of a +context+ block is to provide contextual information about a test so that the reader of the test output may better understand the what is being tested and why. For this reason, a context is always supplied _prose_ -- a context block in Test Bench will not accept a class the way RSpec allows +describe SomeClass+. The structure of a test script should describe behavior that is implemented by some part of the system, and never the implementation itself. This is a subtle but significant departure from RSpec test structures that commonly describe the implementation itself, both through class names supplied to +describe+ and the common convention of method names being used to structure the test script underneath the top level +describe+ block.
 
-The ideal output when running a test script with Test Bench communicates the behavior itself, as well as the various nuances and edge cases. It is common and even desirable to write more than one test script to cover a single class. For instance, a test script for a cache might include a test script for demonstrating a cache hit, and another test script for demonstrating a miss.
+The ideal output when running a test script with Test Bench communicates the behavior produced by the test subject. It is common and even desirable to write more than one test script to cover a single class. For instance, a test script for a cache might include a test script for demonstrating a cache hit, and another test script for demonstrating a miss. Even though a class is responsible for a single concern, there are inevitably nuances and edge cases that must be each described and tested independently.
 
 == Comments
 
