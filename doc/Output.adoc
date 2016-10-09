@@ -1,6 +1,33 @@
 Output
 ======
 
-(This documentation file has not yet been written)
+The test output is intended to communicate both the prose supplied to +context+ and +test+ blocks as well as the structure of the test scripts themselves.
+
+== Test Script Structure
+
+Test Bench tests are structured with +context+ and +test+, which can be nested similarly to +describe+, +context+, +specify+, and +it+ in RSpec.
+
+In general, the goal of a +context+ block is to provide contextual information about a test so that the reader of the test output may better understand the what is being tested and why. For this reason, a context is always supplied _prose_ -- Test Bench will not accept a class the way RSpec allows +describe SomeClass+. A test script should describe behavior that is implemented by some part of the system, and never the implementation itself.  That is a subtle but significant departure from RSpec test structures that commonly describe the implementation itself, both through class names supplied to +describe+ and the common convention of method names being used to structure the test script underneath the top level +describe+ block.
+
+The ideal output when running a test script with Test Bench communicates the behavior itself, as well as the various nuances and edge cases. It is common and even desirable to write more than one test script to cover a single class. For instance, a test script for a cache might include a test script for demonstrating a cache hit, and another test script for demonstrating a miss.
+
+== Comments
+
+To provide additional output beyond the prose supplied to +context+ and +test+, +comment+ can be used to write arbitrary text to the test output. This is useful, for instance, to present data that is about to be used in an assertion -- if the assertion fails, the user may be able to read the comment to understand why:
+
+[source,ruby]
+----
+test "Fibonacci" do
+  result = fib(3)
+
+  comment "fib(3) = #{result.inspect}"
+
+  assert result == [1, 1, 2]
+end
+----
+
+== Verbosity
+
+When using the +bench+ executable, the verbosity level of the output can be controlled. In quiet mode, the output will be extremely succinct and merely summarize the entire execution and show any errors or test failures. This is suitable for a CI environment. Verbose mode includes additional information beyond what is included in normal output. The next section explains the +bench+ executable in greater detail.
 
 **Next**: link:Controlling-Execution.adoc[Controlling Execution]
