@@ -4,7 +4,7 @@ module TestBench
       cls.class_exec do
         extend Forwardable
 
-        delegate %i(assert context refute test) => :structure
+        delegate %i(assert comment context refute test) => :structure
       end
     end
 
