@@ -21,6 +21,16 @@ context "Pulling settings from the environment" do
     assert settings.color == false
   end
 
+  test "Exclude pattern" do
+    settings = TestBench::Settings.new
+    environment = TestBench::Settings::Environment.build settings,
+      'TEST_BENCH_EXCLUDE_PATTERN' => 'some.pattern'
+
+    environment.()
+
+    assert settings.exclude_pattern == 'some.pattern'
+  end
+
   test "Reverse backtraces" do
     settings = TestBench::Settings.new
     environment = TestBench::Settings::Environment.build settings,

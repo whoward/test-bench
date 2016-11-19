@@ -24,6 +24,7 @@ module TestBench
       def call
         abort_on_error
         color
+        exclude_pattern
         reverse_backtraces
         quiet
         record_telemetry
@@ -70,6 +71,12 @@ module TestBench
       def abort_on_error
         if activated? env['TEST_BENCH_ABORT_ON_ERROR']
           settings.abort_on_error = true
+        end
+      end
+
+      def exclude_pattern
+        if pattern = env['TEST_BENCH_EXCLUDE_PATTERN']
+          settings.exclude_pattern = pattern
         end
       end
 

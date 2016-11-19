@@ -33,22 +33,6 @@ context "Settings" do
     end
   end
 
-  context "Reverse backtraces" do
-    test do
-      settings = TestBench::Settings.new
-
-      settings.reverse_backtraces = true
-
-      assert settings.reverse_backtraces == true
-    end
-
-    test "Default is false" do
-      settings = TestBench::Settings.new
-
-      assert settings.reverse_backtraces == false
-    end
-  end
-
   context "Exclude pattern" do
     test do
       settings = TestBench::Settings.new
@@ -62,6 +46,22 @@ context "Settings" do
       settings = TestBench::Settings.new
 
       assert settings.exclude_pattern == "_init\\.rb$"
+    end
+  end
+
+  context "Reverse backtraces" do
+    test do
+      settings = TestBench::Settings.new
+
+      settings.reverse_backtraces = true
+
+      assert settings.reverse_backtraces == true
+    end
+
+    test "Default is false" do
+      settings = TestBench::Settings.new
+
+      assert settings.reverse_backtraces == false
     end
   end
 
