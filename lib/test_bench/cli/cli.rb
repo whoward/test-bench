@@ -2,16 +2,23 @@ module TestBench
   class CLI
     attr_reader :argv
     attr_writer :settings
+    attr_writer :root_directory
 
     def initialize argv
       @argv = argv
     end
 
-    def self.call argv=nil
+    def self.call argv=nil, exclude_pattern: nil, tests_directory: nil
       argv ||= ARGV
 
+      settings = Settings.toplevel
+
+      settings.exclude_pattern = exclude_pattern unless exclude_pattern.nil?
+      settings.tests_dir = tests_directory unless tests_directory.nil?
+
       instance = new argv
-      instance.settings = Settings.toplevel
+
+      instance.settings = settings
       instance.()
     end
 
@@ -21,9 +28,7 @@ module TestBench
       paths = argv
       paths << settings.tests_dir if paths.empty?
 
-      current_directory = File.expand_path Dir.pwd
-
-      TestBench::Runner.(paths, current_directory) or exit 1
+      TestBench::Runner.(paths, root_directory) or exit 1
     end
 
     def help
@@ -80,6 +85,10 @@ If no paths are specified, #{program_name} runs all files in ./tests. The follow
 
     def program_name
       File.basename $PROGRAM_NAME
+    end
+
+    def root_directory
+      @root_directory ||= File.expand_path Dir.pwd
     end
 
     def settings
