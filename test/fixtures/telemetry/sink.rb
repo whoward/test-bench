@@ -41,6 +41,16 @@ module Test
             end
           end
         end
+
+        def refute_recorded(signal)
+          telemetry_record = sink.one_record(signal)
+
+          context "Signal: #{signal.inspect}" do
+            test "Not recorded" do
+              assert(telemetry_record.nil?)
+            end
+          end
+        end
       end
     end
   end

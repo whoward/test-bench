@@ -33,11 +33,19 @@ module TestBench
         Example = SomeSignal
 
         module Asserted
-          def self.example(subject: nil, caller_location: nil)
+          def self.example(subject: nil, caller_location: nil, time: nil)
             subject ||= Assert::Subject.example
             caller_location ||= CallerLocation.example
 
-            TestBench::Assert::Telemetry::Asserted.new(caller_location, subject)
+            if time == :none
+              time = nil
+            else
+              time ||= Time.example
+            end
+
+            asserted = TestBench::Assert::Telemetry::Asserted.new(subject, caller_location)
+            asserted.time = time unless time.nil?
+            asserted
           end
 
           def self.signal
@@ -46,11 +54,19 @@ module TestBench
         end
 
         module AssertionPassed
-          def self.example(subject: nil, caller_location: nil)
+          def self.example(subject: nil, caller_location: nil, time: nil)
             subject ||= Assert::Subject.example
             caller_location ||= CallerLocation.example
 
-            TestBench::Assert::Telemetry::AssertionPassed.new(caller_location, subject)
+            if time == :none
+              time = nil
+            else
+              time ||= Time.example
+            end
+
+            assertion_passed = TestBench::Assert::Telemetry::AssertionPassed.new(subject, caller_location)
+            assertion_passed.time = time unless time.nil?
+            assertion_passed
           end
 
           def self.signal
@@ -59,11 +75,19 @@ module TestBench
         end
 
         module AssertionFailed
-          def self.example(subject: nil, caller_location: nil)
+          def self.example(subject: nil, caller_location: nil, time: nil)
             subject ||= Assert::Subject.example
             caller_location ||= CallerLocation.example
 
-            TestBench::Assert::Telemetry::AssertionFailed.new(caller_location, subject)
+            if time == :none
+              time = nil
+            else
+              time ||= Time.example
+            end
+
+            assertion_failed = TestBench::Assert::Telemetry::AssertionFailed.new(subject, caller_location)
+            assertion_failed.time = time unless time.nil?
+            assertion_failed
           end
 
           def self.signal

@@ -6,6 +6,7 @@ module TestBench
           include Settings::SettingMacro
 
           include Comment::Telemetry
+          include Assert::Telemetry
 
           extend Build
           extend HandleMacro

@@ -11,4 +11,12 @@ require 'test_bench/telemetry/sink'
 
 require 'test_bench/comment'
 
+require 'test_bench/assert'
+require 'test_bench/assert/evaluate'
+require 'test_bench/assert/failure'
+require 'test_bench/assert/refute'
+require 'test_bench/assert/telemetry'
+
+require 'test_bench/refute'
+
 require 'test_bench/fixture'
