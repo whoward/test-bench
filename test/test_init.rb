@@ -8,8 +8,8 @@ require 'ostruct'
   require 'test_bench/bootstrap'; TestBench::Bootstrap.activate
 #end
 
-#require_relative './fixtures/fixtures_init'
+require_relative './fixtures/fixtures_init'
 
-#require 'test_bench/controls'
+require 'test_bench/controls'
 
-#Controls = TestBench::Controls
+Controls = TestBench::Controls
