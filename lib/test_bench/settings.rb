@@ -19,7 +19,7 @@ module TestBench
     end
 
     def self.get(setting)
-      instance.get(setting)
+      instance.public_send(setting)
     end
 
     def self.setting_names
