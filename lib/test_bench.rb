@@ -8,3 +8,7 @@ require 'test_bench/telemetry/dependency'
 require 'test_bench/telemetry/handler'
 require 'test_bench/telemetry/record'
 require 'test_bench/telemetry/sink'
+
+require 'test_bench/comment'
+
+require 'test_bench/fixture'

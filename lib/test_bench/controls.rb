@@ -13,3 +13,7 @@ require 'test_bench/controls/telemetry/record'
 require 'test_bench/controls/telemetry/handler'
 require 'test_bench/controls/telemetry/signal'
 require 'test_bench/controls/telemetry/subscriber'
+
+require 'test_bench/controls/comment'
+
+require 'test_bench/controls/evaluate'

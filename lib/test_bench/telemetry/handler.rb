@@ -5,6 +5,8 @@ module TestBench
         cls.class_exec do
           include Settings::SettingMacro
 
+          include Comment::Telemetry
+
           extend Build
           extend HandleMacro
         end

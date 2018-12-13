@@ -72,11 +72,19 @@ module TestBench
         end
 
         module Commented
-          def self.example(prose: nil, caller_location: nil)
+          def self.example(prose: nil, caller_location: nil, time: nil)
             prose ||= Comment::Prose.example
             caller_location ||= CallerLocation.example
 
-            TestBench::Comment::Telemetry::Commented.new(caller_location, prose)
+            if time == :none
+              time = nil
+            else
+              time ||= Time.example
+            end
+
+            commented = TestBench::Comment::Telemetry::Commented.new(prose, caller_location)
+            commented.time = time unless time.nil?
+            commented
           end
 
           def self.signal
