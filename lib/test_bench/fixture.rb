@@ -4,5 +4,6 @@ module TestBench
     include Assert
     include Refute
     include Test
+    include Context
   end
 end

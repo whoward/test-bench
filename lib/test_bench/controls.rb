@@ -18,5 +18,6 @@ require 'test_bench/controls/error'
 
 require 'test_bench/controls/comment'
 require 'test_bench/controls/test'
+require 'test_bench/controls/context'
 
 require 'test_bench/controls/evaluate'

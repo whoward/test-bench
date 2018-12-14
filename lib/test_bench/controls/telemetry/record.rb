@@ -117,7 +117,7 @@ module TestBench
         end
 
         module ContextEntered
-          def self.example(prose: nil, caller_location: nil)
+          def self.example(prose: nil, caller_location: nil, time: nil)
             if prose == :none
               prose = nil
             else
@@ -126,7 +126,15 @@ module TestBench
 
             caller_location ||= CallerLocation.example
 
-            TestBench::Context::Telemetry::ContextEntered.new(caller_location, prose)
+            if time == :none
+              time = nil
+            else
+              time ||= Time.example
+            end
+
+            context_entered = TestBench::Context::Telemetry::ContextEntered.new(prose, caller_location)
+            context_entered.time = time unless time.nil?
+            context_entered
           end
 
           def self.signal
@@ -135,7 +143,7 @@ module TestBench
         end
 
         module ContextExited
-          def self.example(prose: nil, caller_location: nil)
+          def self.example(prose: nil, caller_location: nil, time: nil)
             if prose == :none
               prose = nil
             else
@@ -144,7 +152,15 @@ module TestBench
 
             caller_location ||= CallerLocation.example
 
-            TestBench::Context::Telemetry::ContextExited.new(caller_location, prose)
+            if time == :none
+              time = nil
+            else
+              time ||= Time.example
+            end
+
+            context_exited = TestBench::Context::Telemetry::ContextExited.new(prose, caller_location)
+            context_exited.time = time unless time.nil?
+            context_exited
           end
 
           def self.signal
