@@ -3,5 +3,6 @@ module TestBench
     include Comment
     include Assert
     include Refute
+    include Test
   end
 end

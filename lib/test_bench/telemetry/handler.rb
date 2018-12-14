@@ -7,6 +7,7 @@ module TestBench
 
           include Comment::Telemetry
           include Assert::Telemetry
+          include Test::Telemetry
 
           extend Build
           extend HandleMacro

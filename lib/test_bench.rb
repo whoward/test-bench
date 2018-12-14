@@ -19,4 +19,6 @@ require 'test_bench/assert/telemetry'
 
 require 'test_bench/refute'
 
+require 'test_bench/test'
+
 require 'test_bench/fixture'

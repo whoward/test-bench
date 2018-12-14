@@ -42,6 +42,14 @@ module TestBench
 
           TestBench::Comment.(prose, telemetry: telemetry, caller_location: caller_location)
         end
+
+        def test(prose=nil, abort_on_error: nil, telemetry: nil, caller_location: nil, &block)
+          abort_on_error ||= false
+          telemetry ||= self.telemetry
+          caller_location ||= caller_locations[0]
+
+          TestBench::Test.(prose, abort_on_error: abort_on_error, telemetry: telemetry, caller_location: caller_location, &block)
+        end
       end
     end
   end

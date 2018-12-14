@@ -14,6 +14,9 @@ require 'test_bench/controls/telemetry/handler'
 require 'test_bench/controls/telemetry/signal'
 require 'test_bench/controls/telemetry/subscriber'
 
+require 'test_bench/controls/error'
+
 require 'test_bench/controls/comment'
+require 'test_bench/controls/test'
 
 require 'test_bench/controls/evaluate'

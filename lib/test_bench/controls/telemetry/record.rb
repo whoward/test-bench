@@ -153,11 +153,19 @@ module TestBench
         end
 
         module ErrorRaised
-          def self.example(error: nil, caller_location: nil)
+          def self.example(error: nil, caller_location: nil, time: nil)
             error ||= Error.example
             caller_location ||= CallerLocation.example
 
-            TestBench::Context::Telemetry::ErrorRaised.new(caller_location, error)
+            if time == :none
+              time = nil
+            else
+              time ||= Time.example
+            end
+
+            error_raised = TestBench::Test::Telemetry::ErrorRaised.new(error, caller_location)
+            error_raised.time = time unless time.nil?
+            error_raised
           end
 
           def self.signal
@@ -166,7 +174,7 @@ module TestBench
         end
 
         module TestPassed
-          def self.example(prose: nil, caller_location: nil)
+          def self.example(prose: nil, caller_location: nil, time: nil)
             if prose == :none
               prose = nil
             else
@@ -175,7 +183,15 @@ module TestBench
 
             caller_location ||= CallerLocation.example
 
-            TestBench::Test::Telemetry::TestPassed.new(caller_location, prose)
+            if time == :none
+              time = nil
+            else
+              time ||= Time.example
+            end
+
+            test_passed = TestBench::Test::Telemetry::TestPassed.new(prose, caller_location)
+            test_passed.time = time unless time.nil?
+            test_passed
           end
 
           def self.signal
@@ -184,7 +200,7 @@ module TestBench
         end
 
         module TestFailed
-          def self.example(prose: nil, caller_location: nil)
+          def self.example(prose: nil, caller_location: nil, time: nil)
             if prose == :none
               prose = nil
             else
@@ -193,7 +209,15 @@ module TestBench
 
             caller_location ||= CallerLocation.example
 
-            TestBench::Test::Telemetry::TestFailed.new(caller_location, prose)
+            if time == :none
+              time = nil
+            else
+              time ||= Time.example
+            end
+
+            test_failed = TestBench::Test::Telemetry::TestFailed.new(prose, caller_location)
+            test_failed.time = time unless time.nil?
+            test_failed
           end
 
           def self.signal
@@ -202,7 +226,7 @@ module TestBench
         end
 
         module TestSkipped
-          def self.example(prose: nil, caller_location: nil)
+          def self.example(prose: nil, caller_location: nil, time: nil)
             if prose == :none
               prose = nil
             else
@@ -211,7 +235,15 @@ module TestBench
 
             caller_location ||= CallerLocation.example
 
-            TestBench::Test::Telemetry::TestSkipped.new(caller_location, prose)
+            if time == :none
+              time = nil
+            else
+              time ||= Time.example
+            end
+
+            test_skipped = TestBench::Test::Telemetry::TestSkipped.new(prose, caller_location)
+            test_skipped.time = time unless time.nil?
+            test_skipped
           end
 
           def self.signal
@@ -220,7 +252,7 @@ module TestBench
         end
 
         module TestStarted
-          def self.example(prose: nil, caller_location: nil)
+          def self.example(prose: nil, caller_location: nil, time: nil)
             if prose == :none
               prose = nil
             else
@@ -229,7 +261,15 @@ module TestBench
 
             caller_location ||= CallerLocation.example
 
-            TestBench::Test::Telemetry::TestStarted.new(caller_location, prose)
+            if time == :none
+              time = nil
+            else
+              time ||= Time.example
+            end
+
+            test_started = TestBench::Test::Telemetry::TestStarted.new(prose, caller_location)
+            test_started.time = time unless time.nil?
+            test_started
           end
 
           def self.signal
@@ -238,7 +278,7 @@ module TestBench
         end
 
         module TestFinished
-          def self.example(prose: nil, caller_location: nil)
+          def self.example(prose: nil, caller_location: nil, time: nil)
             if prose == :none
               prose = nil
             else
@@ -247,7 +287,15 @@ module TestBench
 
             caller_location ||= CallerLocation.example
 
-            TestBench::Test::Telemetry::TestFinished.new(caller_location, prose)
+            if time == :none
+              time = nil
+            else
+              time ||= Time.example
+            end
+
+            test_finished = TestBench::Test::Telemetry::TestFinished.new(prose, caller_location)
+            test_finished.time = time unless time.nil?
+            test_finished
           end
 
           def self.signal
