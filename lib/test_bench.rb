@@ -1,3 +1,5 @@
+require 'stringio'
+
 require 'test_bench/settings'
 require 'test_bench/settings/color'
 require 'test_bench/settings/data'
@@ -24,7 +26,9 @@ require 'test_bench/context'
 
 require 'test_bench/fixture'
 
+require 'test_bench/output/device'
 require 'test_bench/output/format'
 require 'test_bench/output/format/dependency'
 require 'test_bench/output/render_error'
 require 'test_bench/output/render_error/dependency'
+require 'test_bench/output/handlers/fixture'
