@@ -6,7 +6,7 @@ module TestBench
       end
 
       def self.text
-        'some_pattern'
+        'filter_match'
       end
 
       module Default

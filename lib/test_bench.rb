@@ -26,3 +26,5 @@ require 'test_bench/fixture'
 
 require 'test_bench/output/format'
 require 'test_bench/output/format/dependency'
+require 'test_bench/output/render_error'
+require 'test_bench/output/render_error/dependency'
