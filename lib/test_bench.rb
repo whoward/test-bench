@@ -32,3 +32,5 @@ require 'test_bench/output/format/dependency'
 require 'test_bench/output/render_error'
 require 'test_bench/output/render_error/dependency'
 require 'test_bench/output/handlers/fixture'
+
+require 'test_bench/test_bench'
