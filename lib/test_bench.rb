@@ -23,3 +23,6 @@ require 'test_bench/test'
 require 'test_bench/context'
 
 require 'test_bench/fixture'
+
+require 'test_bench/output/format'
+require 'test_bench/output/format/dependency'
